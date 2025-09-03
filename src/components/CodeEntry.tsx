@@ -8,15 +8,14 @@ interface CodeEntryProps {
   onAuthenticated: () => void;
 }
 
+const SECRET_CODE = import.meta.env.VITE_SECRET_CODE || "Loveu3000"; // Use env variable or fallback
+
 const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // You can change this secret code to whatever you both decide on
-    const SECRET_CODE = "Loveu3000"; // Change this to your special code
-    
     if (code === SECRET_CODE) {
       localStorage.setItem("loveLettersAuth", "true");
       onAuthenticated();
@@ -36,19 +35,19 @@ const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
         <div className="absolute bottom-40 left-20 text-primary/20 text-3xl rotate-45">💗</div>
         <div className="absolute bottom-20 right-24 text-primary/15 text-5xl -rotate-6">💝</div>
         <div className="absolute top-40 left-1/2 text-primary/10 text-7xl -rotate-12">💘</div>
-        
+
         {/* Cute doodles */}
         <div className="absolute top-60 right-8 text-primary/20 text-2xl rotate-12">✨</div>
         <div className="absolute bottom-60 left-8 text-primary/15 text-3xl -rotate-12">🌸</div>
         <div className="absolute top-80 left-32 text-primary/20 text-2xl rotate-45">🦋</div>
         <div className="absolute bottom-32 right-32 text-primary/15 text-2xl -rotate-45">🌙</div>
-        
+
         {/* Love messages in background */}
         <div className="absolute top-16 right-20 text-primary/10 text-sm font-serif rotate-12">love you</div>
         <div className="absolute bottom-16 left-16 text-primary/10 text-sm font-serif -rotate-12">always ♡</div>
         <div className="absolute top-72 right-4 text-primary/10 text-xs font-serif rotate-6">forever</div>
       </div>
-      
+
       <div className="w-full max-w-md relative z-10">
         <Card className="shadow-love border-primary/20 bg-gradient-letter">
           <CardHeader className="text-center space-y-4">
@@ -71,13 +70,14 @@ const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
                   className="text-center text-lg tracking-wide border-primary/30 focus:border-primary"
+                  autoFocus
                 />
                 {error && (
                   <p className="text-sm text-destructive text-center">{error}</p>
                 )}
               </div>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 className="w-full bg-gradient-romantic hover:opacity-90 text-white font-medium py-6 text-lg shadow-gentle transition-all duration-300"
               >
                 Open My Letters
