@@ -27,8 +27,29 @@ const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-soft flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-gradient-soft flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Graffiti Designs */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Heart shapes scattered */}
+        <div className="absolute top-20 left-10 text-primary/20 text-4xl rotate-12">💕</div>
+        <div className="absolute top-32 right-16 text-primary/15 text-6xl -rotate-12">💖</div>
+        <div className="absolute bottom-40 left-20 text-primary/20 text-3xl rotate-45">💗</div>
+        <div className="absolute bottom-20 right-24 text-primary/15 text-5xl -rotate-6">💝</div>
+        <div className="absolute top-40 left-1/2 text-primary/10 text-7xl -rotate-12">💘</div>
+        
+        {/* Cute doodles */}
+        <div className="absolute top-60 right-8 text-primary/20 text-2xl rotate-12">✨</div>
+        <div className="absolute bottom-60 left-8 text-primary/15 text-3xl -rotate-12">🌸</div>
+        <div className="absolute top-80 left-32 text-primary/20 text-2xl rotate-45">🦋</div>
+        <div className="absolute bottom-32 right-32 text-primary/15 text-2xl -rotate-45">🌙</div>
+        
+        {/* Love messages in background */}
+        <div className="absolute top-16 right-20 text-primary/10 text-sm font-serif rotate-12">love you</div>
+        <div className="absolute bottom-16 left-16 text-primary/10 text-sm font-serif -rotate-12">always ♡</div>
+        <div className="absolute top-72 right-4 text-primary/10 text-xs font-serif rotate-6">forever</div>
+      </div>
+      
+      <div className="w-full max-w-md relative z-10">
         <Card className="shadow-love border-primary/20 bg-gradient-letter">
           <CardHeader className="text-center space-y-4">
             <div className="mx-auto w-16 h-16 bg-gradient-romantic rounded-full flex items-center justify-center shadow-gentle">

@@ -7,14 +7,14 @@ export interface Letter {
 
 export interface LetterCategory {
   title: string;
-  description: string;
+  tag: string;
   letters: Letter[];
 }
 
 export const letterCategories: Record<string, LetterCategory> = {
-  anxiety: {
+  anxious: {
     title: "When You're Anxious",
-    description: "Calming words for worried moments",
+    tag: "Are anxious",
     letters: [
       {
         title: "Breathe With Me",
@@ -37,115 +37,12 @@ You've got this, beautiful. And I've got you.
 
 All my love and strength,
 Your devoted partner ❤️`
-      },
-      {
-        title: "You're Safe",
-        preview: "In a world of uncertainty, there's one thing that never changes...",
-        content: `My beautiful soul,
-
-I know your mind is spinning right now, creating scenarios and worries that feel so real and scary. But I need you to hear this truth: you are safe.
-
-Even when your anxiety tells you otherwise, even when it feels like everything is falling apart - you are safe in my love. You are safe in your own strength. You are safe in this moment.
-
-Your worries are valid, and I'm not dismissing them. But remember that most of the things we worry about never actually happen. Your beautiful mind is just trying to protect you, even when you don't need protection.
-
-Here's what I want you to do:
-- Name 5 things you can see
-- 4 things you can touch  
-- 3 things you can hear
-- 2 things you can smell
-- 1 thing you can taste
-
-This will bring you back to now, where you are safe, where you are loved, where you are enough.
-
-I love every part of you, including the parts that worry.
-
-Forever yours,
-Your safe harbor 💕`
       }
     ]
   },
-  happy: {
-    title: "Celebrating You",
-    description: "Joy and love for your brightest moments",
-    letters: [
-      {
-        title: "Your Beautiful Smile",
-        preview: "The way your eyes light up when you're happy...",
-        content: `My sunshine,
-
-I wish you could see yourself the way I see you when you're happy. Your smile doesn't just light up the room - it lights up my entire world.
-
-When you laugh, it's like music that I never want to stop hearing. When your eyes sparkle with joy, I fall in love with you all over again. Your happiness is contagious in the most beautiful way.
-
-I love how you get excited about little things - the way you dance when your favorite song comes on, how you light up talking about things you're passionate about, the way you celebrate small victories.
-
-Never apologize for your joy. Never dim your light for anyone. Your happiness is a gift to this world, and seeing you embrace it is one of my greatest privileges.
-
-Keep shining, my love. The world needs your light.
-
-Celebrating you always,
-Your biggest fan ✨`
-      },
-      {
-        title: "Proud of You",
-        preview: "Every single day you make me proud...",
-        content: `My incredible love,
-
-I am so incredibly proud of you. Not just for the big accomplishments (though those are amazing too), but for all the little ways you show up every day.
-
-I'm proud of:
-- How you handle challenges with grace
-- The kindness you show to everyone around you
-- How you keep going even when things get tough
-- The way you love so fully and deeply
-- Your courage to be authentically yourself
-- How you make me want to be a better person
-
-You might not always feel like you're doing enough, but you are doing so much more than enough. You are extraordinary in the most beautiful, everyday ways.
-
-Thank you for being exactly who you are. Thank you for sharing your life with me. Thank you for being my person.
-
-I love you more than words can express.
-
-With all my admiration and love,
-Your forever cheerleader 🌟`
-      }
-    ]
-  },
-  encouragement: {
-    title: "You've Got This",
-    description: "Strength and motivation for tough times",
-    letters: [
-      {
-        title: "Stronger Than You Know",
-        preview: "My love, you have overcome so much already...",
-        content: `My warrior,
-
-I see you doubting yourself, wondering if you're strong enough for what's ahead. Let me remind you of something: you are so much stronger than you know.
-
-Look at everything you've already survived. Look at all the challenges you've faced and conquered. Look at how you've grown and evolved. You didn't get this far by accident - you got here because you have an incredible strength inside you.
-
-Yes, the road ahead might be difficult. Yes, there might be obstacles and setbacks. But you know what? You're equipped for this. You have everything you need within you.
-
-When you feel like giving up, remember:
-- Every expert was once a beginner
-- Every success story started with someone who refused to give up
-- Your dreams chose you because you're capable of achieving them
-- I believe in you with my whole heart
-
-You don't have to be perfect. You just have to keep going. One step at a time, one day at a time, one breath at a time.
-
-I'm cheering you on every step of the way.
-
-Believing in you always,
-Your number one supporter 💪`
-      }
-    ]
-  },
-  daily: {
-    title: "Daily Reminders",
-    description: "Sweet thoughts for everyday moments",
+  wakeup: {
+    title: "When You Wake Up",
+    tag: "Wake up",
     letters: [
       {
         title: "Good Morning, Beautiful",
@@ -169,7 +66,194 @@ Have the most wonderful day, my love.
 
 Starting each day loving you,
 Your devoted morning person ☀️`
-      },
+      }
+    ]
+  },
+  low: {
+    title: "When You Feel Low",
+    tag: "Feel low",
+    letters: [
+      {
+        title: "You Are Enough",
+        preview: "Exactly as you are, right now...",
+        content: `My perfect imperfection,
+
+I need you to hear this today: YOU ARE ENOUGH.
+
+Not when you lose weight or gain confidence. Not when you get that promotion or achieve that goal. Not when you fix the things you think are broken about yourself.
+
+Right now. Today. In this moment. Exactly as you are.
+
+You are enough love to give and receive. You are enough intelligence to figure things out. You are enough strength to handle what comes. You are enough beauty to light up any room. You are enough kindness to change someone's day.
+
+Stop waiting to feel worthy of love - you already are. Stop trying to earn a place in this world - you already belong. Stop believing you need to be different - you are already perfect in your imperfection.
+
+I fell in love with you exactly as you are. Your flaws aren't bugs that need fixing - they're features that make you uniquely, beautifully you.
+
+You. Are. Enough.
+
+Loving every part of you,
+Your reminder that you're already whole ❤️`
+      }
+    ]
+  },
+  happy: {
+    title: "When You're Happy",
+    tag: "Are happy",
+    letters: [
+      {
+        title: "Your Beautiful Smile",
+        preview: "The way your eyes light up when you're happy...",
+        content: `My sunshine,
+
+I wish you could see yourself the way I see you when you're happy. Your smile doesn't just light up the room - it lights up my entire world.
+
+When you laugh, it's like music that I never want to stop hearing. When your eyes sparkle with joy, I fall in love with you all over again. Your happiness is contagious in the most beautiful way.
+
+I love how you get excited about little things - the way you dance when your favorite song comes on, how you light up talking about things you're passionate about, the way you celebrate small victories.
+
+Never apologize for your joy. Never dim your light for anyone. Your happiness is a gift to this world, and seeing you embrace it is one of my greatest privileges.
+
+Keep shining, my love. The world needs your light.
+
+Celebrating you always,
+Your biggest fan ✨`
+      }
+    ]
+  },
+  missme: {
+    title: "When You Miss Me",
+    tag: "Miss me",
+    letters: [
+      {
+        title: "I'm Always With You",
+        preview: "Distance means nothing when you mean everything...",
+        content: `My heart,
+
+I know you miss me, and I miss you too. More than words can express. But I want you to know something - even when we're apart, I'm never really gone.
+
+I'm in the morning coffee that reminds you of our lazy Sunday mornings together. I'm in your favorite song that makes you smile. I'm in the sunset that takes your breath away. I'm in every little moment that makes you think of love.
+
+Close your eyes and feel my arms around you. Remember my voice telling you how much I love you. Remember my laugh when you tell me your silly jokes. Remember how it feels when I hold your hand.
+
+The distance is temporary, but my love for you is eternal. Every second we're apart just makes me appreciate you more. Every day brings us closer to being together again.
+
+Until then, carry my love with you everywhere you go. You are never alone.
+
+Missing you endlessly,
+Your heart that beats for you 💕`
+      }
+    ]
+  },
+  hungry: {
+    title: "When You're Hungry",
+    tag: "Are hungry",
+    letters: [
+      {
+        title: "Nourish Yourself, Love",
+        preview: "Take care of yourself like I would take care of you...",
+        content: `My sweet angel,
+
+I know you're hungry right now, and I wish I could cook your favorite meal for you. But since I can't be there, I want to remind you to nourish yourself with the same love and care that I would.
+
+Remember to eat something that makes you feel good - not just physically, but emotionally too. Maybe that comfort food that always makes you smile, or something fresh and energizing that makes you feel alive.
+
+Take a moment to sit down and enjoy your meal. Don't rush it. Savor every bite and remember that taking care of yourself is an act of love - love for yourself and love for me, because seeing you healthy and happy is all I want.
+
+You deserve to be fed well, to be cared for, to be nourished in every way. Don't forget to drink some water too, beautiful.
+
+I love you and I want you to love yourself the way I love you - completely and without condition.
+
+Sending you all my love and virtual hugs,
+Your caring partner 🍽️💕`
+      }
+    ]
+  },
+  home: {
+    title: "When You Miss Home",
+    tag: "Miss home",
+    letters: [
+      {
+        title: "You Are My Home",
+        preview: "Home isn't a place, it's a feeling...",
+        content: `My darling,
+
+I know you're missing home right now, and that ache in your heart is so real and valid. Home represents comfort, safety, familiarity - all the things that make us feel grounded.
+
+But I want you to remember something beautiful: you carry home with you everywhere you go. Home isn't just a place with four walls - it's the love in your heart, the memories you cherish, the values that guide you, and the dreams that inspire you.
+
+You are my home. Wherever you are in this world, that's where my heart feels most at peace. When I think of home, I think of your laugh, your warmth, your presence beside me.
+
+Create little pockets of home wherever you are - play familiar music, call the people you love, do something that brings you comfort. You have the power to create that feeling of belonging anywhere.
+
+And remember, I'm here loving you across any distance. You're never truly alone because you carry my love with you always.
+
+You are home, you are loved, you are enough.
+
+Forever yours,
+Your love who finds home in you 🏡💕`
+      }
+    ]
+  },
+  food: {
+    title: "When You Miss Food",
+    tag: "Miss food",
+    letters: [
+      {
+        title: "Taste of Love",
+        preview: "Every meal is better when shared with love...",
+        content: `My foodie love,
+
+I know you're craving that special dish right now - maybe it's your mom's cooking, that restaurant we went to on our first date, or just some good comfort food that hits the soul.
+
+Food is so much more than sustenance, isn't it? It's love, memory, culture, comfort all rolled into one. I love how your eyes light up when you talk about your favorite foods, how passionate you get about flavors and textures.
+
+I promise you, we'll have that meal again. We'll sit together, share bites, laugh over dinner, and create new food memories. Until then, try to find something that brings you even a little bit of that joy.
+
+Cook something with love, even if it's simple. Try that new recipe you've been wanting to make. Order something that makes you smile. Food tastes better when it's made or chosen with intention and love.
+
+I can't wait to cook for you again, to see that happy expression when you take that first perfect bite.
+
+Sending you all my love and virtual taste buds,
+Your personal chef and biggest fan 🍳❤️`
+      }
+    ]
+  },
+  exams: {
+    title: "When You Have Exams",
+    tag: "Have exams",
+    letters: [
+      {
+        title: "You've Got This, Genius",
+        preview: "Believe in yourself as much as I believe in you...",
+        content: `My brilliant scholar,
+
+I know exam time is stressful, and your mind might be racing with everything you need to remember and do. But I want you to take a deep breath and remember how incredibly smart and capable you are.
+
+You've prepared for this. You've studied hard, you've put in the effort, and you know more than you think you do. Trust in all the work you've done and trust in your amazing mind.
+
+Here's what I want you to remember during your exams:
+- Read each question carefully and take your time
+- Trust your first instincts - they're usually right
+- If you don't know an answer, move on and come back to it
+- You don't have to be perfect, just do your best
+- I'm so proud of you no matter what the results are
+
+Take breaks, eat well, stay hydrated, and get enough sleep. Your health is more important than any grade.
+
+You are so much more than your exam results. You are kind, intelligent, hardworking, and amazing. These exams are just one small part of your incredible journey.
+
+I believe in you completely.
+
+Cheering you on from here,
+Your biggest supporter and study buddy 📚✨`
+      }
+    ]
+  },
+  daily: {
+    title: "Daily Reminders",
+    tag: "Daily reminders",
+    letters: [
       {
         title: "Thinking of You",
         preview: "Just because I love you...",
@@ -190,9 +274,9 @@ Your person who thinks about you constantly 💭❤️`
       }
     ]
   },
-  goodnight: {
-    title: "Sweet Dreams",
-    description: "Peaceful thoughts for bedtime",
+  bedtime: {
+    title: "When You Go to Bed",
+    tag: "Go to bed",
     letters: [
       {
         title: "Sleep Well, My Love",
@@ -216,49 +300,358 @@ Your guardian of sweet dreams 🌙✨`
       }
     ]
   },
-  random: {
-    title: "Just Because",
-    description: "Random love notes from my heart",
+  frustrated: {
+    title: "When You're Frustrated",
+    tag: "Are frustrated",
     letters: [
       {
-        title: "I Choose You",
-        preview: "In a world full of people, I choose you...",
-        content: `My chosen one,
+        title: "Let It Out, Love",
+        preview: "It's okay to feel frustrated, you're human...",
+        content: `My strong warrior,
 
-In a world of billions of people, in all the possible timelines and universes, I choose you. Not just once, but every single day. I choose you in your strength and in your vulnerability. I choose you in your joy and in your struggles.
+I can feel your frustration from here, and I want you to know that it's completely okay to feel this way. You're human, you're allowed to have hard days, and you're allowed to feel overwhelmed.
 
-I choose your morning voice and your sleepy eyes. I choose your passionate rants and your quiet moments. I choose your dreams and your fears. I choose your past, your present, and whatever future we build together.
+Sometimes life doesn't go according to plan. Sometimes people let us down, things break, plans fall through, and nothing seems to work out the way we want it to. It's infuriating and exhausting and completely valid to be frustrated about it.
 
-This isn't about perfection - it's about choice. And every day, when I wake up, I think about how grateful I am that out of all the people in the world, I get to love you.
+But here's what I know about you - you're resilient. You've gotten through 100% of your bad days so far, and that's a pretty good track record. This frustration is temporary, but your strength is permanent.
 
-You make ordinary moments magical just by being in them. You make me believe in love stories and happy endings. You make me want to be the best version of myself.
+Take some deep breaths. Scream into a pillow if you need to. Go for a walk. Listen to angry music. Do whatever helps you process these feelings safely.
 
-Thank you for being you. Thank you for letting me love you. Thank you for being mine.
+Then, when you're ready, we'll figure it out together. Every problem has a solution, even if we can't see it right now.
 
-Choosing you forever,
-Your devoted heart 💕`
-      },
+I love you through every emotion, every bad day, every moment of frustration. You're going to be okay.
+
+Standing by your side always,
+Your patient and understanding love 💪❤️`
+      }
+    ]
+  },
+  angry: {
+    title: "When You're Angry",
+    tag: "Are angry",
+    letters: [
       {
-        title: "You Are Enough",
-        preview: "Exactly as you are, right now...",
-        content: `My perfect imperfection,
+        title: "Your Feelings Are Valid",
+        preview: "It's okay to be angry, let yourself feel it...",
+        content: `My fierce love,
 
-I need you to hear this today: YOU ARE ENOUGH.
+You're angry right now, and you know what? That's perfectly okay. Anger is a valid emotion, and you have every right to feel it fully.
 
-Not when you lose weight or gain confidence. Not when you get that promotion or achieve that goal. Not when you fix the things you think are broken about yourself.
+Don't let anyone tell you to "calm down" or that you're "overreacting." Your feelings matter, your boundaries matter, and whatever has made you angry deserves to be acknowledged.
 
-Right now. Today. In this moment. Exactly as you are.
+Anger often comes from a place of hurt or injustice. Something has crossed a line, violated your values, or threatened something you care about. That fire in you? It's your inner strength protecting what matters to you.
 
-You are enough love to give and receive. You are enough intelligence to figure things out. You are enough strength to handle what comes. You are enough beauty to light up any room. You are enough kindness to change someone's day.
+Feel your anger fully, but don't let it consume you. Use it as fuel to make positive changes, to stand up for yourself, to set boundaries, to fight for what's right.
 
-Stop waiting to feel worthy of love - you already are. Stop trying to earn a place in this world - you already belong. Stop believing you need to be different - you are already perfect in your imperfection.
+You are allowed to be angry. You are allowed to take up space with your feelings. You are allowed to demand better treatment. You are allowed to say "no" and "this isn't okay."
 
-I fell in love with you exactly as you are. Your flaws aren't bugs that need fixing - they're features that make you uniquely, beautifully you.
+I love every part of you, including your righteous anger. Channel it wisely, my fierce protector.
 
-You. Are. Enough.
+Supporting your fire always,
+Your ally in all battles 🔥❤️`
+      }
+    ]
+  },
+  hateme: {
+    title: "When You Hate Me",
+    tag: "Hate me",
+    letters: [
+      {
+        title: "Even When You're Mad",
+        preview: "I love you even when you can't stand me...",
+        content: `My complicated love,
 
-Loving every part of you,
-Your reminder that you're already whole ❤️`
+I know you're furious with me right now, and I understand. I probably messed up, said the wrong thing, or hurt your feelings. I'm not perfect, and sometimes I fail at being the partner you deserve.
+
+But I want you to know something, even in your anger - I love you. I love you when you're happy with me, and I love you when you hate me. I love you when we're laughing together, and I love you when you can't stand to look at me.
+
+Your anger doesn't scare me away. Your disappointment doesn't make me love you less. We're going to fight sometimes, we're going to hurt each other's feelings, and we're going to have days where we drive each other crazy. That's what real love looks like.
+
+I'm sorry for whatever I did to make you feel this way. I want to make it right, I want to learn from this, and I want to do better.
+
+Take all the time you need to be angry with me. I'll be here when you're ready to talk, ready to listen, ready to make amends.
+
+I love you through it all.
+
+Forever yours, even when you hate me,
+Your imperfect but devoted partner 💔❤️`
+      }
+    ]
+  },
+  worried: {
+    title: "When You're Worried About Us",
+    tag: "Are worried for us",
+    letters: [
+      {
+        title: "We're Stronger Together",
+        preview: "Whatever you're worried about, we'll face it together...",
+        content: `My precious heart,
+
+I can sense that worry in your mind about us, about our relationship, about our future. Those fears are creeping in and making you question everything beautiful we've built together.
+
+Let me ease those worries with some truths:
+
+I choose you. Not just today, but every day. Not just when it's easy, but especially when it's hard. Not just when we're happy, but when we're struggling too.
+
+We're not perfect, and we never will be. We'll have disagreements, we'll have bad days, we'll face challenges that test us. But that doesn't mean we're not right for each other - it means we're human.
+
+What matters is that we keep showing up for each other. We keep communicating, we keep trying, we keep choosing love even when it's difficult.
+
+I see our future together, and it's beautiful. It's full of growth, adventure, laughter, and yes, some tears too. But we'll face it all together.
+
+Your worries about us are natural, but don't let them convince you that what we have isn't real or strong enough. We are strong enough. We are enough.
+
+I love you through every worry and every fear.
+
+Committed to us always,
+Your partner in this beautiful chaos 💕`
+      }
+    ]
+  },
+  tired: {
+    title: "When You're Tired",
+    tag: "Are tired",
+    letters: [
+      {
+        title: "Rest, My Love",
+        preview: "You've been so strong for so long...",
+        content: `My exhausted angel,
+
+I can see how tired you are - tired in your bones, tired in your soul, tired in ways that sleep alone can't fix. You've been carrying so much, giving so much, pushing through so much.
+
+It's okay to be tired. It's okay to admit that you need rest, need a break, need someone to take care of you for a while.
+
+You don't have to be strong all the time. You don't have to have it all figured out. You don't have to keep pushing when your body and spirit are crying out for rest.
+
+Give yourself permission to slow down. Take that nap. Cancel those plans. Say no to that extra responsibility. Put your phone on silent. Just breathe.
+
+You are not lazy for needing rest. You are not weak for being tired. You are human, and humans need time to recharge.
+
+I wish I could wrap you in the softest blanket, bring you your favorite tea, and let you sleep for as long as you need. Since I can't be there, please do these things for yourself.
+
+Rest, my love. The world can wait. Your well-being is more important than any deadline or obligation.
+
+Protecting your peace always,
+Your soft place to land 🌙💤`
+      }
+    ]
+  }
+  },
+  stressed: {
+    title: "When You're Stressed",
+    tag: "Are stressed",
+    letters: [
+      {
+        title: "One Thing at a Time",
+        preview: "You don't have to carry it all at once...",
+        content: `My overwhelmed darling,
+
+I know everything feels like too much right now. Your to-do list is endless, deadlines are looming, people are depending on you, and it feels like the world is spinning too fast.
+
+But let's slow down for just a moment. Let's breathe together.
+
+You don't have to do everything at once. You don't have to be everything to everyone. You don't have to solve every problem today.
+
+Pick one thing. Just one. Do that one thing. Then pick another. One step at a time, one breath at a time, one moment at a time.
+
+It's okay to ask for help. It's okay to delegate. It's okay to say "I'm overwhelmed and I need support." Strong people ask for help when they need it.
+
+Remember that you've handled stress before and you've come through it. This too shall pass. You are more capable and resilient than you know.
+
+Take a hot shower. Call a friend. Go for a walk. Do something, anything, that brings you even a moment of peace.
+
+You've got this, and I've got you.
+
+Breathing with you,
+Your calm in every storm 🌊💙`
+      }
+    ]
+  },
+  mood: {
+    title: "When You're in the Mood",
+    tag: "Are in the mood",
+    letters: [
+      {
+        title: "You Drive Me Wild",
+        preview: "The way you look at me when you want me...",
+        content: `My irresistible love,
+
+I can tell by that look in your eyes, that little smile, the way you're moving - you're thinking about us, about our bodies, about the way we fit together so perfectly.
+
+You are absolutely intoxicating. The way you bite your lip when you want me, the way your eyes get that hungry look, the way you move closer like you can't help yourself - it drives me absolutely wild.
+
+I love how confident you are in your desire, how you own your sexuality, how you make me feel wanted and needed and completely crazy for you.
+
+I'm thinking about every inch of you, every sound you make, every way we connect. I'm thinking about how beautiful you look when you let go completely, how perfect you feel in my arms.
+
+I wish I could be there to worship every part of you, to show you exactly how much I want you, to make you feel as incredible as you make me feel.
+
+You are gorgeous, you are sexy, you are mine.
+
+Wanting you always,
+Your devoted lover 🔥💋`
+      }
+    ]
+  },
+  period: {
+    title: "When You're on Your Period",
+    tag: "Are on your period",
+    letters: [
+      {
+        title: "You're Still Perfect",
+        preview: "Your body is doing something amazing...",
+        content: `My beautiful strong woman,
+
+I know you don't feel your best right now. You're cramping, you're uncomfortable, you feel bloated and emotional and just not like yourself. But I want you to know something - you are still absolutely perfect to me.
+
+Your body is doing something incredible. It's following ancient rhythms, preparing for life, showing its incredible power and resilience. There is nothing disgusting or shameful about this natural process.
+
+You don't have to hide from me or feel embarrassed. You don't have to pretend you feel fine when you don't. I want to take care of you during this time.
+
+Put on those comfortable clothes. Use the heating pad. Eat whatever sounds good. Cancel plans if you need to. Rest as much as you want.
+
+You are not "gross" or "moody" or any of those horrible things society tells women they are during their periods. You are human, you are natural, you are beautiful.
+
+I love you through every day of your cycle, through every mood, through every cramp and every comfort food craving.
+
+Taking care of you always,
+Your understanding partner 🌸💕`
+      }
+    ]
+  },
+  lesspretty: {
+    title: "When You Feel Less Pretty",
+    tag: "Feel less pretty (impossible)",
+    letters: [
+      {
+        title: "You Are Breathtaking",
+        preview: "How could you not see what I see?...",
+        content: `My stunning goddess,
+
+You texted me that you're feeling ugly today, and my heart just broke a little. How could the most beautiful person I know not see what I see every time I look at you?
+
+You are breathtaking. Not just when you're all dressed up with makeup on, but right now, exactly as you are. In your pajamas with messy hair and no makeup - you take my breath away.
+
+I love your face when you first wake up. I love the little lines around your eyes when you laugh. I love your natural skin, your real hair, your actual body that does amazing things every day.
+
+You are not your worst angle in bad lighting. You are not the critical voice in your head. You are not the impossible standards that society has tried to impose on you.
+
+You are the way your eyes light up when you're excited. You are the grace in your movements. You are the kindness that radiates from your soul and makes you glow.
+
+Beauty is not a size, an age, or a filter. Beauty is life, joy, love, authenticity - and you have all of those in abundance.
+
+I see you, all of you, and you are absolutely beautiful.
+
+Worshipping your beauty always,
+Your devoted admirer 💖✨`
+      }
+    ]
+  },
+  sick: {
+    title: "When You're Sick",
+    tag: "Are sick",
+    letters: [
+      {
+        title: "Get Well Soon, Love",
+        preview: "I wish I could take care of you...",
+        content: `My sweet patient,
+
+I hate that you're not feeling well. I wish I could be there to bring you soup, fluff your pillows, and take care of you the way you deserve.
+
+Being sick is the worst - everything hurts, you feel exhausted, and even simple tasks feel overwhelming. But your body is fighting hard for you, and I'm so proud of it for working to get you better.
+
+Please rest as much as you can. Don't worry about work, chores, or anything else right now. Your only job is to get better.
+
+Drink lots of fluids, take your medicine, and sleep whenever your body tells you to. Listen to what you need and give it to yourself without guilt.
+
+I'm sending you all my love and healing energy. I'm thinking about you constantly and hoping you feel better soon.
+
+You're going to get through this, and I'll be here cheering you on every step of the way.
+
+Nursing you back to health with love,
+Your personal caregiver 🤒💊`
+      }
+    ]
+  },
+  cantsleep: {
+    title: "When You Can't Sleep",
+    tag: "Can't sleep",
+    letters: [
+      {
+        title: "Close Your Eyes, Love",
+        preview: "Let me help you find peace in the darkness...",
+        content: `My restless darling,
+
+I know your mind is racing and sleep feels impossible right now. Those thoughts are spinning, worries are multiplying, and the harder you try to sleep, the more awake you feel.
+
+First, it's okay. One night of poor sleep won't hurt you. Try to release the pressure you're putting on yourself to fall asleep immediately.
+
+Let's try something together. Close your eyes and imagine we're lying together in our favorite place. Feel my arm around you, your head on my chest, the rhythm of my breathing matching yours.
+
+Think about all the good moments from today, no matter how small. The taste of your morning coffee, a text from a friend, a song you heard, the warmth of sunlight through a window.
+
+Let go of tomorrow's worries. They'll still be there in the morning, and you'll handle them better after rest. Right now, there's nothing to solve, nothing to fix, nothing to do but breathe.
+
+I'm here with you in the darkness, loving you, protecting your peace.
+
+Sweet dreams, my love,
+Your sleepy-time guardian 🌙💤`
+      }
+    ]
+  },
+  birthday: {
+    title: "On Your Birthday",
+    tag: "Your birthday",
+    letters: [
+      {
+        title: "Happy Birthday, My Love",
+        preview: "Today we celebrate the most amazing person I know...",
+        content: `My birthday angel,
+
+Happy, happy birthday to the most incredible person in the world! Today is all about celebrating you, and I couldn't be more excited.
+
+I'm so grateful that you were born. I'm grateful for every year that led you to become the amazing person you are today. I'm grateful that our paths crossed and that I get to love you.
+
+You make this world brighter just by being in it. You bring joy, kindness, laughter, and love wherever you go. You make everyone around you better, including me.
+
+I hope your birthday is filled with everything that makes you happy - good food, your favorite people, surprises that make you smile, and moments that remind you how loved you are.
+
+You deserve to be celebrated not just today, but every single day. You deserve all the love, all the joy, all the beautiful things life has to offer.
+
+I can't wait to celebrate many more birthdays with you, to watch you grow and evolve and become even more amazing (if that's even possible).
+
+Have the most wonderful day, birthday girl/boy!
+
+Celebrating you always,
+Your birthday party planner 🎂🎉`
+      }
+    ]
+  },
+  badday: {
+    title: "On a Bad Day",
+    tag: "Bad day",
+    letters: [
+      {
+        title: "Tomorrow Will Be Better",
+        preview: "Bad days don't last, but resilient people do...",
+        content: `My strong survivor,
+
+I can tell today has been rough on you. Nothing went right, everything felt hard, and you probably just want this day to be over.
+
+I'm so sorry you had a bad day. I wish I could have absorbed some of that difficulty for you, wish I could have made things easier somehow.
+
+But here's what I know about bad days - they end. And here's what I know about you - you're incredibly resilient, even when you don't feel like it.
+
+Bad days are part of being human. They don't mean you're doing anything wrong or that things won't get better. They're just temporary storms that pass through our lives.
+
+Tomorrow is a fresh start. New possibilities, new opportunities, new chances for things to go right. Today's struggles don't determine tomorrow's success.
+
+For now, be extra gentle with yourself. Do something that brings you comfort. Remember that you're loved deeply and that this day doesn't define you.
+
+You've gotten through 100% of your bad days so far. That's a perfect track record.
+
+Standing by you through it all,
+Your constant support system 🌈💪`
       }
     ]
   }

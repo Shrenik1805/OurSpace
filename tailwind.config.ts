@@ -96,11 +96,22 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'envelope-open': {
+					'0%': { 
+						transform: 'rotateX(0deg)',
+						transformOrigin: 'top'
+					},
+					'100%': { 
+						transform: 'rotateX(-180deg)',
+						transformOrigin: 'top'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'envelope-open': 'envelope-open 0.6s ease-out'
 			}
 		}
 	},
