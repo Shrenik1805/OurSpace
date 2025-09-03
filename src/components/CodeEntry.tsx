@@ -15,7 +15,7 @@ const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // You can change this secret code to whatever you both decide on
-    const SECRET_CODE = "OurLoveStory2024"; // Change this to your special code
+    const SECRET_CODE = "Loveu3000"; // Change this to your special code
     
     if (code === SECRET_CODE) {
       localStorage.setItem("loveLettersAuth", "true");
