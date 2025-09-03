@@ -1,14 +1,32 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState, useEffect } from "react";
+import CodeEntry from "@/components/CodeEntry";
+import LettersDashboard from "@/components/LettersDashboard";
 
 const Index = () => {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
-  );
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Check if user is already authenticated
+    const authStatus = localStorage.getItem("loveLettersAuth");
+    if (authStatus === "true") {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleAuthenticated = () => {
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("loveLettersAuth");
+    setIsAuthenticated(false);
+  };
+
+  if (!isAuthenticated) {
+    return <CodeEntry onAuthenticated={handleAuthenticated} />;
+  }
+
+  return <LettersDashboard onLogout={handleLogout} />;
 };
 
 export default Index;
