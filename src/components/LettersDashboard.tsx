@@ -52,7 +52,7 @@ const LettersDashboard = ({ onLogout }: LettersDashboardProps) => {
             "I'm sorry, I'm not there live, But babe I'm just a click away."
           </p>
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-white mb-2 tracking-tight">
-           ᕼEᒪᒪO ᒪOᐯE,
+           Hello Love,
           </h1>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-4 max-w-7xl mx-auto px-4">
