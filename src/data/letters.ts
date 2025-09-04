@@ -11,10 +11,12 @@ export interface LetterCategory {
   letters: Letter[];
 }
 
+// Categories organized by emotional support type
 export const letterCategories: Record<string, LetterCategory> = {
+  // ✨ Emotional Support
   anxious: {
-    title: "When You're Anxious",
-    tag: "Are anxious",
+    title: "For Your Anxious Heart",
+    tag: "need calm & comfort 🫂",
     letters: [
       {
         title: "Breathe With Me",
@@ -41,8 +43,8 @@ Your devoted partner ❤️`
     ]
   },
   wakeup: {
-    title: "When You Wake Up",
-    tag: "Wake up",
+    title: "Good Morning Sunshine",
+    tag: "start your day ☀️",
     letters: [
       {
         title: "Good Morning, Beautiful",
@@ -70,8 +72,8 @@ Your devoted morning person ☀️`
     ]
   },
   low: {
-    title: "When You Feel Low",
-    tag: "Feel low",
+    title: "Lift Your Spirit",
+    tag: "need encouragement 💪",
     letters: [
       {
         title: "You Are Enough",
@@ -98,8 +100,8 @@ Your reminder that you're already whole ❤️`
     ]
   },
   happy: {
-    title: "When You're Happy",
-    tag: "Are happy",
+    title: "Celebrate Your Joy",
+    tag: "shine brighter ✨",
     letters: [
       {
         title: "Your Beautiful Smile",
@@ -122,8 +124,8 @@ Your biggest fan ✨`
     ]
   },
   missme: {
-    title: "When You Miss Me",
-    tag: "Miss me",
+    title: "Missing You Too",
+    tag: "feel our connection 💕",
     letters: [
       {
         title: "I'm Always With You",
@@ -146,8 +148,8 @@ Your heart that beats for you 💕`
     ]
   },
   hungry: {
-    title: "When You're Hungry",
-    tag: "Are hungry",
+    title: "Nourish Your Soul",
+    tag: "treat yourself 🍯",
     letters: [
       {
         title: "Nourish Yourself, Love",
@@ -170,8 +172,8 @@ Your caring partner 🍽️💕`
     ]
   },
   home: {
-    title: "When You Miss Home",
-    tag: "Miss home",
+    title: "Homesick Heart",
+    tag: "long for home 🏠",
     letters: [
       {
         title: "You Are My Home",
@@ -196,8 +198,8 @@ Your love who finds home in you 🏡💕`
     ]
   },
   food: {
-    title: "When You Miss Food",
-    tag: "Miss food",
+    title: "Craving Comfort",
+    tag: "taste memories 🍜",
     letters: [
       {
         title: "Taste of Love",
@@ -220,8 +222,8 @@ Your personal chef and biggest fan 🍳❤️`
     ]
   },
   exams: {
-    title: "When You Have Exams",
-    tag: "Have exams",
+    title: "You've Got This",
+    tag: "conquer your fears 📚",
     letters: [
       {
         title: "You've Got This, Genius",
@@ -251,8 +253,8 @@ Your biggest supporter and study buddy 📚✨`
     ]
   },
   daily: {
-    title: "Daily Reminders",
-    tag: "Daily reminders",
+    title: "Just Because",
+    tag: "deserve love always 💭",
     letters: [
       {
         title: "Thinking of You",
@@ -275,8 +277,8 @@ Your person who thinks about you constantly 💭❤️`
     ]
   },
   bedtime: {
-    title: "When You Go to Bed",
-    tag: "Go to bed",
+    title: "Sweet Dreams",
+    tag: "sleep peacefully 🌙",
     letters: [
       {
         title: "Sleep Well, My Love",
@@ -301,8 +303,8 @@ Your guardian of sweet dreams 🌙✨`
     ]
   },
   frustrated: {
-    title: "When You're Frustrated",
-    tag: "Are frustrated",
+    title: "Release & Breathe",
+    tag: "let it all out 💨",
     letters: [
       {
         title: "Let It Out, Love",
@@ -327,8 +329,8 @@ Your patient and understanding love 💪❤️`
     ]
   },
   angry: {
-    title: "When You're Angry",
-    tag: "Are angry",
+    title: "Your Fire is Valid",
+    tag: "feel your power 🔥",
     letters: [
       {
         title: "Your Feelings Are Valid",
@@ -353,8 +355,8 @@ Your ally in all battles 🔥❤️`
     ]
   },
   hateme: {
-    title: "When You Hate Me",
-    tag: "Hate me",
+    title: "Even When Mad",
+    tag: "still love you 💔",
     letters: [
       {
         title: "Even When You're Mad",
@@ -379,8 +381,8 @@ Your imperfect but devoted partner 💔❤️`
     ]
   },
   worried: {
-    title: "When You're Worried About Us",
-    tag: "Are worried for us",
+    title: "Us Against the World",
+    tag: "trust our love 💞",
     letters: [
       {
         title: "We're Stronger Together",
@@ -409,8 +411,8 @@ Your partner in this beautiful chaos 💕`
     ]
   },
   tired: {
-    title: "When You're Tired",
-    tag: "Are tired",
+    title: "Rest Your Soul",
+    tag: "need gentle rest 😴",
     letters: [
       {
         title: "Rest, My Love",
@@ -437,8 +439,8 @@ Your soft place to land 🌙💤`
     ]
   },
   stressed: {
-    title: "When You're Stressed",
-    tag: "Are stressed",
+    title: "Breathe Through It",
+    tag: "find your calm 🌊",
     letters: [
       {
         title: "One Thing at a Time",
@@ -467,8 +469,8 @@ Your calm in every storm 🌊💙`
     ]
   },
   mood: {
-    title: "When You're in the Mood",
-    tag: "Are in the mood",
+    title: "Feeling Frisky",
+    tag: "want some love 😏",
     letters: [
       {
         title: "You Drive Me Wild",
@@ -493,8 +495,8 @@ Your devoted lover 🔥💋`
     ]
   },
   period: {
-    title: "When You're on Your Period",
-    tag: "Are on your period",
+    title: "Monthly Warrior",
+    tag: "extra tender care 🌸",
     letters: [
       {
         title: "You're Still Perfect",
@@ -519,8 +521,8 @@ Your understanding partner 🌸💕`
     ]
   },
   lesspretty: {
-    title: "When You Feel Less Pretty",
-    tag: "Feel less pretty (impossible)",
+    title: "You're Stunning",
+    tag: "always beautiful ✨",
     letters: [
       {
         title: "You Are Breathtaking",
@@ -547,8 +549,8 @@ Your devoted admirer 💖✨`
     ]
   },
   sick: {
-    title: "When You're Sick",
-    tag: "Are sick",
+    title: "Healing Hugs",
+    tag: "get well soon 🤒",
     letters: [
       {
         title: "Get Well Soon, Love",
@@ -573,8 +575,8 @@ Your personal caregiver 🤒💊`
     ]
   },
   cantsleep: {
-    title: "When You Can't Sleep",
-    tag: "Can't sleep",
+    title: "Counting Dreams",
+    tag: "peaceful slumber 🌙",
     letters: [
       {
         title: "Close Your Eyes, Love",
@@ -599,8 +601,8 @@ Your sleepy-time guardian 🌙💤`
     ]
   },
   birthday: {
-    title: "On Your Birthday",
-    tag: "Your birthday",
+    title: "Birthday Magic",
+    tag: "celebrate you 🎂",
     letters: [
       {
         title: "Happy Birthday, My Love",
@@ -627,8 +629,8 @@ Your birthday party planner 🎂🎉`
     ]
   },
   badday: {
-    title: "On a Bad Day",
-    tag: "Bad day",
+    title: "Tomorrow's Sunshine",
+    tag: "better days ahead 🌈",
     letters: [
       {
         title: "Tomorrow Will Be Better",
