@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Heart } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface Letter {
   title: string;
@@ -16,10 +16,35 @@ interface LetterViewerProps {
 }
 
 const LetterViewer = ({ letter, onBack }: LetterViewerProps) => {
+  const [displayedContent, setDisplayedContent] = useState("");
+  const [isTyping, setIsTyping] = useState(true);
+
   // Automatically scroll to top when the letter changes
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [letter]);
+
+  // Typewriter effect
+  useEffect(() => {
+    setDisplayedContent("");
+    setIsTyping(true);
+    let index = 0;
+    const content = letter.content;
+    
+    const typeWriter = () => {
+      if (index < content.length) {
+        setDisplayedContent(content.slice(0, index + 1));
+        index++;
+        // Adjust speed here - lower = faster, higher = slower
+        setTimeout(typeWriter, 30);
+      } else {
+        setIsTyping(false);
+      }
+    };
+    
+    // Small delay before starting typewriter
+    setTimeout(typeWriter, 300);
+  }, [letter.content]);
 
   return (
     <div className="min-h-screen bg-gradient-soft">
@@ -50,7 +75,8 @@ const LetterViewer = ({ letter, onBack }: LetterViewerProps) => {
             <CardContent className="p-8">
               <div className="prose prose-lg max-w-none">
                 <div className="whitespace-pre-wrap text-foreground leading-relaxed font-serif text-lg">
-                  {letter.content}
+                  {displayedContent}
+                  {isTyping && <span className="animate-pulse text-primary">|</span>}
                 </div>
               </div>
               <div className="mt-8 pt-6 border-t border-primary/10 text-center">
