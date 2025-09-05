@@ -12,7 +12,7 @@ const BackgroundMusic = () => {
     if (!audio) return;
 
     // Set volume to a gentle level
-    audio.volume = 0.3;
+    audio.volume = 0.2;
     
     // Try to play automatically (modern browsers may block this)
     const playPromise = audio.play();
@@ -57,6 +57,7 @@ const BackgroundMusic = () => {
           src="/ambient-music.mp3" 
           type="audio/mpeg" 
         />
+        {/* Add your own ambient music file named 'ambient-music.mp3' to the public folder */}
         Your browser does not support the audio element.
       </audio>
       
