@@ -53,13 +53,11 @@ const BackgroundMusic = () => {
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
       >
-        {/* Using YouTube Audio Library ambient track */}
         <source 
-          src="https://www.youtube.com/audiolibrary/music/free-download/Ambient-1" 
+          src="/ambient-music.mp3" 
           type="audio/mpeg" 
         />
-        {/* Note: In production, you should host your own audio files */}
-        {/* For now, this will serve as a placeholder - the audio won't load but controls will work */}
+        Your browser does not support the audio element.
       </audio>
       
       <div className="flex gap-2">

@@ -1,8 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import LetterViewer from "./LetterViewer";
+import SharedJournal from "./SharedJournal";
 import Envelope from "./Envelope";
 import HeartLock from "./HeartLock";
 import { letterCategories, Letter } from "@/data/letters";
+import { Button } from "@/components/ui/button";
+import { BookOpen } from "lucide-react";
 
 interface LettersDashboardProps {
   onLogout: () => void;
@@ -10,16 +13,17 @@ interface LettersDashboardProps {
 
 const LettersDashboard = ({ onLogout }: LettersDashboardProps) => {
   const [selectedLetter, setSelectedLetter] = useState<Letter | null>(null);
+  const [showJournal, setShowJournal] = useState(false);
   const scrollPositionRef = useRef(0);
 
   // Restore scroll position when returning to dashboard
   useEffect(() => {
-    if (!selectedLetter) {
+    if (!selectedLetter && !showJournal) {
       setTimeout(() => {
         window.scrollTo(0, scrollPositionRef.current);
       }, 0);
     }
-  }, [selectedLetter]);
+  }, [selectedLetter, showJournal]);
 
   const handleLetterOpen = (letter: Letter) => {
     // Save current scroll position before opening letter
@@ -29,6 +33,12 @@ const LettersDashboard = ({ onLogout }: LettersDashboardProps) => {
 
   const handleBackToDashboard = () => {
     setSelectedLetter(null);
+    setShowJournal(false);
+  };
+
+  const handleJournalOpen = () => {
+    scrollPositionRef.current = window.scrollY;
+    setShowJournal(true);
   };
 
   if (selectedLetter) {
@@ -40,11 +50,24 @@ const LettersDashboard = ({ onLogout }: LettersDashboardProps) => {
     );
   }
 
+  if (showJournal) {
+    return (
+      <SharedJournal onBack={handleBackToDashboard} />
+    );
+  }
+
   return (
     <div className="min-h-screen love-letters-bg">
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
-          <div></div>
+          <Button
+            variant="ghost"
+            onClick={handleJournalOpen}
+            className="bg-white/10 text-white border border-white/20 hover:bg-white/20"
+          >
+            <BookOpen className="h-4 w-4 mr-2" />
+            Our Journal
+          </Button>
           <HeartLock onLogout={onLogout} />
         </div>
         <div className="text-center mb-12 px-4">
