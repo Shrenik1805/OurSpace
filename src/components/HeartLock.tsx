@@ -21,62 +21,24 @@ const HeartLock = ({ onLogout, className }: HeartLockProps) => {
 
   return (
     <Button
-      variant="ghost"
-      size="sm"
       onClick={handleLogout}
-      disabled={isLocking}
+      variant="ghost"
       className={cn(
-        "relative group bg-white/10 backdrop-blur-sm border border-white/20",
-        "hover:bg-white/20 text-white transition-all duration-300",
-        "rounded-full p-3 shadow-love",
-        isLocking && "animate-pulse",
+        "group relative bg-gradient-to-r from-pink-500/20 to-purple-500/20 hover:from-pink-500/30 hover:to-purple-500/30 border border-pink-300/30 hover:border-pink-400/50 transition-all duration-300 rounded-full px-6 py-3",
         className
       )}
+      disabled={isLocking}
     >
-      {/* Heart Background */}
-      <div className={cn(
-        "absolute inset-0 rounded-full transition-all duration-500",
-        "bg-gradient-to-br from-pink-400/20 to-red-400/20",
-        isLocking && "bg-gradient-to-br from-gray-400/30 to-gray-600/30"
-      )} />
-      
-      {/* Main Heart Icon */}
-      <div className="relative z-10 flex items-center justify-center">
-        <Heart 
-          size={20} 
-          className={cn(
-            "transition-all duration-500 fill-current",
-            isLocking ? "text-gray-300 scale-75" : "text-pink-200 group-hover:text-pink-100"
-          )} 
-        />
-        
-        {/* Lock Icon Overlay */}
-        <Lock 
-          size={12} 
-          className={cn(
-            "absolute transition-all duration-500",
-            isLocking 
-              ? "opacity-100 scale-100 text-white" 
-              : "opacity-0 scale-50 text-transparent"
-          )} 
-        />
-      </div>
-
-      {/* Animated Rings */}
-      {isLocking && (
-        <>
-          <div className="absolute inset-0 rounded-full border-2 border-white/30 animate-ping" />
-          <div className="absolute inset-0 rounded-full border border-pink-300/50 animate-pulse" />
-        </>
-      )}
-
-      {/* Tooltip */}
-      <div className={cn(
-        "absolute -bottom-8 left-1/2 transform -translate-x-1/2",
-        "text-xs text-white/80 opacity-0 group-hover:opacity-100",
-        "transition-opacity duration-300 whitespace-nowrap"
-      )}>
-        {isLocking ? "Locking..." : "Lock & Sign Out"}
+      <div className="flex items-center space-x-2">
+        {isLocking ? (
+          <Lock className="h-4 w-4 text-purple-600 animate-pulse" />
+        ) : (
+          <Heart className="h-4 w-4 text-pink-600 group-hover:text-pink-700 transition-colors" />
+        )}
+        {/* Dynamic text sizing using responsive classes */}
+        <span className="text-xs sm:text-sm md:text-base lg:text-lg text-gray-700 font-medium group-hover:text-gray-800 transition-colors">
+          {isLocking ? "Locking..." : "Lock & Sign Out"}
+        </span>
       </div>
     </Button>
   );
