@@ -4,7 +4,6 @@ import { Volume2, VolumeX } from "lucide-react";
 
 const BackgroundMusic = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
-  const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
 
   useEffect(() => {
@@ -14,27 +13,15 @@ const BackgroundMusic = () => {
     // Set volume to a gentle level
     audio.volume = 0.2;
     
-    // Try to play automatically (modern browsers may block this)
+    // Auto-play music always (removed play/pause functionality)
     const playPromise = audio.play();
     if (playPromise !== undefined) {
       playPromise.catch(() => {
-        // Auto-play blocked, user will need to interact first
-        setIsPlaying(false);
+        // Auto-play blocked, but will still attempt to play
+        console.log("Auto-play blocked by browser");
       });
     }
   }, []);
-
-  const togglePlay = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    if (isPlaying) {
-      audio.pause();
-    } else {
-      audio.play();
-    }
-    setIsPlaying(!isPlaying);
-  };
 
   const toggleMute = () => {
     const audio = audioRef.current;
@@ -45,40 +32,28 @@ const BackgroundMusic = () => {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed top-4 right-4 z-50">
       <audio
         ref={audioRef}
         loop
-        preload="auto"
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
+        autoPlay
+        onPlay={() => {}}
+        onPause={() => {}}
       >
-        <source 
-          src="/ambient-music.mp3" 
-          type="audio/mpeg" 
-        />
+        <source src="/ambient-music.mp3" type="audio/mpeg" />
         {/* Add your own ambient music file named 'ambient-music.mp3' to the public folder */}
         Your browser does not support the audio element.
       </audio>
       
-      <div className="flex gap-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={toggleMute}
-          className="bg-background/80 backdrop-blur-sm hover:bg-background/90 text-foreground"
-        >
-          {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={togglePlay}
-          className="bg-background/80 backdrop-blur-sm hover:bg-background/90 text-foreground"
-        >
-          {isPlaying ? "⏸️" : "▶️"}
-        </Button>
-      </div>
+      {/* Only mute button remains - play/pause button removed */}
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={toggleMute}
+        className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20"
+      >
+        {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+      </Button>
     </div>
   );
 };
