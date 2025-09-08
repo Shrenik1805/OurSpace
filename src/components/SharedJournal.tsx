@@ -2,9 +2,8 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Heart, BookOpen, Send } from "lucide-react";
+import { ArrowLeft, Heart, BookOpen, Send, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -117,54 +116,82 @@ const SharedJournal = ({ onBack }: SharedJournalProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-soft">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 p-4">
+      <div className="max-w-4xl mx-auto">
+        <div className="mb-6">
           <Button
-            variant="ghost"
             onClick={onBack}
-            className="mb-6 hover:bg-primary/5"
+            variant="ghost"
+            className="mb-4 text-purple-600 hover:text-purple-700"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Letters
           </Button>
-
-          <div className="text-center mb-8">
-            <div className="flex items-center justify-center mb-4">
-              <BookOpen className="h-8 w-8 text-primary mr-3" />
-              <h1 className="text-3xl font-serif text-foreground">
-                Our Shared Journal
-              </h1>
+          
+          <div className="text-center">
+            <div className="flex items-center justify-center mb-2">
+              <BookOpen className="h-8 w-8 text-purple-600 mr-3" />
+              <Heart className="h-6 w-6 text-pink-500" />
             </div>
-            <p className="text-muted-foreground">
+            <h1 className="text-4xl font-bold text-gray-800 mb-2">Our Shared Journal</h1>
+            <p className="text-lg text-gray-600">
               A space for us to share thoughts, memories, and moments together
             </p>
           </div>
+        </div>
 
+        <div className="space-y-6">
           {/* Add new entry form */}
-          <Card className="bg-gradient-letter border-primary/20 shadow-letter mb-8">
+          <Card className="border-2 border-purple-200 bg-white/80 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle className="flex items-center">
-                <Heart className="h-5 w-5 text-primary mr-2" fill="currentColor" />
+              <CardTitle className="flex items-center text-purple-800">
+                <Send className="h-5 w-5 mr-2" />
                 Write a New Entry
               </CardTitle>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <Label htmlFor="author">Your Name</Label>
-                  <Input
-                    id="author"
-                    value={authorName}
-                    onChange={(e) => setAuthorName(e.target.value)}
-                    placeholder="Who is writing this entry?"
-                    required
-                  />
+                  <Label htmlFor="author" className="text-sm font-medium text-gray-700">
+                    Choose Your Name
+                  </Label>
+                  {/* Changed from input field to button selection */}
+                  <div className="flex gap-3 mt-2">
+                    <Button
+                      type="button"
+                      variant={authorName === "TANYA" ? "default" : "outline"}
+                      onClick={() => setAuthorName("TANYA")}
+                      className={`flex-1 ${
+                        authorName === "TANYA" 
+                          ? "bg-pink-500 hover:bg-pink-600 text-white" 
+                          : "border-pink-300 text-pink-600 hover:bg-pink-50"
+                      }`}
+                    >
+                      <User className="h-4 w-4 mr-2" />
+                      TANYA
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={authorName === "SHRENIK" ? "default" : "outline"}
+                      onClick={() => setAuthorName("SHRENIK")}
+                      className={`flex-1 ${
+                        authorName === "SHRENIK" 
+                          ? "bg-purple-500 hover:bg-purple-600 text-white" 
+                          : "border-purple-300 text-purple-600 hover:bg-purple-50"
+                      }`}
+                    >
+                      <User className="h-4 w-4 mr-2" />
+                      SHRENIK
+                    </Button>
+                  </div>
                 </div>
+                
                 <div>
-                  <Label htmlFor="entry">Your Thoughts</Label>
+                  <Label htmlFor="content" className="text-sm font-medium text-gray-700">
+                    Your Thoughts
+                  </Label>
                   <Textarea
-                    id="entry"
+                    id="content"
                     value={newEntry}
                     onChange={(e) => setNewEntry(e.target.value)}
                     placeholder="What's on your heart today?"
@@ -172,55 +199,54 @@ const SharedJournal = ({ onBack }: SharedJournalProps) => {
                     required
                   />
                 </div>
+                
                 <Button 
                   type="submit" 
-                  disabled={submitting || !newEntry.trim() || !authorName.trim()}
-                  className="w-full"
+                  disabled={!newEntry.trim() || !authorName.trim() || submitting}
+                  className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
                 >
                   <Send className="h-4 w-4 mr-2" />
-                  {submitting ? "Sharing..." : "Share Entry"}
+                  {submitting ? "Adding..." : "Add Entry"}
                 </Button>
               </form>
             </CardContent>
           </Card>
 
           {/* Journal entries */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             {loading ? (
-              <Card className="bg-gradient-letter border-primary/20">
-                <CardContent className="p-8 text-center">
-                  <p className="text-muted-foreground">Loading journal entries...</p>
+              <Card className="border-purple-200 bg-white/60 backdrop-blur-sm">
+                <CardContent className="text-center py-8">
+                  <p className="text-gray-600">Loading journal entries...</p>
                 </CardContent>
               </Card>
             ) : entries.length === 0 ? (
-              <Card className="bg-gradient-letter border-primary/20">
-                <CardContent className="p-8 text-center">
-                  <BookOpen className="h-12 w-12 text-primary mx-auto mb-4" />
-                  <p className="text-muted-foreground">
+              <Card className="border-purple-200 bg-white/60 backdrop-blur-sm">
+                <CardContent className="text-center py-8">
+                  <BookOpen className="h-12 w-12 text-purple-300 mx-auto mb-4" />
+                  <p className="text-gray-600">
                     No entries yet. Be the first to share your thoughts!
                   </p>
                 </CardContent>
               </Card>
             ) : (
               entries.map((entry) => (
-                <Card key={entry.id} className="bg-gradient-letter border-primary/20 shadow-letter">
-                  <CardContent className="p-6">
-                    <div className="flex justify-between items-start mb-4">
+                <Card key={entry.id} className="border-purple-200 bg-white/60 backdrop-blur-sm hover:bg-white/80 transition-all">
+                  <CardContent className="pt-6">
+                    <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center">
-                        <Heart className="h-4 w-4 text-primary mr-2" fill="currentColor" />
-                        <span className="font-medium text-foreground">
+                        <Heart className="h-4 w-4 text-pink-500 mr-2" />
+                        <span className="font-semibold text-purple-800">
                           {entry.author_name}
                         </span>
                       </div>
-                      <span className="text-sm text-muted-foreground">
+                      <span className="text-sm text-gray-500">
                         {formatDate(entry.created_at)}
                       </span>
                     </div>
-                    <div className="prose prose-lg max-w-none">
-                      <p className="whitespace-pre-wrap text-foreground leading-relaxed">
-                        {entry.content}
-                      </p>
-                    </div>
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                      {entry.content}
+                    </p>
                   </CardContent>
                 </Card>
               ))
