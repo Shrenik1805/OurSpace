@@ -1,56 +1,51 @@
+// BackgroundMusic.js
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Volume2, VolumeX } from "lucide-react";
 
-const BackgroundMusic = () => {
-  const audioRef = useRef<HTMLAudioElement>(null);
+/**
+ * Props:
+ *   playOnLogin (boolean): Pass true to start music after login.
+ */
+const BackgroundMusic = ({ playOnLogin }) => {
+  const audioRef = useRef(null);
   const [isMuted, setIsMuted] = useState(false);
 
+  // Start playing ONLY after user logs in (user-triggered event)
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio) return;
-
-    // Set volume to a gentle level
+    if (!audio || !playOnLogin) return;
     audio.volume = 0.2;
-    
-    // Auto-play music always (removed play/pause functionality)
+    audio.muted = isMuted;
     const playPromise = audio.play();
     if (playPromise !== undefined) {
       playPromise.catch(() => {
-        // Auto-play blocked, but will still attempt to play
-        console.log("Auto-play blocked by browser");
+        // In rare cases, auto-play may still fail if no user gesture is detected
+        console.log("Auto-play blocked by browser; wait for further interaction");
       });
     }
-  }, []);
+  }, [playOnLogin, isMuted]);
 
+  // Toggle mute on/off
   const toggleMute = () => {
     const audio = audioRef.current;
     if (!audio) return;
-
     audio.muted = !isMuted;
     setIsMuted(!isMuted);
   };
 
   return (
     <div className="fixed top-4 right-4 z-50">
-      <audio
-        ref={audioRef}
-        loop
-        autoPlay
-        onPlay={() => {}}
-        onPause={() => {}}
-      >
+      <audio ref={audioRef} loop>
         <source src="/ambient-music.mp3" type="audio/mpeg" />
-        {/* Add your own ambient music file named 'ambient-music.mp3' to the public folder */}
         Your browser does not support the audio element.
       </audio>
-      
-      {/* Only mute button remains - play/pause button removed */}
       <Button
         variant="outline"
         size="icon"
         onClick={toggleMute}
         className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20"
+        aria-label={isMuted ? "Unmute music" : "Mute music"}
       >
         {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
       </Button>
