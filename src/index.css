@@ -1,6 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */
@@ -16,7 +20,7 @@ All colors MUST be HSL.
     --popover-foreground: 340 15% 25%;
     --primary: 340 65% 60%;
     --primary-foreground: 0 0% 100%;
-    
+
     --primary-soft: 340 45% 85%;
     --primary-glow: 340 55% 70%;
     --secondary: 320 30% 95%;
@@ -35,10 +39,12 @@ All colors MUST be HSL.
     --gradient-romantic: linear-gradient(135deg, hsl(340 65% 60%) 0%, hsl(320 55% 65%) 50%, hsl(300 45% 70%) 100%);
     --gradient-soft: linear-gradient(180deg, hsl(350 60% 98%) 0%, hsl(340 40% 96%) 100%);
     --gradient-letter: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(330 30% 98%) 100%);
-    
+    --gradient-sunset: linear-gradient(135deg, hsl(350 80% 65%) 0%, hsl(320 70% 70%) 50%, hsl(290 60% 75%) 100%);
+
     --shadow-gentle: 0 4px 20px hsl(340 20% 85% / 0.3);
     --shadow-letter: 0 8px 32px hsl(340 15% 75% / 0.2);
     --shadow-love: 0 0 40px hsl(340 65% 60% / 0.15);
+    --shadow-floating: 0 20px 40px hsl(340 20% 75% / 0.15);
 
     --radius: 1rem;
     --sidebar-background: 0 0% 98%;
@@ -50,6 +56,7 @@ All colors MUST be HSL.
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
@@ -57,7 +64,7 @@ All colors MUST be HSL.
     --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
+    --primary: 340 65% 60%;
     --primary-foreground: 222.2 47.4% 11.2%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -85,8 +92,26 @@ All colors MUST be HSL.
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-feature-settings: 'cv11', 'ss01';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Custom font classes */
+  .font-playfair {
+    font-family: 'Playfair Display', serif;
+  }
+
+  .font-dancing {
+    font-family: 'Dancing Script', cursive;
+  }
+
+  .font-inter {
+    font-family: 'Inter', sans-serif;
   }
 }
 
@@ -94,9 +119,242 @@ All colors MUST be HSL.
 .love-letters-bg {
   background: var(--gradient-romantic);
   min-height: 100vh;
+  position: relative;
+}
+
+.love-letters-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 20%, hsl(340 60% 70% / 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, hsl(320 60% 70% / 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, hsl(300 60% 70% / 0.05) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .letter-paper {
   background: var(--gradient-letter);
   box-shadow: var(--shadow-letter);
+  position: relative;
+  overflow: hidden;
+}
+
+.letter-paper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(45deg, transparent 48%, hsl(340 20% 95%) 49%, hsl(340 20% 95%) 51%, transparent 52%),
+    linear-gradient(-45deg, transparent 48%, hsl(340 15% 97%) 49%, hsl(340 15% 97%) 51%, transparent 52%);
+  background-size: 20px 20px;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Custom animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: var(--shadow-love); }
+  50% { box-shadow: var(--shadow-love), 0 0 60px hsl(340 65% 60% / 0.25); }
+}
+
+@keyframes heart-beat {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.1); }
+  50% { transform: scale(1); }
+  75% { transform: scale(1.05); }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(180deg); }
+}
+
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+/* Utility classes */
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.animate-heart-beat {
+  animation: heart-beat 1.5s ease-in-out infinite;
+}
+
+.animate-sparkle {
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+
+.animate-typewriter {
+  animation: typewriter 3s steps(40, end);
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid hsl(var(--primary));
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.7);
+}
+
+/* Focus styles for accessibility */
+.focus-visible {
+  @apply outline-none ring-2 ring-primary ring-offset-2;
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: var(--gradient-romantic);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-floating);
+}
+
+/* Letter envelope animation */
+.envelope-sealed {
+  transform-style: preserve-3d;
+}
+
+.envelope-flap {
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: top;
+}
+
+.envelope-sealed:hover .envelope-flap {
+  transform: rotateX(-180deg);
+}
+
+/* Romantic particle effects */
+.particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  font-size: 1rem;
+  color: hsl(var(--primary) / 0.2);
+  animation: particle-float 8s infinite linear;
+}
+
+@keyframes particle-float {
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Loading spinner */
+.loading-heart {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.loading-heart:after {
+  content: "💖";
+  display: block;
+  font-size: 2rem;
+  animation: heart-beat 1.2s infinite;
+}
+
+/* Responsive design improvements */
+@media (max-width: 640px) {
+  .love-letters-bg {
+    padding: 1rem;
+  }
+
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .love-letters-bg {
+    background: white;
+  }
+
+  .letter-paper {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
