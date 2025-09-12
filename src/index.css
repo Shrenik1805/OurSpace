@@ -738,7 +738,6 @@ select.form-control {
 }
 
 /* END PERPLEXITY DESIGN SYSTEM */
-```css
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
