@@ -4,6 +4,7 @@ import { ArrowLeft, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface Letter {
+  id: string;
   title: string;
   content: string;
   date?: string;
@@ -13,9 +14,11 @@ interface Letter {
 interface LetterViewerProps {
   letter: Letter;
   onBack: () => void;
+  isFavorite: boolean;
+  onToggleFavorite: () => void;
 }
 
-const LetterViewer = ({ letter, onBack }: LetterViewerProps) => {
+const LetterViewer = ({ letter, onBack, isFavorite, onToggleFavorite }: LetterViewerProps) => {
   const [displayedContent, setDisplayedContent] = useState("");
   const [isTyping, setIsTyping] = useState(true);
 
@@ -47,47 +50,83 @@ const LetterViewer = ({ letter, onBack }: LetterViewerProps) => {
   }, [letter.content]);
 
   return (
-    <div className="min-h-screen bg-gradient-soft">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-3xl mx-auto">
+    <div className="min-h-screen bg-gradient-romantic">
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        {/* Header with back button and favorite */}
+        <div className="flex justify-between items-center mb-8">
           <Button
-            variant="ghost"
             onClick={onBack}
-            className="mb-6 hover:bg-primary/5"
+            variant="outline"
+            size="sm"
+            className="text-muted-foreground hover:text-foreground"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
+            <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Letters
           </Button>
-          <Card className="bg-gradient-letter border-primary/20 shadow-letter">
-            <CardHeader className="text-center border-b border-primary/10">
-              <div className="flex items-center justify-center mb-4">
-                <Heart className="h-6 w-6 text-primary mr-2" fill="currentColor" />
-                <h1 className="text-2xl font-serif text-foreground">
-                  {letter.title}
-                </h1>
+          <Button
+            onClick={onToggleFavorite}
+            variant="ghost"
+            size="sm"
+            className={`favorite-heart ${isFavorite ? "favorited" : ""}`}
+          >
+            <Heart 
+              className={`w-5 h-5 ${
+                isFavorite 
+                  ? "fill-red-500 text-red-500" 
+                  : "text-muted-foreground"
+              }`} 
+            />
+            <span className="ml-2 text-sm">
+              {isFavorite ? "Favorited" : "Add to Favorites"}
+            </span>
+          </Button>
+        </div>
+
+        {/* Letter Card */}
+        <Card className="letter-paper">
+          <CardHeader className="text-center border-b border-border/50">
+            <div className="mb-4">
+              <div className="w-16 h-16 mx-auto bg-gradient-romantic rounded-full flex items-center justify-center mb-4 shadow-love">
+                <Heart className="w-8 h-8 text-white fill-white" />
               </div>
-              {letter.date && (
-                <p className="text-sm text-muted-foreground">
-                  Written with love on {letter.date}
+            </div>
+            <h1 className="text-3xl font-bold text-foreground mb-2">
+              {letter.title}
+            </h1>
+            {letter.date && (
+              <p className="text-muted-foreground italic">
+                Written with love on {letter.date}
+              </p>
+            )}
+          </CardHeader>
+          
+          <CardContent className="p-8">
+            <div className="prose prose-lg max-w-none">
+              <div className="letter-content whitespace-pre-line text-foreground/95 leading-relaxed text-lg">
+                {displayedContent}
+                {isTyping && <span className="animate-pulse">|</span>}
+              </div>
+            </div>
+            
+            {!isTyping && (
+              <div className="text-center mt-8 pt-8 border-t border-border/50">
+                <p className="text-muted-foreground italic font-medium">
+                  Always yours ❤️
                 </p>
-              )}
-            </CardHeader>
-            <CardContent className="p-8">
-              <div className="prose prose-lg max-w-none">
-                <div className="whitespace-pre-wrap text-foreground leading-relaxed font-serif text-lg">
-                  {displayedContent}
-                  {isTyping && <span className="animate-pulse text-primary">|</span>}
-                </div>
               </div>
-              <div className="mt-8 pt-6 border-t border-primary/10 text-center">
-                <div className="flex items-center justify-center text-primary">
-                  <Heart className="h-5 w-5 mr-2" fill="currentColor" />
-                  <span className="text-sm font-medium">Always yours</span>
-                  <Heart className="h-5 w-5 ml-2" fill="currentColor" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Navigation hint */}
+        <div className="text-center mt-8">
+          <Button
+            onClick={onBack}
+            variant="outline"
+            className="text-muted-foreground hover:text-foreground"
+          >
+            ← Choose Another Letter
+          </Button>
         </div>
       </div>
     </div>
