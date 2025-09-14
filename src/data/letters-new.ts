@@ -1,31 +1,27 @@
 export interface Letter {
-  title: string;
-  content: string;
-  date?: string;
-  preview: string;
+ title: string;
+ content: string;
+ date?: string;
+ preview: string;
 }
 
 export interface LetterCategory {
-  title: string;
-  tag: string;
-  letters: Letter[];
+ title: string;
+ tag: string;
+ letters: Letter[];
 }
-
-// Import the new letters data
-import { letterCategories as newLetterCategories } from "./letters-new";
 
 // Categories organized by mood-based groupings
 export const letterCategories: Record<string, LetterCategory> = {
-  ...newLetterCategories,
-  // ✨ Emotional Support (Happy, sad, missing you)
-  happy: {
-    title: "Celebrate Your Joy",
-    tag: "shine brighter ✨",
-    letters: [
-      {
-        title: "Your Beautiful Smile",
-        preview: "The way your eyes light up when you're happy...",
-        content: `My sunshine,
+ // ✨ Emotional Support (Happy, sad, missing you)
+ happy: {
+ title: "Celebrate Your Joy",
+ tag: "shine brighter ✨",
+ letters: [
+ {
+ title: "Your Beautiful Smile",
+ preview: "The way your eyes light up when you're happy...",
+ content: `My sunshine,
 
 I wish you could see yourself the way I see you when you're happy. Your smile doesn't just light up the room - it lights up my entire world.
 
@@ -39,17 +35,17 @@ Keep shining, my love. The world needs your light.
 
 Celebrating you always,
 Your biggest fan ✨`
-      }
-    ]
-  },
-  low: {
-    title: "Lift Your Spirit",
-    tag: "need encouragement 💪",
-    letters: [
-      {
-        title: "You Are Enough",
-        preview: "Exactly as you are, right now...",
-        content: `My perfect imperfection,
+ }
+ ]
+ },
+ low: {
+ title: "Lift Your Spirit",
+ tag: "need encouragement 💪",
+ letters: [
+ {
+ title: "You Are Enough",
+ preview: "Exactly as you are, right now...",
+ content: `My perfect imperfection,
 
 I need you to hear this today: YOU ARE ENOUGH.
 
@@ -67,17 +63,17 @@ You. Are. Enough.
 
 Loving every part of you,
 Your reminder that you're already whole ❤️`
-      }
-    ]
-  },
-  missme: {
-    title: "Missing You Too",
-    tag: "feel our connection 💕",
-    letters: [
-      {
-        title: "I'm Always With You",
-        preview: "Distance means nothing when you mean everything...",
-        content: `My heart,
+ }
+ ]
+ },
+ missme: {
+ title: "Missing You Too",
+ tag: "feel our connection 💕",
+ letters: [
+ {
+ title: "I'm Always With You",
+ preview: "Distance means nothing when you mean everything...",
+ content: `My heart,
 
 I know you miss me, and I miss you too. More than words can express. But I want you to know something - even when we're apart, I'm never really gone.
 
@@ -91,19 +87,19 @@ Until then, carry my love with you everywhere you go. You are never alone.
 
 Missing you endlessly,
 Your heart that beats for you 💕`
-      }
-    ]
-  },
+ }
+ ]
+ },
 
-  // ✨ Daily Life (Wake up, bedtime, just because)
-  wakeup: {
-    title: "Good Morning Sunshine",
-    tag: "start your day ☀️",
-    letters: [
-      {
-        title: "Good Morning, Beautiful",
-        preview: "Another day to love you starts now...",
-        content: `Good morning, my beautiful love,
+ // ✨ Daily Life (Wake up, bedtime, just because)
+ wakeup: {
+ title: "Good Morning Sunshine",
+ tag: "start your day ☀️",
+ letters: [
+ {
+ title: "Good Morning, Beautiful",
+ preview: "Another day to love you starts now...",
+ content: `Good morning, my beautiful love,
 
 As you open your eyes to a new day, I want you to know that somewhere, someone is thinking about you with the biggest smile on their face. That someone is me.
 
@@ -122,17 +118,17 @@ Have the most wonderful day, my love.
 
 Starting each day loving you,
 Your devoted morning person ☀️`
-      }
-    ]
-  },
-  bedtime: {
-    title: "Sweet Dreams",
-    tag: "sleep peacefully 🌙",
-    letters: [
-      {
-        title: "Sleep Well, My Love",
-        preview: "As you close your eyes tonight...",
-        content: `My sweetest dream,
+ }
+ ]
+ },
+ bedtime: {
+ title: "Sweet Dreams",
+ tag: "sleep peacefully 🌙",
+ letters: [
+ {
+ title: "Sleep Well, My Love",
+ preview: "As you close your eyes tonight...",
+ content: `My sweetest dream,
 
 As you prepare for sleep tonight, I want your last thoughts to be filled with love and peace.
 
@@ -148,17 +144,17 @@ Sleep well, my love. Tomorrow is another day to love you.
 
 With all my love and gentle kisses,
 Your guardian of sweet dreams 🌙✨`
-      }
-    ]
-  },
-  daily: {
-    title: "Just Because",
-    tag: "deserve love always 💭",
-    letters: [
-      {
-        title: "Thinking of You",
-        preview: "Just because I love you...",
-        content: `My dearest,
+ }
+ ]
+ },
+ daily: {
+ title: "Just Because",
+ tag: "deserve love always 💭",
+ letters: [
+ {
+ title: "Thinking of You",
+ preview: "Just because I love you...",
+ content: `My dearest,
 
 No special reason for this letter except that you crossed my mind (which happens about every 5 minutes, to be honest), and I wanted you to know.
 
@@ -172,19 +168,19 @@ Either way, I love you.
 
 Just because,
 Your person who thinks about you constantly 💭❤️`
-      }
-    ]
-  },
+ }
+ ]
+ },
 
-  // ✨ Special Occasions (Birthday, Montiversary)
-  birthday: {
-    title: "Birthday Magic",
-    tag: "celebrate you 🎂",
-    letters: [
-      {
-        title: "Happy Birthday, My Love",
-        preview: "Today we celebrate the most amazing person I know...",
-        content: `My birthday angel,
+ // ✨ Special Occasions (Birthday, Montiversary)
+ birthday: {
+ title: "Birthday Magic",
+ tag: "celebrate you 🎂",
+ letters: [
+ {
+ title: "Happy Birthday, My Love",
+ preview: "Today we celebrate the most amazing person I know...",
+ content: `My birthday angel,
 
 Happy, happy birthday to the most incredible person in the world! Today is all about celebrating you, and I couldn't be more excited.
 
@@ -202,17 +198,17 @@ Have the most wonderful day, birthday girl/boy!
 
 Celebrating you always,
 Your birthday party planner 🎂🎉`
-      }
-    ]
-  },
-  montiversary: {
-    title: "Monthly Milestone",
-    tag: "celebrate our love 💕",
-    letters: [
-      {
-        title: "Another Month of Love",
-        preview: "Celebrating another beautiful month together...",
-        content: `My love,
+ }
+ ]
+ },
+ montiversary: {
+ title: "Monthly Milestone",
+ tag: "celebrate our love 💕",
+ letters: [
+ {
+ title: "Another Month of Love",
+ preview: "Celebrating another beautiful month together...",
+ content: `My love,
 
 Happy montiversary! Another month of loving you, learning about you, and growing together. Time feels different when you're in love - some days feel like forever, and some months feel like minutes.
 
@@ -226,19 +222,19 @@ I love you more today than I did a month ago, and I'll love you even more a mont
 
 Celebrating our love always,
 Your devoted partner 💕`
-      }
-    ]
-  },
+ }
+ ]
+ },
 
-  // ✨ Tough Times (Anxious, stressed, bad day, monthly warrior)
-  anxious: {
-    title: "For Your Anxious Heart",
-    tag: "need calm & comfort 🫂",
-    letters: [
-      {
-        title: "Breathe With Me",
-        preview: "Remember, my love, you are stronger than any storm...",
-        content: `My dearest love,
+ // ✨ Tough Times (Anxious, stressed, bad day, monthly warrior)
+ anxious: {
+ title: "For Your Anxious Heart",
+ tag: "need calm & comfort 🫂",
+ letters: [
+ {
+ title: "Breathe With Me",
+ preview: "Remember, my love, you are stronger than any storm...",
+ content: `My dearest love,
 
 I know right now your mind feels like it's racing, and the world might seem overwhelming. But I want you to take a deep breath with me.
 
@@ -256,17 +252,17 @@ You've got this, beautiful. And I've got you.
 
 All my love and strength,
 Your devoted partner ❤️`
-      }
-    ]
-  },
-  stressed: {
-    title: "Breathe Through It",
-    tag: "find your calm 🌊",
-    letters: [
-      {
-        title: "One Thing at a Time",
-        preview: "You don't have to carry it all at once...",
-        content: `My overwhelmed darling,
+ }
+ ]
+ },
+ stressed: {
+ title: "Breathe Through It",
+ tag: "find your calm 🌊",
+ letters: [
+ {
+ title: "One Thing at a Time",
+ preview: "You don't have to carry it all at once...",
+ content: `My overwhelmed darling,
 
 I know everything feels like too much right now. Your to-do list is endless, deadlines are looming, people are depending on you, and it feels like the world is spinning too fast.
 
@@ -286,17 +282,17 @@ You've got this, and I've got you.
 
 Breathing with you,
 Your calm in every storm 🌊💙`
-      }
-    ]
-  },
-  badday: {
-    title: "Tomorrow's Sunshine",
-    tag: "better days ahead 🌈",
-    letters: [
-      {
-        title: "Tomorrow Will Be Better",
-        preview: "Bad days don't last, but resilient people do...",
-        content: `My strong survivor,
+ }
+ ]
+ },
+ badday: {
+ title: "Tomorrow's Sunshine",
+ tag: "better days ahead 🌈",
+ letters: [
+ {
+ title: "Tomorrow Will Be Better",
+ preview: "Bad days don't last, but resilient people do...",
+ content: `My strong survivor,
 
 I can tell today has been rough on you. Nothing went right, everything felt hard, and you probably just want this day to be over.
 
@@ -314,17 +310,17 @@ You've gotten through 100% of your bad days so far. That's a perfect track recor
 
 Standing by you through it all,
 Your constant support system 🌈💪`
-      }
-    ]
-  },
-  period: {
-    title: "Monthly Warrior",
-    tag: "extra tender care 🌸",
-    letters: [
-      {
-        title: "You're Still Perfect",
-        preview: "Your body is doing something amazing...",
-        content: `My beautiful strong woman,
+ }
+ ]
+ },
+ period: {
+ title: "Monthly Warrior",
+ tag: "extra tender care 🌸",
+ letters: [
+ {
+ title: "You're Still Perfect",
+ preview: "Your body is doing something amazing...",
+ content: `My beautiful strong woman,
 
 I know you don't feel your best right now. You're cramping, you're uncomfortable, you feel bloated and emotional and just not like yourself. But I want you to know something - you are still absolutely perfect to me.
 
@@ -340,7 +336,7 @@ I love you through every day of your cycle, through every mood, through every cr
 
 Taking care of you always,
 Your understanding partner 🌸💕`
-      }
-    ]
-  }
+ }
+ ]
+ }
 };
