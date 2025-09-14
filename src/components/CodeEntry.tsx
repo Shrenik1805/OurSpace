@@ -98,10 +98,9 @@ const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
       opacity: 0.6,
     }}
     animate={{
-      translateX: [0, 20, -10, 0],
-      translateY: [0, -30, 15, 0],
-      rotate: [0, 360],
-      scale: [1, 1.2, 0.8, 1],
+      translateX: [0, 10, 0, -10, 0],   // side-to-side bounce
+      translateY: [0, -20, 0, -10, 0], // vertical bounce
+      scale: [1, 1.1, 1, 0.9, 1],     // slight scale for bounce effect
     }}
     transition={{
       duration: element.duration,
@@ -113,6 +112,7 @@ const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
     {element.emoji}
   </motion.div>
 ))}
+
 
       </div>
 
