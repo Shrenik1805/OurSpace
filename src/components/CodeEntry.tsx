@@ -19,14 +19,16 @@ const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Floating elements animation
-  const floatingElements = Array.from({ length: 20 }, (_, i) => ({
+  const [floatingElements] = useState(() =>
+  Array.from({ length: 20 }, (_, i) => ({
     id: i,
     emoji: ['💕', '💖', '💗', '💝', '💘', '✨', '🌸', '🦋', '🌙', '⭐'][i % 10],
     delay: Math.random() * 5,
-    duration: 3 + Math.random() * 4,
+    duration: 8 + Math.random() * 4,
     x: Math.random() * 100,
     y: Math.random() * 100,
-  }));
+  }))
+);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
