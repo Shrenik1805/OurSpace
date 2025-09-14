@@ -11,8 +11,12 @@ export interface LetterCategory {
   letters: Letter[];
 }
 
+// Import the new letters data
+import { letterCategories as newLetterCategories } from "./letters-new";
+
 // Categories organized by mood-based groupings
 export const letterCategories: Record<string, LetterCategory> = {
+  ...newLetterCategories,
   // ✨ Emotional Support (Happy, sad, missing you)
   happy: {
     title: "Celebrate Your Joy",
