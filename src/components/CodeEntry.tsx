@@ -92,7 +92,7 @@ const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-red-50 relative overflow-hidden flex items-center justify-center p-4">
       {/* Floating background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {floatingElements.map((element) => (
+    {floatingElements.map((element) => (
   <motion.div
     key={element.id}
     className="absolute text-2xl select-none"
@@ -121,7 +121,7 @@ const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
       scale: [1, 1.1, 1, 0.9, 1],
     }}
     transition={{
-      duration: element.duration,
+      duration: 8 + Math.random() * 4, // slower medium pace: 8 to 12 seconds
       delay: element.delay,
       repeat: Infinity,
       ease: "easeInOut",
@@ -130,6 +130,7 @@ const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
     {element.emoji}
   </motion.div>
 ))}
+
 
       </div>
 
