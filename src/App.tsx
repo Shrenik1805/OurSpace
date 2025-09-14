@@ -43,29 +43,56 @@ const App: React.FC = () => {
     }
   }, []);
 
+  // Listen for auth changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const authStatus = localStorage.getItem("loveLettersAuth");
+      setIsAuthenticated(authStatus === "true");
+    };
+
+    // Listen for localStorage changes
+    window.addEventListener('storage', handleStorageChange);
+
+    // Also check periodically for auth changes within the same tab
+    const interval = setInterval(() => {
+      const authStatus = localStorage.getItem("loveLettersAuth");
+      const currentAuth = authStatus === "true";
+      if (currentAuth !== isAuthenticated) {
+        setIsAuthenticated(currentAuth);
+      }
+    }, 1000);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [isAuthenticated]);
+
   return (
-    <ErrorBoundary>
-      <ThemeProvider defaultTheme="light" storageKey="hellolove-theme">
-        <QueryClientProvider client={queryClient}>
-          <TooltipProvider>
-            <BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+        <TooltipProvider>
+          <BrowserRouter>
+            <ErrorBoundary>
               <Routes>
                 <Route path="/" element={<Index />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
 
-              {/* Background Music - only play when authenticated */}
-              <BackgroundMusic playOnLogin={isAuthenticated} />
+              {/* Background Music - only show when authenticated */}
+              {isAuthenticated && (
+                <BackgroundMusic playOnLogin={isAuthenticated} />
+              )}
 
               {/* Toast notifications */}
               <Toaster />
               <Sonner />
-            </BrowserRouter>
-          </TooltipProvider>
-        </QueryClientProvider>
+            </ErrorBoundary>
+          </BrowserRouter>
+        </TooltipProvider>
       </ThemeProvider>
-    </ErrorBoundary>
+    </QueryClientProvider>
   );
 };
 
