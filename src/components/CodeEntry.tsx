@@ -1,94 +1,288 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Heart } from "lucide-react";
+import { Heart, Sparkles, Lock, Eye, EyeOff } from "lucide-react";
 
 interface CodeEntryProps {
   onAuthenticated: () => void;
 }
 
-const SECRET_CODE = import.meta.env.VITE_SECRET_CODE || "Loveu3000"; // Use env variable or fallback
+const SECRET_CODE = import.meta.env.VITE_SECRET_CODE || "Loveu3000";
 
 const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
+  const [showCode, setShowCode] = useState(false);
+  const [attempts, setAttempts] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Floating elements animation
+  const floatingElements = Array.from({ length: 20 }, (_, i) => ({
+    id: i,
+    emoji: ['💕', '💖', '💗', '💝', '💘', '✨', '🌸', '🦋', '🌙', '⭐'][i % 10],
+    delay: Math.random() * 5,
+    duration: 3 + Math.random() * 4,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+  }));
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+    setError("");
+
+    // Add a small delay for better UX
+    await new Promise(resolve => setTimeout(resolve, 800));
+
     if (code === SECRET_CODE) {
       localStorage.setItem("loveLettersAuth", "true");
       onAuthenticated();
     } else {
-      setError("Incorrect code. Try again, my love 💕");
+      setAttempts(prev => prev + 1);
+      setError(attempts >= 2 ? "Take your time, my love. Think of our special moment 💕" : "Not quite right. Try our special code 💕");
       setCode("");
+    }
+    
+    setIsSubmitting(false);
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.6, ease: "easeOut" }
+    }
+  };
+
+  const cardVariants = {
+    hidden: { scale: 0.9, opacity: 0, y: 50 },
+    visible: {
+      scale: 1,
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+        delay: 0.2
+      }
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-soft flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Graffiti Designs */}
-      <div className="absolute inset-0 pointer-events-none">
-        {/* Heart shapes scattered */}
-        <div className="absolute top-20 left-10 text-primary/20 text-4xl rotate-12">💕</div>
-        <div className="absolute top-32 right-16 text-primary/15 text-6xl -rotate-12">💖</div>
-        <div className="absolute bottom-40 left-20 text-primary/20 text-3xl rotate-45">💗</div>
-        <div className="absolute bottom-20 right-24 text-primary/15 text-5xl -rotate-6">💝</div>
-        <div className="absolute top-40 left-1/2 text-primary/10 text-7xl -rotate-12">💘</div>
-
-        {/* Cute doodles */}
-        <div className="absolute top-60 right-8 text-primary/20 text-2xl rotate-12">✨</div>
-        <div className="absolute bottom-60 left-8 text-primary/15 text-3xl -rotate-12">🌸</div>
-        <div className="absolute top-80 left-32 text-primary/20 text-2xl rotate-45">🦋</div>
-        <div className="absolute bottom-32 right-32 text-primary/15 text-2xl -rotate-45">🌙</div>
-
-        {/* Love messages in background */}
-        <div className="absolute top-16 right-20 text-primary/10 text-sm font-serif rotate-12">love you</div>
-        <div className="absolute bottom-16 left-16 text-primary/10 text-sm font-serif -rotate-12">always ♡</div>
-        <div className="absolute top-72 right-4 text-primary/10 text-xs font-serif rotate-6">forever</div>
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-red-50 relative overflow-hidden flex items-center justify-center p-4">
+      {/* Floating background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {floatingElements.map((element) => (
+          <motion.div
+            key={element.id}
+            className="absolute text-2xl select-none"
+            initial={{
+              x: `${element.x}%`,
+              y: `${element.y}%`,
+              opacity: 0.6,
+            }}
+            animate={{
+              x: [`${element.x}%`, `${element.x + 20}%`, `${element.x - 10}%`, `${element.x}%`],
+              y: [`${element.y}%`, `${element.y - 30}%`, `${element.y + 15}%`, `${element.y}%`],
+              rotate: [0, 360],
+              scale: [1, 1.2, 0.8, 1],
+            }}
+            transition={{
+              duration: element.duration,
+              delay: element.delay,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          >
+            {element.emoji}
+          </motion.div>
+        ))}
       </div>
 
-      <div className="w-full max-w-md relative z-10">
-        <Card className="shadow-love border-primary/20 bg-gradient-letter">
-          <CardHeader className="text-center space-y-4">
-            <div className="mx-auto w-16 h-16 bg-gradient-romantic rounded-full flex items-center justify-center shadow-gentle">
-              <Heart className="h-8 w-8 text-white" fill="currentColor" />
-            </div>
-            <CardTitle className="text-2xl font-serif text-foreground">
-              Love Letters
-            </CardTitle>
-            <CardDescription className="text-muted-foreground text-base">
-              Enter our special code to access your personalized messages
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Input
-                  type="password"
-                  placeholder="Enter the secret code..."
-                  value={code}
-                  onChange={(e) => setCode(e.target.value)}
-                  className="text-center text-lg tracking-wide border-primary/30 focus:border-primary"
-                  autoFocus
-                />
-                {error && (
-                  <p className="text-sm text-destructive text-center">{error}</p>
-                )}
-              </div>
-              <Button
-                type="submit"
-                className="w-full bg-gradient-romantic hover:opacity-90 text-white font-medium py-6 text-lg shadow-gentle transition-all duration-300"
+      {/* Romantic quotes in background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          className="absolute top-20 left-10 text-rose-300/40 text-lg font-script transform -rotate-12"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 1.5, duration: 0.8 }}
+        >
+          "Love you to the moon and back"
+        </motion.div>
+        <motion.div
+          className="absolute top-32 right-16 text-pink-300/40 text-lg font-script transform rotate-6"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 2, duration: 0.8 }}
+        >
+          "Always & Forever ♡"
+        </motion.div>
+        <motion.div
+          className="absolute bottom-24 left-20 text-red-300/40 text-lg font-script transform -rotate-6"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 2.5, duration: 0.8 }}
+        >
+          "You are my sunshine"
+        </motion.div>
+      </div>
+
+      {/* Main card */}
+      <motion.div
+        className="relative z-10 w-full max-w-md"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <Card className="backdrop-blur-lg bg-white/90 border border-rose-200/50 shadow-2xl">
+          {/* Decorative header gradient */}
+          <div className="h-2 bg-gradient-to-r from-rose-400 via-pink-400 to-red-400 rounded-t-lg"></div>
+          
+          <motion.div variants={cardVariants}>
+            <CardHeader className="text-center space-y-2 pb-4">
+              <motion.div
+                className="w-16 h-16 mx-auto bg-gradient-to-br from-rose-400 to-pink-500 rounded-full flex items-center justify-center mb-4"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                Open My Letters
-              </Button>
-            </form>
-          </CardContent>
+                <Heart className="w-8 h-8 text-white" fill="currentColor" />
+              </motion.div>
+              
+              <motion.div variants={itemVariants}>
+                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
+                  Love Letters
+                </CardTitle>
+              </motion.div>
+              
+              <motion.div variants={itemVariants}>
+                <CardDescription className="text-rose-600/70 text-base">
+                  Enter our special code to unlock your personalized messages
+                </CardDescription>
+              </motion.div>
+            </CardHeader>
+
+            <CardContent className="space-y-6">
+              <motion.form onSubmit={handleSubmit} className="space-y-4" variants={itemVariants}>
+                <div className="relative">
+                  <Input
+                    type={showCode ? "text" : "password"}
+                    placeholder="Enter the secret code..."
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                    className="text-center text-lg tracking-wider border-rose-200 focus:border-rose-400 focus:ring-rose-400 pr-12 py-6 rounded-xl bg-rose-50/50"
+                    autoFocus
+                    disabled={isSubmitting}
+                    maxLength={20}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCode(!showCode)}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-rose-400 hover:text-rose-600 transition-colors"
+                  >
+                    {showCode ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
+
+                <AnimatePresence mode="wait">
+                  {error && (
+                    <motion.p
+                      className="text-rose-500 text-sm text-center bg-rose-50 p-3 rounded-lg"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {error}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+
+                <motion.div variants={itemVariants}>
+                  <Button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white py-6 rounded-xl font-medium text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                    disabled={isSubmitting || !code.trim()}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <AnimatePresence mode="wait">
+                      {isSubmitting ? (
+                        <motion.div
+                          key="loading"
+                          className="flex items-center gap-2"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                        >
+                          <motion.div
+                            className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                          />
+                          Unlocking...
+                        </motion.div>
+                      ) : (
+                        <motion.span
+                          key="unlock"
+                          className="flex items-center gap-2"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                        >
+                          <Lock className="w-5 h-5" />
+                          Unlock Letters
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                  </Button>
+                </motion.div>
+              </motion.form>
+
+              <motion.div className="space-y-2 text-center" variants={itemVariants}>
+                <p className="text-rose-400 text-sm">
+                  Made with love just for you
+                </p>
+                {attempts > 0 && (
+                  <motion.p
+                    className="text-rose-300 text-xs italic"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    Hint: Think of our special number... 💕
+                  </motion.p>
+                )}
+              </motion.div>
+            </CardContent>
+          </motion.div>
         </Card>
-        <p className="text-center text-sm text-muted-foreground mt-4">
-          Made with love just for you ✨
-        </p>
-      </div>
+      </motion.div>
+
+      {/* Bottom decoration */}
+      <motion.div
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 3, duration: 0.8 }}
+      >
+        <Sparkles className="w-6 h-6 text-rose-400/60" />
+      </motion.div>
     </div>
   );
 };
