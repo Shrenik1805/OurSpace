@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Heart, Mail } from "lucide-react";
+import { Heart, Mail, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 interface EnvelopeProps {
   title: string;
@@ -19,112 +20,200 @@ const Envelope = ({ title, tag, onClick, className }: EnvelopeProps) => {
     setTimeout(() => {
       onClick();
       setIsClicked(false);
-    }, 300);
+    }, 400);
   };
 
   return (
-    <div className={cn("relative group", className)}>
-      <Button
-        onClick={handleClick}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        className={cn(
-          "relative w-full h-36 sm:h-32 p-4 bg-gradient-to-br from-pink-50 to-rose-100",
-          "border-2 border-pink-200 hover:border-pink-300",
-          "transform transition-all duration-300 ease-out",
-          "hover:scale-105 hover:shadow-xl hover:shadow-pink-200/60",
-          "rounded-xl overflow-visible",
-          "active:scale-95 touch-manipulation",
-          isClicked && "animate-envelope-open scale-95",
-          isHovered && "shadow-2xl shadow-pink-300/40 -translate-y-1"
-        )}
-        variant="ghost"
-      >
-        {/* Envelope Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-2 left-2 text-pink-300">
-            <Heart size={16} />
-          </div>
-          <div className="absolute top-2 right-2 text-pink-300">
-            <Heart size={12} />
-          </div>
-          <div className="absolute bottom-2 left-2 text-pink-300">
-            <Heart size={14} />
-          </div>
-          <div className="absolute bottom-2 right-2 text-pink-300">
-            <Heart size={10} />
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center">
-          <div className="mb-2">
-            <Mail 
-              size={24} 
-              className={cn(
-                "text-pink-600 transition-transform duration-300",
-                isHovered && "scale-110 rotate-3"
-              )} 
-            />
-          </div>
-          
-          <h3 className="text-sm font-semibold text-pink-800 mb-2 leading-tight">
-            {title}
-          </h3>
-          
-          <p className="text-xs text-pink-600/90 font-medium">
-            {tag}
-          </p>
-        </div>
-      </Button>
-
-      {/* Floating Hearts Around Envelope */}
-      {isHovered && (
-        <div className="absolute -inset-4 pointer-events-none">
-          <div className="absolute -top-2 -left-2 animate-bounce delay-100">
-            <Heart size={10} className="text-pink-300 fill-current opacity-70" />
-          </div>
-          <div className="absolute -top-2 -right-2 animate-bounce delay-200">
-            <Heart size={8} className="text-rose-300 fill-current opacity-80" />
-          </div>
-          <div className="absolute -bottom-2 -left-2 animate-bounce delay-300">
-            <Heart size={9} className="text-pink-400 fill-current opacity-60" />
-          </div>
-          <div className="absolute -bottom-2 -right-2 animate-bounce delay-400">
-            <Heart size={7} className="text-rose-400 fill-current opacity-75" />
-          </div>
-          <div className="absolute top-1/2 -left-3 animate-bounce delay-500">
-            <Heart size={6} className="text-pink-200 fill-current opacity-50" />
-          </div>
-          <div className="absolute top-1/2 -right-3 animate-bounce delay-600">
-            <Heart size={8} className="text-rose-200 fill-current opacity-65" />
-          </div>
-        </div>
+    <motion.div
+      layout
+      whileHover={{ y: -8, scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      className={cn(
+        "relative group cursor-pointer",
+        "bg-gradient-to-br from-white via-pink-50/30 to-rose-50/50",
+        "rounded-2xl shadow-lg hover:shadow-2xl",
+        "transition-all duration-500 ease-out",
+        "border border-primary/10 hover:border-primary/30",
+        "overflow-hidden",
+        className
       )}
-
-      {/* Enhanced Envelope Flap with Opening Animation */}
-      <div 
-        className={cn(
-          "absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-pink-300 to-rose-300",
-          "transform origin-top transition-all duration-700 ease-out rounded-t-xl",
-          isClicked && "scale-y-0 -rotate-x-90",
-          isHovered && "shadow-md"
-        )}
-      />
-
-      {/* Wax Seal Effect */}
-      <div className={cn(
-        "absolute top-1 right-2 w-3 h-3 rounded-full",
-        "bg-gradient-to-br from-rose-400 to-pink-500",
-        "transition-all duration-500 shadow-sm",
-        isClicked && "scale-0 opacity-0"
-      )}>
-        <div className="absolute inset-0.5 rounded-full bg-rose-300/50" />
+      onClick={handleClick}
+    >
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent" />
+        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
+          <pattern id="hearts" patternUnits="userSpaceOnUse" width="20" height="20">
+            <text x="10" y="15" fontSize="8" textAnchor="middle" fill="currentColor" opacity="0.1">💕</text>
+          </pattern>
+          <rect width="100" height="100" fill="url(#hearts)" />
+        </svg>
       </div>
 
-      {/* Bottom Shadow */}
-      <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-4 h-1 bg-gradient-to-r from-pink-200 to-rose-200 rounded-full opacity-50" />
-    </div>
+      {/* Floating Hearts Animation - Only on Hover */}
+      <motion.div 
+        className="absolute inset-0 pointer-events-none"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isHovered ? 1 : 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        {[...Array(4)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute text-pink-400/60"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={isHovered ? {
+              scale: [0, 1, 0.8],
+              opacity: [0, 1, 0],
+              x: [0, Math.cos(i * 90) * 30],
+              y: [0, Math.sin(i * 90) * 30],
+            } : {}}
+            transition={{
+              duration: 1.5,
+              repeat: isHovered ? Infinity : 0,
+              delay: i * 0.2,
+              ease: "easeInOut"
+            }}
+            style={{
+              left: "50%",
+              top: "50%",
+            }}
+          >
+            💖
+          </motion.div>
+        ))}
+      </motion.div>
+
+      {/* Main Content */}
+      <div className="relative p-6 h-48 flex flex-col justify-between">
+        {/* Header with Sparkle */}
+        <div className="flex items-start justify-between">
+          <motion.div
+            animate={isHovered ? { rotate: 360 } : { rotate: 0 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            className="text-2xl"
+          >
+            💌
+          </motion.div>
+          
+          <motion.div
+            animate={isHovered ? { 
+              scale: [1, 1.2, 1],
+              rotate: [0, 180, 360]
+            } : {}}
+            transition={{ duration: 1, repeat: isHovered ? Infinity : 0 }}
+            className="text-yellow-400/70"
+          >
+            <Sparkles className="h-4 w-4" />
+          </motion.div>
+        </div>
+
+        {/* Title and Tag */}
+        <div className="text-center space-y-3">
+          <motion.h3 
+            className="text-xl font-semibold text-primary font-playfair leading-tight"
+            animate={isHovered ? { scale: 1.05 } : { scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            {title}
+          </motion.h3>
+          
+          <motion.div
+            className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-full"
+            animate={isHovered ? { scale: 1.05 } : { scale: 1 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
+            <span className="text-sm text-primary/80 font-medium">{tag}</span>
+          </motion.div>
+        </div>
+
+        {/* Bottom Decoration */}
+        <div className="flex justify-center">
+          <motion.div
+            className="flex gap-1"
+            animate={isHovered ? { scale: 1.1 } : { scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            {[...Array(3)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="w-1.5 h-1.5 bg-primary/40 rounded-full"
+                animate={isHovered ? {
+                  scale: [1, 1.5, 1],
+                  opacity: [0.4, 1, 0.4]
+                } : {}}
+                transition={{
+                  duration: 0.8,
+                  repeat: isHovered ? Infinity : 0,
+                  delay: i * 0.2,
+                }}
+              />
+            ))}
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Enhanced Envelope Flap with Opening Animation */}
+      <motion.div
+        className={cn(
+          "absolute top-0 left-0 right-0 h-20",
+          "bg-gradient-to-b from-primary/20 to-primary/10",
+          "rounded-t-2xl",
+          "origin-top transition-all duration-500 ease-out",
+          isHovered && !isClicked && "transform rotate-x-12",
+          isClicked && "transform rotate-x-180"
+        )}
+        style={{
+          transformStyle: "preserve-3d",
+          clipPath: isHovered || isClicked 
+            ? "polygon(0 0, 100% 0, 50% 100%)" 
+            : "polygon(0 0, 100% 0, 100% 100%, 0% 100%)"
+        }}
+      >
+        {/* Wax Seal Effect */}
+        <motion.div
+          className={cn(
+            "absolute bottom-2 left-1/2 transform -translate-x-1/2",
+            "w-8 h-8 bg-gradient-to-br from-red-400 to-red-600",
+            "rounded-full shadow-lg",
+            "flex items-center justify-center text-white text-xs",
+            "transition-all duration-500"
+          )}
+          animate={isClicked ? { scale: 0, opacity: 0 } : { scale: 1, opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Heart className="h-3 w-3 fill-current" />
+        </motion.div>
+      </motion.div>
+
+      {/* Click Ripple Effect */}
+      {isClicked && (
+        <motion.div
+          className="absolute inset-0 rounded-2xl"
+          initial={{ scale: 0, opacity: 0.5 }}
+          animate={{ scale: 2, opacity: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          style={{
+            background: "radial-gradient(circle, rgba(var(--primary-rgb), 0.3) 0%, transparent 70%)"
+          }}
+        />
+      )}
+
+      {/* Hover Glow Effect */}
+      <motion.div
+        className="absolute -inset-1 bg-gradient-to-r from-pink-300 via-purple-300 to-rose-300 rounded-2xl blur opacity-0 group-hover:opacity-20 transition-all duration-500"
+        animate={isHovered ? { 
+          scale: [1, 1.05, 1],
+          opacity: [0.2, 0.4, 0.2] 
+        } : {}}
+        transition={{ duration: 2, repeat: Infinity }}
+      />
+
+      {/* Bottom Shadow Enhancement */}
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-3/4 h-2 bg-primary/10 blur-sm rounded-full opacity-50" />
+    </motion.div>
   );
 };
 
