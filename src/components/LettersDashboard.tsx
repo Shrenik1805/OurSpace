@@ -6,7 +6,7 @@ import { letterCategories, Letter } from "@/data/letters";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Search, Heart, Sparkles, LogOut, Filter } from "lucide-react";
+import { BookOpen, Search, Heart, Sparkles, LogOut, Filter, Star, StarOff } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Select,
@@ -80,6 +80,25 @@ const LettersDashboard: React.FC<LettersDashboardProps> = ({ onLogout }) => {
     onLogout();
   };
 
+  // Get category info for display
+  const getCategoryInfo = () => {
+    const categoryMap: Record<string, { emoji: string; title: string; description: string }> = {
+      daily: { emoji: "🌟", title: "All Moods", description: "Letters for everyday moments" },
+      happy: { emoji: "💝", title: "Emotional Support", description: "When you need encouragement" },
+      low: { emoji: "💪", title: "Lift Your Spirit", description: "For those tough moments" },
+      missme: { emoji: "💕", title: "Daily Life", description: "Connecting across distance" },
+      wakeup: { emoji: "☀️", title: "Morning Light", description: "Start your day with love" },
+      bedtime: { emoji: "🌙", title: "Sweet Dreams", description: "End your day peacefully" },
+      birthday: { emoji: "🎉", title: "Special Occasions", description: "Celebrating your milestones" },
+      period: { emoji: "🌸", title: "Tender Care", description: "Extra love and support" },
+      monthiversary: { emoji: "💎", title: "Monthly Love", description: "Celebrating us every month" },
+      anxious: { emoji: "🫂", title: "Calm & Comfort", description: "When anxiety feels overwhelming" },
+      stressed: { emoji: "🌊", title: "Find Peace", description: "Breathing through the chaos" },
+      badday: { emoji: "🌈", title: "Better Tomorrow", description: "Hope after difficult days" }
+    };
+    return categoryMap;
+  };
+
   // Filter letters based on search and category
   const filteredCategories = Object.entries(letterCategories).filter(([categoryKey, category]) => {
     const matchesCategory = selectedCategory === "all" || categoryKey === selectedCategory;
@@ -118,225 +137,317 @@ const LettersDashboard: React.FC<LettersDashboardProps> = ({ onLogout }) => {
     );
   }
 
+  const categoryInfo = getCategoryInfo();
+
   return (
     <div className="min-h-screen love-letters-bg">
-      {/* Header */}
-      <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-primary/10">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <motion.div
-                className="text-2xl"
-                animate={{ rotate: [0, 10, -10, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              >
-                💝
-              </motion.div>
-              <div>
-                <h1 className="text-2xl font-playfair font-bold gradient-text">
-                  HelloLove
-                </h1>
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        {/* Enhanced Header */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12 relative"
+        >
+          {/* Floating decoration */}
+          <div className="absolute -top-6 -left-6 text-6xl opacity-20 animate-float">💕</div>
+          <div className="absolute -top-4 -right-4 text-4xl opacity-30 animate-float" style={{animationDelay: '1s'}}>✨</div>
+          
+          <motion.div 
+            className="inline-flex items-center gap-3 mb-4"
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <div className="text-5xl animate-heart-beat">💝</div>
+            <h1 className="text-5xl md:text-6xl font-dancing gradient-text-enhanced">
+              HelloLove
+            </h1>
+          </motion.div>
+          
+          <p className="text-xl text-muted-foreground font-inter max-w-2xl mx-auto leading-relaxed">
+            Choose the perfect letter that matches your heart today
+          </p>
+          
+          {/* Header Actions */}
+          <div className="flex flex-wrap items-center justify-center gap-4 mt-8">
+            <Button
+              onClick={handleJournalOpen}
+              variant="outline"
+              size="lg"
+              className="bg-white/80 backdrop-blur-sm border-primary/30 hover:bg-primary/10 transition-all duration-300"
+            >
+              <BookOpen className="mr-2 h-5 w-5" />
+              Our Journal
+            </Button>
+            <Button
+              onClick={handleLogoutClick}
+              variant="ghost"
+              size="lg"
+              className="hover:bg-destructive/10 hover:text-destructive transition-all duration-300"
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Logout
+            </Button>
+          </div>
+        </motion.div>
+
+        {/* Enhanced Search and Filter */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="mb-12"
+        >
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-primary/10">
+            <div className="flex flex-col md:flex-row gap-4">
+              {/* Search Input */}
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Input
+                  placeholder="Search for the perfect letter..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 h-12 border-primary/20 focus:border-primary bg-white/50 text-lg"
+                />
+              </div>
+
+              {/* Category Filter */}
+              <div className="flex items-center gap-2 md:min-w-[240px]">
+                <Filter className="h-5 w-5 text-muted-foreground" />
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger className="h-12 bg-white/50 border-primary/20">
+                    <SelectValue placeholder="All Categories" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">🌟 All Categories</SelectItem>
+                    <SelectItem value="daily">🌟 All Moods</SelectItem>
+                    <SelectItem value="happy">💝 Celebrate Joy</SelectItem>
+                    <SelectItem value="low">💪 Lift Spirit</SelectItem>
+                    <SelectItem value="missme">💕 Missing You</SelectItem>
+                    <SelectItem value="wakeup">☀️ Morning Light</SelectItem>
+                    <SelectItem value="bedtime">🌙 Sweet Dreams</SelectItem>
+                    <SelectItem value="birthday">🎉 Special Days</SelectItem>
+                    <SelectItem value="period">🌸 Tender Care</SelectItem>
+                    <SelectItem value="monthiversary">💎 Monthly Love</SelectItem>
+                    <SelectItem value="anxious">🫂 Calm & Comfort</SelectItem>
+                    <SelectItem value="stressed">🌊 Find Peace</SelectItem>
+                    <SelectItem value="badday">🌈 Better Tomorrow</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
-            <div className="flex items-center space-x-2">
-              <Button
-                onClick={handleJournalOpen}
-                variant="outline"
-                size="sm"
-                className="border-primary/30 hover:border-primary"
-              >
-                <BookOpen className="w-4 h-4 mr-2" />
-                Journal
-              </Button>
-
-              <Button
-                onClick={handleLogoutClick}
-                variant="ghost"
-                size="sm"
-                className="text-primary/70 hover:text-primary"
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Leave
-              </Button>
-            </div>
+            {/* Search Results Info */}
+            {searchQuery && (
+              <div className="mt-4 text-center text-muted-foreground">
+                Found {filteredCategories.length} letter{filteredCategories.length !== 1 ? 's' : ''} matching "{searchQuery}"
+              </div>
+            )}
           </div>
-        </div>
-      </div>
+        </motion.div>
 
-      {/* Search and Filter Controls */}
-      <div className="container mx-auto px-4 py-6">
-        <div className="flex flex-col sm:flex-row gap-4 mb-8">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary/40 w-4 h-4" />
-            <Input
-              placeholder="Search letters by mood or content..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 border-primary/20 focus:border-primary"
-            />
-          </div>
-
-          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-full sm:w-48 border-primary/20 focus:border-primary">
-              <Filter className="w-4 h-4 mr-2" />
-              <SelectValue placeholder="Filter by category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">🌟 All Moods</SelectItem>
-              <SelectItem value="happy">💝 Emotional Support</SelectItem>
-              <SelectItem value="wakeup">☀️ Daily Life</SelectItem>
-              <SelectItem value="birthday">🎉 Special Occasions</SelectItem>
-              <SelectItem value="anxious">🫂 Tough Times</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Main Content */}
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-4xl font-playfair font-bold mb-4 text-primary">
-              Hello Love,
-            </h2>
-            <div className="relative">
-              <p className="text-lg text-white font-medium mb-6 drop-shadow-lg">
-                Welcome to our special place. Choose the letter that matches your heart today.
-              </p>
-              {/* Enhanced bouncing sparkles with better visibility */}
-              {[...Array(12)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute text-yellow-300 text-2xl pointer-events-none"
-                  style={{
-                    left: `${10 + (i * 7)}%`,
-                    top: `${Math.random() * 100}%`,
-                  }}
-                  animate={{
-                    y: [-10, -30, -10],
-                    x: [0, Math.random() * 20 - 10, 0],
-                    rotate: [0, 180, 360],
-                    scale: [0.8, 1.2, 0.8],
-                  }}
-                  transition={{
-                    duration: 2 + Math.random() * 2,
-                    repeat: Infinity,
-                    delay: i * 0.2,
-                    ease: "easeInOut"
-                  }}
-                >
-                  ✨
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Quick Actions */}
-            <div className="flex justify-center space-x-4 mb-8">
-              <Badge variant="secondary" className="bg-primary/10 text-primary px-4 py-2">
-                <Sparkles className="w-4 h-4 mr-2" />
-                Made with Love
-              </Badge>
-            </div>
-          </motion.div>
-
-          {/* Favorite Letters Section - Show at Top */}
-          {favoriteLetters.length > 0 && selectedCategory === "all" && searchQuery === "" && (
+        {/* Subtle sparkles - reduced from 12 to 6 */}
+        <div className="fixed inset-0 pointer-events-none z-0">
+          {[...Array(6)].map((_, i) => (
             <motion.div
+              key={i}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.6, 0] }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                delay: i * 0.5,
+              }}
+              className="absolute text-yellow-400/40 text-lg"
+              style={{
+                left: `${Math.random() * 90 + 5}%`,
+                top: `${Math.random() * 90 + 5}%`,
+              }}
+            >
+              ✨
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Favorite Letters Section */}
+        <AnimatePresence>
+          {favoriteLetters.length > 0 && selectedCategory === "all" && searchQuery === "" && (
+            <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-12"
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="mb-16"
             >
-              <div className="flex items-center mb-6">
-                <Heart className="w-5 h-5 mr-2 text-red-500" />
-                <h3 className="text-xl font-playfair font-semibold text-primary">
-                  Your Favorite Letters
-                </h3>
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center gap-2 mb-4">
+                  <Star className="h-6 w-6 text-yellow-500 fill-yellow-500" />
+                  <h2 className="text-3xl font-dancing gradient-text-enhanced">Your Favorite Letters</h2>
+                  <Star className="h-6 w-6 text-yellow-500 fill-yellow-500" />
+                </div>
+                <p className="text-muted-foreground">The letters that touched your heart</p>
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {favoriteLetters.map(([categoryKey, category], index) => (
                   <motion.div
-                    key={`favorite-${categoryKey}`}
+                    key={categoryKey}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
                     className="relative"
                   >
                     <Envelope
-                      category={category}
+                      title={category.title}
+                      tag={category.tag}
                       onClick={() => handleLetterOpen(category.letters[0])}
-                      className="border-2 border-red-200 bg-red-50"
+                      className="border-2 border-yellow-200/60 bg-gradient-to-br from-yellow-50/80 to-orange-50/60 shadow-xl hover:shadow-2xl transition-all duration-500"
                     />
 
-                    {/* Favorite Button - Moved to top left */}
-                    <Button
+                    {/* Enhanced Favorite Button */}
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
                       onClick={(e) => toggleFavorite(category.letters[0].title, e)}
-                      className="absolute top-3 left-3 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 bg-red-500 text-white shadow-md hover:bg-red-600"
-                      aria-label="Remove from favorites"
+                      className="absolute -top-2 -right-2 w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full shadow-lg flex items-center justify-center z-10 hover:from-yellow-500 hover:to-orange-500 transition-all duration-300"
                     >
-                      <Heart className="w-4 h-4 fill-current" />
-                    </Button>
+                      <Star className="h-5 w-5 text-white fill-white" />
+                    </motion.button>
                   </motion.div>
                 ))}
               </div>
             </motion.div>
           )}
+        </AnimatePresence>
 
-          {/* Letters Grid - Non-favorites */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <AnimatePresence>
-              {nonFavoriteLetters.map(([categoryKey, category], index) => (
-                <motion.div
-                  key={categoryKey}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="relative"
-                >
-                  <Envelope
-                    category={category}
-                    onClick={() => handleLetterOpen(category.letters[0])}
-                  />
+        {/* Main Letters Grid */}
+        <div className="relative">
+          {nonFavoriteLetters.length > 0 && (
+            <>
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="text-center mb-8"
+              >
+                <h2 className="text-3xl font-dancing gradient-text-enhanced mb-2">
+                  {selectedCategory === "all" ? "All Letters" : 
+                   categoryInfo[selectedCategory]?.title || "Letters"}
+                </h2>
+                {selectedCategory !== "all" && categoryInfo[selectedCategory] && (
+                  <p className="text-muted-foreground text-lg">
+                    {categoryInfo[selectedCategory].description}
+                  </p>
+                )}
+              </motion.div>
 
-                  {/* Favorite Button - Moved to top left */}
-                  <Button
-                    onClick={(e) => toggleFavorite(category.letters[0].title, e)}
-                    className={`absolute top-3 left-3 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${
-                      favorites.includes(category.letters[0].title)
-                        ? 'bg-red-500 text-white shadow-md'
-                        : 'bg-white/80 text-gray-400 hover:text-red-500'
-                    }`}
-                    aria-label="Toggle favorite"
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {nonFavoriteLetters.map(([categoryKey, category], index) => (
+                  <motion.div
+                    key={categoryKey}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ 
+                      duration: 0.6, 
+                      delay: 0.5 + (index * 0.1),
+                      type: "spring",
+                      stiffness: 100 
+                    }}
+                    className="relative group"
                   >
-                    <Heart className="w-4 h-4" />
-                  </Button>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
+                    <Envelope
+                      title={category.title}
+                      tag={category.tag}
+                      onClick={() => handleLetterOpen(category.letters[0])}
+                      className="hover:scale-105 transition-all duration-300"
+                    />
 
-          {/* No Results Message */}
-          {filteredCategories.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-12"
-            >
-              <div className="text-6xl mb-4">💔</div>
-              <h3 className="text-xl font-playfair font-semibold text-primary mb-2">
-                No letters found
-              </h3>
-              <p className="text-primary/70">
-                Try adjusting your search or filter to find the perfect letter.
-              </p>
-            </motion.div>
+                    {/* Favorite Button */}
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={(e) => toggleFavorite(category.letters[0].title, e)}
+                      className={`absolute -top-2 -right-2 w-8 h-8 rounded-full shadow-md flex items-center justify-center z-10 transition-all duration-300 ${
+                        favorites.includes(category.letters[0].title)
+                          ? "bg-gradient-to-br from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500"
+                          : "bg-white hover:bg-gray-50 border border-gray-200"
+                      }`}
+                    >
+                      {favorites.includes(category.letters[0].title) ? (
+                        <Star className="h-4 w-4 text-white fill-white" />
+                      ) : (
+                        <StarOff className="h-4 w-4 text-gray-400" />
+                      )}
+                    </motion.button>
+
+                    {/* Category Badge */}
+                    <div className="absolute top-2 left-2 z-10">
+                      <Badge 
+                        variant="secondary" 
+                        className="bg-white/90 backdrop-blur-sm text-primary font-medium px-2 py-1 text-xs"
+                      >
+                        {categoryInfo[categoryKey]?.emoji || "💌"} {categoryInfo[categoryKey]?.title || category.title}
+                      </Badge>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </>
           )}
         </div>
+
+        {/* No Results Message */}
+        <AnimatePresence>
+          {filteredCategories.length === 0 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.5 }}
+              className="text-center py-20"
+            >
+              <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-12 max-w-md mx-auto shadow-lg border border-primary/10">
+                <motion.div 
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="text-6xl mb-4"
+                >
+                  💔
+                </motion.div>
+                <h3 className="text-2xl font-dancing gradient-text-enhanced mb-4">
+                  No letters found
+                </h3>
+                <p className="text-muted-foreground text-lg mb-6">
+                  Try adjusting your search or filter to find the perfect letter for your heart.
+                </p>
+                <Button
+                  onClick={() => {
+                    setSearchQuery("");
+                    setSelectedCategory("all");
+                  }}
+                  variant="outline"
+                  className="bg-white/50 border-primary/30 hover:bg-primary/10"
+                >
+                  Clear Filters
+                </Button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Footer */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 1 }}
+          className="text-center mt-20 pb-8"
+        >
+          <div className="inline-flex items-center gap-2 text-muted-foreground">
+            <Heart className="h-4 w-4 text-primary fill-primary animate-pulse" />
+            <span className="text-sm font-inter">Made with endless love for you</span>
+            <Heart className="h-4 w-4 text-primary fill-primary animate-pulse" />
+          </div>
+        </motion.div>
       </div>
     </div>
   );
