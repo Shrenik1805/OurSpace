@@ -43,10 +43,14 @@ const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
       onAuthenticated();
     } else {
       setAttempts(prev => prev + 1);
-      setError(attempts >= 2 ? "Take your time, my love. Think of our special moment 💕" : "Not quite right. Try our special code 💕");
+      setError(
+        attempts >= 2
+          ? "Take your time, my love. Think of our special moment 💕"
+          : "Not quite right. Try our special code 💕"
+      );
       setCode("");
     }
-    
+
     setIsSubmitting(false);
   };
 
@@ -56,9 +60,9 @@ const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
       opacity: 1,
       transition: {
         duration: 0.6,
-        staggerChildren: 0.1
-      }
-    }
+        staggerChildren: 0.1,
+      },
+    },
   };
 
   const itemVariants = {
@@ -66,8 +70,8 @@ const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
     visible: {
       y: 0,
       opacity: 1,
-      transition: { duration: 0.6, ease: "easeOut" }
-    }
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
   };
 
   const cardVariants = {
@@ -79,9 +83,9 @@ const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
       transition: {
         duration: 0.8,
         ease: "easeOut",
-        delay: 0.2
-      }
-    }
+        delay: 0.2,
+      },
+    },
   };
 
   return (
@@ -89,59 +93,29 @@ const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
       {/* Floating background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {floatingElements.map((element) => (
-  <motion.div
-    key={element.id}
-    className="absolute text-2xl select-none"
-    style={{
-      left: `${element.x}%`,
-      top: `${element.y}%`,
-      opacity: 0.6,
-    }}
-    animate={{
-      translateX: [0, 10, 0, -10, 0],   // side-to-side bounce
-      translateY: [0, -20, 0, -10, 0], // vertical bounce
-      scale: [1, 1.1, 1, 0.9, 1],     // slight scale for bounce effect
-    }}
-    transition={{
-      duration: element.duration,
-      delay: element.delay,
-      repeat: Infinity,
-      ease: "easeInOut",
-    }}
-  >
-    {element.emoji}
-  </motion.div>
-))}
-
-
-      </div>
-
-      {/* Romantic quotes in background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          className="absolute top-20 left-10 text-rose-300/40 text-lg font-script transform -rotate-12"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 1.5, duration: 0.8 }}
-        >
-          "Love you to the moon and back"
-        </motion.div>
-        <motion.div
-          className="absolute top-32 right-16 text-pink-300/40 text-lg font-script transform rotate-6"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 2, duration: 0.8 }}
-        >
-          "Always & Forever ♡"
-        </motion.div>
-        <motion.div
-          className="absolute bottom-24 left-20 text-red-300/40 text-lg font-script transform -rotate-6"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 2.5, duration: 0.8 }}
-        >
-          "You are my sunshine"
-        </motion.div>
+          <motion.div
+            key={element.id}
+            className="absolute text-2xl select-none"
+            style={{
+              left: `${element.x}%`,
+              top: `${element.y}%`,
+              opacity: 0.6,
+            }}
+            animate={{
+              translateX: [0, 10, 0, -10, 0], // side-to-side bounce
+              translateY: [0, -20, 0, -10, 0], // vertical bounce
+              scale: [1, 1.1, 1, 0.9, 1], // slight scale for bounce effect
+            }}
+            transition={{
+              duration: element.duration,
+              delay: element.delay,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          >
+            {element.emoji}
+          </motion.div>
+        ))}
       </div>
 
       {/* Main card */}
@@ -154,7 +128,7 @@ const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
         <Card className="backdrop-blur-lg bg-white/90 border border-rose-200/50 shadow-2xl">
           {/* Decorative header gradient */}
           <div className="h-2 bg-gradient-to-r from-rose-400 via-pink-400 to-red-400 rounded-t-lg"></div>
-          
+
           <motion.div variants={cardVariants}>
             <CardHeader className="text-center space-y-2 pb-4">
               <motion.div
@@ -164,20 +138,19 @@ const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
               >
                 <Heart className="w-8 h-8 text-white" fill="currentColor" />
               </motion.div>
-              
+
               <motion.div variants={itemVariants}>
                 <CardTitle className="text-2xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
                   Love Letters
                 </CardTitle>
               </motion.div>
-              
+
               <motion.div variants={itemVariants}>
                 <CardDescription className="text-rose-600/70 text-base">
                   Enter our special code to unlock your personalized messages
                 </CardDescription>
               </motion.div>
             </CardHeader>
-
             <CardContent className="space-y-6">
               <motion.form onSubmit={handleSubmit} className="space-y-4" variants={itemVariants}>
                 <div className="relative">
@@ -199,7 +172,6 @@ const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
                     {showCode ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
-
                 <AnimatePresence mode="wait">
                   {error && (
                     <motion.p
@@ -213,7 +185,6 @@ const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
                     </motion.p>
                   )}
                 </AnimatePresence>
-
                 <motion.div variants={itemVariants}>
                   <Button
                     type="submit"
@@ -254,11 +225,8 @@ const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
                   </Button>
                 </motion.div>
               </motion.form>
-
               <motion.div className="space-y-2 text-center" variants={itemVariants}>
-                <p className="text-rose-400 text-sm">
-                  Made with love just for you
-                </p>
+                <p className="text-rose-400 text-sm">Made with love just for you</p>
                 {attempts > 0 && (
                   <motion.p
                     className="text-rose-300 text-xs italic"
