@@ -35,14 +35,14 @@ const LetterViewer = ({ letter, onBack }: LetterViewerProps) => {
     setCurrentCharIndex(0);
     setIsTyping(true);
     setReadingProgress(0);
-    
+
     // Split content into paragraphs
     const paragraphs = letter.content.split('\n\n').filter(p => p.trim());
-    
+
     const typeWriter = () => {
       if (currentParagraphIndex < paragraphs.length) {
         const currentParagraph = paragraphs[currentParagraphIndex];
-        
+
         if (currentCharIndex < currentParagraph.length) {
           // Add character
           const newContent = paragraphs
@@ -50,19 +50,19 @@ const LetterViewer = ({ letter, onBack }: LetterViewerProps) => {
             .join('\n\n') + 
             (currentParagraphIndex > 0 ? '\n\n' : '') +
             currentParagraph.slice(0, currentCharIndex + 1);
-          
+
           setDisplayedContent(newContent);
           setCurrentCharIndex(prev => prev + 1);
-          
+
           // Update reading progress
           const totalChars = letter.content.length;
           const currentChars = newContent.length;
           setReadingProgress((currentChars / totalChars) * 100);
-          
+
           // Variable speed: slower for punctuation, faster for regular chars
           const currentChar = currentParagraph[currentCharIndex];
           let delay = 30; // Base speed
-          
+
           if (['.', '!', '?'].includes(currentChar)) {
             delay = 400; // Pause after sentences
           } else if ([',', ';', ':'].includes(currentChar)) {
@@ -70,13 +70,13 @@ const LetterViewer = ({ letter, onBack }: LetterViewerProps) => {
           } else if (currentChar === ' ') {
             delay = 50; // Slightly slower for spaces
           }
-          
+
           setTimeout(typeWriter, delay);
         } else {
           // Finished current paragraph, move to next with breathing pause
           setCurrentParagraphIndex(prev => prev + 1);
           setCurrentCharIndex(0);
-          
+
           if (currentParagraphIndex + 1 < paragraphs.length) {
             // Breathing pause between paragraphs
             setTimeout(typeWriter, 800);
@@ -88,7 +88,7 @@ const LetterViewer = ({ letter, onBack }: LetterViewerProps) => {
         }
       }
     };
-    
+
     // Small delay before starting typewriter
     setTimeout(typeWriter, 500);
   }, [letter.content, currentParagraphIndex, currentCharIndex]);
@@ -96,147 +96,129 @@ const LetterViewer = ({ letter, onBack }: LetterViewerProps) => {
   // Format content with proper paragraph breaks
   const formatContent = (content: string) => {
     return content.split('\n\n').map((paragraph, index) => (
-      <div key={index} className="mb-4 last:mb-0">
+      <div key={index} className="mb-4">
         {paragraph.split('\n').map((line, lineIndex) => (
-          <div key={lineIndex} className={lineIndex > 0 ? "mt-2" : ""}>
+          <p key={lineIndex} className={lineIndex > 0 ? "mt-2" : ""}>
             {line}
-          </div>
+          </p>
         ))}
       </div>
     ));
   };
 
   return (
-    <div className="min-h-screen love-letters-bg">
-      <div className="container mx-auto px-6 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-rose-50">
+      {/* Fixed Back Button - Improved positioning */}
+      <motion.div 
+        className="fixed top-4 left-4 z-50"
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <Button
+          onClick={onBack}
+          variant="outline"
+          size="sm"
+          className="bg-white/90 backdrop-blur-sm border-pink-200 hover:bg-pink-50 hover:border-pink-300 shadow-lg transition-all duration-200"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Letters
+        </Button>
+      </motion.div>
+
+      {/* Main Letter Content */}
+      <div className="container mx-auto px-4 py-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="fixed top-4 left-4 z-50"
+          className="max-w-4xl mx-auto"
         >
-          <Button
-            onClick={onBack}
-            variant="secondary"
-            className="bg-white/90 backdrop-blur-sm shadow-lg hover:bg-white text-primary font-dancing"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Letters
-          </Button>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          <Card className="max-w-4xl mx-auto letter-paper shadow-letter">
-            <CardHeader className="text-center border-b border-primary/10">
+          <Card className="bg-white/80 backdrop-blur-sm border-pink-200 shadow-xl">
+            <CardHeader className="text-center pb-8">
               <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
               >
-                <h1 className="text-3xl font-playfair text-primary mb-2 font-semibold">
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
                   {letter.title}
                 </h1>
-                
                 {letter.date && (
-                  <p className="text-sm text-primary/60 font-dancing italic">
+                  <p className="text-sm text-gray-500 italic">
                     Written with love on {letter.date}
                   </p>
                 )}
               </motion.div>
             </CardHeader>
-            
-            <CardContent className="p-8 md:p-12">
+
+            <CardContent className="px-8 pb-8">
               <motion.div
-                className="prose prose-lg max-w-none"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.6 }}
+                transition={{ delay: 0.4, duration: 0.5 }}
+                className="prose prose-lg max-w-none text-gray-700 leading-relaxed"
               >
-                <div className="text-primary/90 font-inter leading-relaxed text-lg whitespace-pre-wrap">
-                  {formatContent(displayedContent)}
-                  {isTyping && (
-                    <motion.span
-                      className="inline-block w-0.5 h-6 bg-primary ml-1"
-                      animate={{ opacity: [0, 1, 0] }}
-                      transition={{ 
-                        duration: 1, 
-                        repeat: Infinity,
-                        repeatType: "reverse"
-                      }}
-                    >
-                      |
-                    </motion.span>
-                  )}
-                </div>
+                {formatContent(displayedContent)}
+                {isTyping && (
+                  <span className="inline-block w-0.5 h-5 bg-pink-400 animate-pulse ml-1">
+                    |
+                  </span>
+                )}
               </motion.div>
-              
-              <motion.div
-                className="text-center mt-12 pt-8 border-t border-primary/10"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1 }}
-              >
-                <p className="text-primary/70 font-dancing text-lg italic">
-                  Always yours
-                </p>
-                <div className="flex justify-center mt-4">
-                  <Heart className="w-6 h-6 text-red-500 fill-current animate-heart-beat" />
-                </div>
-              </motion.div>
+
+              {!isTyping && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5, duration: 0.5 }}
+                  className="text-center mt-8"
+                >
+                  <p className="text-sm text-gray-500 italic">
+                    Always yours
+                  </p>
+                  <Heart className="h-4 w-4 text-pink-400 mx-auto mt-2" />
+                </motion.div>
+              )}
             </CardContent>
           </Card>
         </motion.div>
+      </div>
 
-        {/* Reading Progress Indicator */}
-        <motion.div
-          className="fixed bottom-6 left-6 bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg border border-primary/20"
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 1, duration: 0.3 }}
-        >
-          <div className="relative w-12 h-12">
-            {/* Background circle */}
-            <svg className="w-12 h-12 transform -rotate-90" viewBox="0 0 48 48">
-              <circle
-                cx="24"
-                cy="24"
-                r="20"
-                stroke="hsl(var(--primary-soft))"
-                strokeWidth="4"
-                fill="none"
-              />
-              {/* Progress circle */}
-              <motion.circle
-                cx="24"
-                cy="24"
-                r="20"
-                stroke="hsl(var(--primary))"
-                strokeWidth="4"
-                fill="none"
-                strokeLinecap="round"
-                strokeDasharray={`${2 * Math.PI * 20}`}
-                strokeDashoffset={`${2 * Math.PI * 20 * (1 - readingProgress / 100)}`}
-                transition={{ duration: 0.3 }}
-              />
-            </svg>
-            
-            {/* Percentage text */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-xs font-semibold text-primary">
-                {Math.round(readingProgress)}%
-              </span>
-            </div>
+      {/* Reading Progress Indicator */}
+      <div className="fixed bottom-4 right-4">
+        <div className="relative">
+          {/* Background circle */}
+          <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm border border-pink-200"></div>
+
+          {/* Progress circle */}
+          <svg className="absolute top-0 left-0 w-16 h-16 transform -rotate-90">
+            <circle
+              cx="32"
+              cy="32"
+              r="28"
+              stroke="currentColor"
+              strokeWidth="4"
+              fill="none"
+              className="text-pink-300"
+              strokeDasharray={`${(readingProgress / 100) * 175.92} 175.92`}
+              strokeLinecap="round"
+              style={{ transition: 'stroke-dasharray 0.3s ease' }}
+            />
+          </svg>
+
+          {/* Percentage text */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-xs font-medium text-gray-600">
+              {Math.round(readingProgress)}%
+            </span>
           </div>
-          
-          {/* Reading indicator label */}
-          <div className="absolute left-full ml-3 top-1/2 transform -translate-y-1/2 bg-primary text-white px-2 py-1 rounded text-xs font-dancing whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-            Reading Progress
-          </div>
-        </motion.div>
+        </div>
+
+        {/* Reading indicator label */}
+        <p className="text-xs text-gray-500 text-center mt-1">
+          Reading Progress
+        </p>
       </div>
     </div>
   );
