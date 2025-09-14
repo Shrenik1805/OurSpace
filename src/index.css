@@ -741,9 +741,6 @@ select.form-control {
     format('woff2');
 }
 
-/* END PERPLEXITY DESIGN SYSTEM */
-/* Import fonts - Updated to match design system */
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
 /* Enhanced Design System - Colors adapted to use design system tokens */
 :root {
