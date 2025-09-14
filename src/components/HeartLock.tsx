@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Heart, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface HeartLockProps {
   onLogout: () => void;
@@ -16,30 +17,101 @@ const HeartLock = ({ onLogout, className }: HeartLockProps) => {
     setTimeout(() => {
       onLogout();
       setIsLocking(false);
-    }, 1000);
+    }, 2000); // Extended to allow for the complete animation
   };
 
   return (
     <Button
       onClick={handleLogout}
       variant="ghost"
+      size="sm"
       className={cn(
-        "group relative bg-gradient-to-r from-pink-500/20 to-purple-500/20 hover:from-pink-500/30 hover:to-purple-500/30 border border-pink-300/30 hover:border-pink-400/50 transition-all duration-300 rounded-full px-6 py-3",
+        "flex items-center gap-2 text-primary hover:text-primary/80 transition-colors",
         className
       )}
       disabled={isLocking}
     >
-      <div className="flex items-center space-x-2">
+      <AnimatePresence mode="wait">
         {isLocking ? (
-          <Lock className="h-4 w-4 text-purple-600 animate-pulse" />
+          <motion.div
+            key="locking"
+            className="flex items-center gap-2"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.3 }}
+          >
+            <motion.div
+              className="relative"
+              animate={{
+                scale: [1, 1.2, 1, 1.1, 1],
+                rotate: [0, -10, 10, -5, 0]
+              }}
+              transition={{
+                duration: 2,
+                ease: "easeInOut"
+              }}
+            >
+              {/* Heart breaking animation */}
+              <motion.div
+                className="text-red-500"
+                animate={{
+                  opacity: [1, 0.7, 1, 0.5, 0.2]
+                }}
+                transition={{
+                  duration: 2,
+                  ease: "easeInOut"
+                }}
+              >
+                <Heart className="w-5 h-5 fill-current" />
+              </motion.div>
+              
+              {/* Lock appearing animation */}
+              <motion.div
+                className="absolute inset-0 text-gray-600"
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ 
+                  opacity: [0, 0, 0.5, 1], 
+                  scale: [0, 0, 0.8, 1],
+                  rotate: [180, 90, 45, 0]
+                }}
+                transition={{
+                  duration: 2,
+                  ease: "easeInOut",
+                  delay: 0.5
+                }}
+              >
+                <Lock className="w-5 h-5" />
+              </motion.div>
+            </motion.div>
+            
+            <motion.span
+              className="text-sm font-dancing"
+              animate={{
+                opacity: [1, 0.5, 1, 0.5, 0.2]
+              }}
+              transition={{
+                duration: 2,
+                ease: "easeInOut"
+              }}
+            >
+              Locking your letters...
+            </motion.span>
+          </motion.div>
         ) : (
-          <Heart className="h-4 w-4 text-pink-600 group-hover:text-pink-700 transition-colors" />
+          <motion.div
+            key="normal"
+            className="flex items-center gap-2"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Heart className="w-5 h-5" />
+            <span className="text-sm font-dancing">Leave</span>
+          </motion.div>
         )}
-        {/* Dynamic text sizing using responsive classes */}
-        <span className="text-xs sm:text-sm md:text-base lg:text-lg text-gray-700 font-medium group-hover:text-gray-800 transition-colors">
-          {isLocking ? "Locking..." : "Lock & Sign Out"}
-        </span>
-      </div>
+      </AnimatePresence>
     </Button>
   );
 };
