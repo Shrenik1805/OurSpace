@@ -1,230 +1,265 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Heart } from "lucide-react";
-import { useEffect, useState, useRef } from "react";
-import { motion } from "framer-motion";
+import { Volume2, VolumeX, Play, Pause, Music } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
-interface Letter {
-  title: string;
-  content: string;
-  date?: string;
-  preview: string;
+interface BackgroundMusicProps {
+  playOnLogin?: boolean;
 }
 
-interface LetterViewerProps {
-  letter: Letter;
-  onBack: () => void;
-}
+const BackgroundMusic: React.FC<BackgroundMusicProps> = ({ playOnLogin = false }) => {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
+  const [audioError, setAudioError] = useState(false);
 
-const LetterViewer = ({ letter, onBack }: LetterViewerProps) => {
-  const [displayedContent, setDisplayedContent] = useState("");
-  const [isTyping, setIsTyping] = useState(true);
-  const [readingProgress, setReadingProgress] = useState(0);
-  
-  // Use refs to avoid dependency issues
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const currentIndexRef = useRef(0);
-  const contentRef = useRef("");
-
-  // Automatically scroll to top when the letter changes
+  // Initialize audio element
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [letter]);
+    const audio = audioRef.current;
+    if (!audio) return;
 
-  // Simplified typewriter effect - FIXED VERSION
-  useEffect(() => {
-    // Reset all state when letter changes
-    setDisplayedContent("");
-    setIsTyping(true);
-    setReadingProgress(0);
-    currentIndexRef.current = 0;
-    contentRef.current = letter.content;
-
-    // Clear any existing timeout
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-
-    const typeContent = () => {
-      if (currentIndexRef.current < contentRef.current.length) {
-        const newContent = contentRef.current.slice(0, currentIndexRef.current + 1);
-        setDisplayedContent(newContent);
-        
-        // Update reading progress
-        const progress = (currentIndexRef.current / contentRef.current.length) * 100;
-        setReadingProgress(progress);
-        
-        currentIndexRef.current++;
-
-        // Variable speed typing
-        const currentChar = contentRef.current[currentIndexRef.current - 1];
-        let delay = 40; // Base speed
-
-        if (['.', '!', '?'].includes(currentChar)) {
-          delay = 600; // Long pause after sentences
-        } else if ([',', ';', ':'].includes(currentChar)) {
-          delay = 300; // Medium pause after commas
-        } else if (currentChar === '\n') {
-          delay = 400; // Pause for line breaks
-        } else if (currentChar === ' ') {
-          delay = 60; // Slightly slower for spaces
-        }
-
-        timeoutRef.current = setTimeout(typeContent, delay);
-      } else {
-        // Finished typing
-        setIsTyping(false);
-        setReadingProgress(100);
-      }
+    const handleLoadStart = () => {
+      setIsLoading(true);
+      setAudioError(false);
     };
 
-    // Start typing after a small delay
-    timeoutRef.current = setTimeout(typeContent, 800);
+    const handleCanPlay = () => {
+      setIsLoading(false);
+      setAudioError(false);
+    };
 
-    // Cleanup function
+    const handlePlay = () => {
+      setIsPlaying(true);
+      setIsLoading(false);
+    };
+
+    const handlePause = () => {
+      setIsPlaying(false);
+    };
+
+    const handleError = (e: Event) => {
+      console.error('Audio error:', e);
+      setIsLoading(false);
+      setAudioError(true);
+      setIsPlaying(false);
+    };
+
+    const handleLoadedData = () => {
+      setIsLoading(false);
+    };
+
+    // Add event listeners
+    audio.addEventListener('loadstart', handleLoadStart);
+    audio.addEventListener('canplay', handleCanPlay);
+    audio.addEventListener('loadeddata', handleLoadedData);
+    audio.addEventListener('play', handlePlay);
+    audio.addEventListener('pause', handlePause);
+    audio.addEventListener('error', handleError);
+
+    // Set initial properties
+    audio.volume = 0.15;
+    audio.loop = true;
+    audio.preload = 'auto';
+
     return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+      audio.removeEventListener('loadstart', handleLoadStart);
+      audio.removeEventListener('canplay', handleCanPlay);
+      audio.removeEventListener('loadeddata', handleLoadedData);
+      audio.removeEventListener('play', handlePlay);
+      audio.removeEventListener('pause', handlePause);
+      audio.removeEventListener('error', handleError);
+    };
+  }, []);
+
+  // Handle auto-play after user login (requires user interaction)
+  useEffect(() => {
+    if (!playOnLogin || !hasUserInteracted || audioError) return;
+
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const attemptAutoPlay = async () => {
+      try {
+        setIsLoading(true);
+        await audio.play();
+      } catch (error) {
+        console.log("Auto-play blocked by browser - user needs to manually start music");
+        setIsLoading(false);
       }
     };
-  }, [letter.title]); // Only depend on letter.title to avoid loops
 
-  // Format content with proper paragraph breaks
-  const formatContent = (content: string) => {
-    return content.split('\n\n').map((paragraph, index) => (
-      <div key={index} className="mb-4">
-        {paragraph.split('\n').map((line, lineIndex) => (
-          <p key={lineIndex} className={lineIndex > 0 ? "mt-2" : ""}>
-            {line}
-          </p>
-        ))}
-      </div>
-    ));
+    // Small delay to ensure audio is ready
+    const timeoutId = setTimeout(attemptAutoPlay, 500);
+    return () => clearTimeout(timeoutId);
+  }, [playOnLogin, hasUserInteracted, audioError]);
+
+  // Handle user interaction to enable autoplay
+  useEffect(() => {
+    const handleUserInteraction = () => {
+      setHasUserInteracted(true);
+      // Remove listeners after first interaction
+      document.removeEventListener('click', handleUserInteraction);
+      document.removeEventListener('keydown', handleUserInteraction);
+      document.removeEventListener('touchstart', handleUserInteraction);
+    };
+
+    document.addEventListener('click', handleUserInteraction);
+    document.addEventListener('keydown', handleUserInteraction);
+    document.addEventListener('touchstart', handleUserInteraction);
+
+    return () => {
+      document.removeEventListener('click', handleUserInteraction);
+      document.removeEventListener('keydown', handleUserInteraction);
+      document.removeEventListener('touchstart', handleUserInteraction);
+    };
+  }, []);
+
+  // Toggle play/pause
+  const togglePlayPause = async () => {
+    const audio = audioRef.current;
+    if (!audio || audioError) return;
+
+    setHasUserInteracted(true);
+
+    try {
+      if (isPlaying) {
+        await audio.pause();
+      } else {
+        setIsLoading(true);
+        await audio.play();
+      }
+    } catch (error) {
+      console.error("Could not play/pause audio:", error);
+      setIsLoading(false);
+      setAudioError(true);
+    }
   };
 
+  // Toggle mute on/off
+  const toggleMute = () => {
+    const audio = audioRef.current;
+    if (!audio || audioError) return;
+
+    const newMutedState = !isMuted;
+    audio.muted = newMutedState;
+    setIsMuted(newMutedState);
+  };
+
+  // Don't render if there's an audio error
+  if (audioError) {
+    return null;
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-pink-900/20 p-4">
-      {/* Fixed Back Button - Improved positioning */}
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        className="fixed top-6 left-6 z-50"
-      >
-        <Button
-          onClick={onBack}
-          variant="outline"
-          size="sm"
-          className="shadow-lg backdrop-blur-sm bg-white/90 dark:bg-gray-800/90 border-rose-200 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all duration-200"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back
-        </Button>
-      </motion.div>
+    <div className="fixed bottom-4 left-4 z-50">
+      <audio ref={audioRef} preload="auto">
+        <source src="/ambient-music.mp3" type="audio/mpeg" />
+        <source src="/ambient-music.ogg" type="audio/ogg" />
+        Your browser does not support the audio element.
+      </audio>
 
-      {/* Main Letter Content */}
-      <div className="max-w-2xl mx-auto pt-20">
+      <AnimatePresence>
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, scale: 0.8, x: -20 }}
+          animate={{ opacity: 1, scale: 1, x: 0 }}
+          exit={{ opacity: 0, scale: 0.8, x: -20 }}
+          className="flex items-center gap-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full px-3 py-2 shadow-lg border border-rose-200/50 dark:border-rose-800/50"
         >
-          <Card className="shadow-xl border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
-            <CardHeader className="text-center border-b border-rose-100 dark:border-rose-800 bg-gradient-to-r from-rose-50 to-pink-50 dark:from-rose-900/30 dark:to-pink-900/30">
-              <motion.h1
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                className="text-3xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent"
-              >
-                {letter.title}
-              </motion.h1>
-              {letter.date && (
-                <p className="text-sm text-muted-foreground mt-2">
-                  Written with love on {letter.date}
-                </p>
-              )}
-            </CardHeader>
+          {/* Music Icon */}
+          <div className="flex items-center justify-center w-8 h-8">
+            {isLoading ? (
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                className="w-4 h-4 border-2 border-rose-500 border-t-transparent rounded-full"
+              />
+            ) : (
+              <Music className="h-4 w-4 text-rose-500" />
+            )}
+          </div>
 
-            <CardContent className="p-8">
-              <div className="prose prose-lg max-w-none text-gray-800 dark:text-gray-200 leading-relaxed">
-                {formatContent(displayedContent)}
-                {isTyping && (
-                  <motion.span
-                    animate={{ opacity: [1, 0] }}
-                    transition={{ repeat: Infinity, duration: 1 }}
-                    className="text-rose-500 font-bold text-xl"
-                  >
-                    |
-                  </motion.span>
-                )}
-              </div>
-
-              {!isTyping && (
+          {/* Play/Pause Button */}
+          <Button
+            onClick={togglePlayPause}
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 hover:bg-rose-100 dark:hover:bg-rose-900/20 rounded-full transition-colors"
+            disabled={isLoading || audioError}
+          >
+            <AnimatePresence mode="wait">
+              {isPlaying ? (
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
-                  className="text-center mt-8 pt-6 border-t border-rose-100 dark:border-rose-800"
+                  key="pause"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  <p className="text-rose-600 dark:text-rose-400 font-medium">
-                    Always yours ❤️
-                  </p>
-                  <Heart className="h-6 w-6 mx-auto mt-2 text-rose-500 fill-rose-500" />
+                  <Pause className="h-4 w-4 text-rose-600" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="play"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Play className="h-4 w-4 text-rose-600" />
                 </motion.div>
               )}
-            </CardContent>
-          </Card>
+            </AnimatePresence>
+          </Button>
+
+          {/* Mute/Unmute Button */}
+          <Button
+            onClick={toggleMute}
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 hover:bg-rose-100 dark:hover:bg-rose-900/20 rounded-full transition-colors"
+            disabled={audioError}
+          >
+            <AnimatePresence mode="wait">
+              {isMuted ? (
+                <motion.div
+                  key="muted"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <VolumeX className="h-4 w-4 text-gray-500" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="unmuted"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Volume2 className="h-4 w-4 text-rose-600" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </Button>
+
+          {/* Status indicator */}
+          {!hasUserInteracted && playOnLogin && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-xs text-gray-500 ml-1 whitespace-nowrap"
+            >
+              Click to enable music
+            </motion.div>
+          )}
         </motion.div>
-      </div>
-
-      {/* Reading Progress Indicator */}
-      <div className="fixed bottom-6 right-6 z-50">
-        <motion.div
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 1 }}
-          className="relative w-16 h-16"
-        >
-          {/* Background circle */}
-          <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
-            <circle
-              cx="18"
-              cy="18"
-              r="16"
-              fill="none"
-              className="stroke-rose-200 dark:stroke-rose-800"
-              strokeWidth="2"
-            />
-            {/* Progress circle */}
-            <circle
-              cx="18"
-              cy="18"
-              r="16"
-              fill="none"
-              className="stroke-rose-500"
-              strokeWidth="2"
-              strokeDasharray={`${readingProgress}, 100`}
-              className="transition-all duration-300 ease-out"
-            />
-          </svg>
-
-          {/* Percentage text */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-xs font-bold text-rose-600 dark:text-rose-400">
-              {Math.round(readingProgress)}%
-            </span>
-          </div>
-
-          {/* Reading indicator label */}
-          <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-            <span className="text-xs text-muted-foreground">
-              Reading Progress
-            </span>
-          </div>
-        </motion.div>
-      </div>
+      </AnimatePresence>
     </div>
   );
 };
 
-export default LetterViewer;
+export default BackgroundMusic;
