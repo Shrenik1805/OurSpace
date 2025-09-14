@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Heart } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 
 interface Letter {
@@ -18,80 +18,76 @@ interface LetterViewerProps {
 
 const LetterViewer = ({ letter, onBack }: LetterViewerProps) => {
   const [displayedContent, setDisplayedContent] = useState("");
-  const [currentParagraphIndex, setCurrentParagraphIndex] = useState(0);
-  const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const [isTyping, setIsTyping] = useState(true);
   const [readingProgress, setReadingProgress] = useState(0);
+  
+  // Use refs to avoid dependency issues
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const currentIndexRef = useRef(0);
+  const contentRef = useRef("");
 
   // Automatically scroll to top when the letter changes
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [letter]);
 
-  // Enhanced typewriter effect with paragraph-wise display and breathing effect
+  // Simplified typewriter effect - FIXED VERSION
   useEffect(() => {
+    // Reset all state when letter changes
     setDisplayedContent("");
-    setCurrentParagraphIndex(0);
-    setCurrentCharIndex(0);
     setIsTyping(true);
     setReadingProgress(0);
+    currentIndexRef.current = 0;
+    contentRef.current = letter.content;
 
-    // Split content into paragraphs
-    const paragraphs = letter.content.split('\n\n').filter(p => p.trim());
+    // Clear any existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
 
-    const typeWriter = () => {
-      if (currentParagraphIndex < paragraphs.length) {
-        const currentParagraph = paragraphs[currentParagraphIndex];
+    const typeContent = () => {
+      if (currentIndexRef.current < contentRef.current.length) {
+        const newContent = contentRef.current.slice(0, currentIndexRef.current + 1);
+        setDisplayedContent(newContent);
+        
+        // Update reading progress
+        const progress = (currentIndexRef.current / contentRef.current.length) * 100;
+        setReadingProgress(progress);
+        
+        currentIndexRef.current++;
 
-        if (currentCharIndex < currentParagraph.length) {
-          // Add character
-          const newContent = paragraphs
-            .slice(0, currentParagraphIndex)
-            .join('\n\n') + 
-            (currentParagraphIndex > 0 ? '\n\n' : '') +
-            currentParagraph.slice(0, currentCharIndex + 1);
+        // Variable speed typing
+        const currentChar = contentRef.current[currentIndexRef.current - 1];
+        let delay = 40; // Base speed
 
-          setDisplayedContent(newContent);
-          setCurrentCharIndex(prev => prev + 1);
-
-          // Update reading progress
-          const totalChars = letter.content.length;
-          const currentChars = newContent.length;
-          setReadingProgress((currentChars / totalChars) * 100);
-
-          // Variable speed: slower for punctuation, faster for regular chars
-          const currentChar = currentParagraph[currentCharIndex];
-          let delay = 30; // Base speed
-
-          if (['.', '!', '?'].includes(currentChar)) {
-            delay = 400; // Pause after sentences
-          } else if ([',', ';', ':'].includes(currentChar)) {
-            delay = 200; // Pause after commas
-          } else if (currentChar === ' ') {
-            delay = 50; // Slightly slower for spaces
-          }
-
-          setTimeout(typeWriter, delay);
-        } else {
-          // Finished current paragraph, move to next with breathing pause
-          setCurrentParagraphIndex(prev => prev + 1);
-          setCurrentCharIndex(0);
-
-          if (currentParagraphIndex + 1 < paragraphs.length) {
-            // Breathing pause between paragraphs
-            setTimeout(typeWriter, 800);
-          } else {
-            // Finished all paragraphs
-            setIsTyping(false);
-            setReadingProgress(100);
-          }
+        if (['.', '!', '?'].includes(currentChar)) {
+          delay = 600; // Long pause after sentences
+        } else if ([',', ';', ':'].includes(currentChar)) {
+          delay = 300; // Medium pause after commas
+        } else if (currentChar === '\n') {
+          delay = 400; // Pause for line breaks
+        } else if (currentChar === ' ') {
+          delay = 60; // Slightly slower for spaces
         }
+
+        timeoutRef.current = setTimeout(typeContent, delay);
+      } else {
+        // Finished typing
+        setIsTyping(false);
+        setReadingProgress(100);
       }
     };
 
-    // Small delay before starting typewriter
-    setTimeout(typeWriter, 500);
-  }, [letter.content, currentParagraphIndex, currentCharIndex]);
+    // Start typing after a small delay
+    timeoutRef.current = setTimeout(typeContent, 800);
+
+    // Cleanup function
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [letter.title]); // Only depend on letter.title to avoid loops
 
   // Format content with proper paragraph breaks
   const formatContent = (content: string) => {
@@ -107,77 +103,73 @@ const LetterViewer = ({ letter, onBack }: LetterViewerProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-rose-50">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-pink-900/20 p-4">
       {/* Fixed Back Button - Improved positioning */}
-      <motion.div 
-        className="fixed top-4 left-4 z-50"
+      <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.3 }}
+        className="fixed top-6 left-6 z-50"
       >
         <Button
           onClick={onBack}
           variant="outline"
           size="sm"
-          className="bg-white/90 backdrop-blur-sm border-pink-200 hover:bg-pink-50 hover:border-pink-300 shadow-lg transition-all duration-200"
+          className="shadow-lg backdrop-blur-sm bg-white/90 dark:bg-gray-800/90 border-rose-200 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all duration-200"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Letters
+          Back
         </Button>
       </motion.div>
 
       {/* Main Letter Content */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="max-w-2xl mx-auto pt-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="max-w-4xl mx-auto"
+          transition={{ duration: 0.6 }}
         >
-          <Card className="bg-white/80 backdrop-blur-sm border-pink-200 shadow-xl">
-            <CardHeader className="text-center pb-8">
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 0.2, duration: 0.5 }}
-              >
-                <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-                  {letter.title}
-                </h1>
-                {letter.date && (
-                  <p className="text-sm text-gray-500 italic">
-                    Written with love on {letter.date}
-                  </p>
-                )}
-              </motion.div>
-            </CardHeader>
-
-            <CardContent className="px-8 pb-8">
-              <motion.div
+          <Card className="shadow-xl border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+            <CardHeader className="text-center border-b border-rose-100 dark:border-rose-800 bg-gradient-to-r from-rose-50 to-pink-50 dark:from-rose-900/30 dark:to-pink-900/30">
+              <motion.h1
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.4, duration: 0.5 }}
-                className="prose prose-lg max-w-none text-gray-700 leading-relaxed"
+                transition={{ delay: 0.3 }}
+                className="text-3xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent"
               >
+                {letter.title}
+              </motion.h1>
+              {letter.date && (
+                <p className="text-sm text-muted-foreground mt-2">
+                  Written with love on {letter.date}
+                </p>
+              )}
+            </CardHeader>
+
+            <CardContent className="p-8">
+              <div className="prose prose-lg max-w-none text-gray-800 dark:text-gray-200 leading-relaxed">
                 {formatContent(displayedContent)}
                 {isTyping && (
-                  <span className="inline-block w-0.5 h-5 bg-pink-400 animate-pulse ml-1">
+                  <motion.span
+                    animate={{ opacity: [1, 0] }}
+                    transition={{ repeat: Infinity, duration: 1 }}
+                    className="text-rose-500 font-bold text-xl"
+                  >
                     |
-                  </span>
+                  </motion.span>
                 )}
-              </motion.div>
+              </div>
 
               {!isTyping && (
                 <motion.div
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5, duration: 0.5 }}
-                  className="text-center mt-8"
+                  transition={{ delay: 0.5 }}
+                  className="text-center mt-8 pt-6 border-t border-rose-100 dark:border-rose-800"
                 >
-                  <p className="text-sm text-gray-500 italic">
-                    Always yours
+                  <p className="text-rose-600 dark:text-rose-400 font-medium">
+                    Always yours ❤️
                   </p>
-                  <Heart className="h-4 w-4 text-pink-400 mx-auto mt-2" />
+                  <Heart className="h-6 w-6 mx-auto mt-2 text-rose-500 fill-rose-500" />
                 </motion.div>
               )}
             </CardContent>
@@ -186,39 +178,50 @@ const LetterViewer = ({ letter, onBack }: LetterViewerProps) => {
       </div>
 
       {/* Reading Progress Indicator */}
-      <div className="fixed bottom-4 right-4">
-        <div className="relative">
+      <div className="fixed bottom-6 right-6 z-50">
+        <motion.div
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 1 }}
+          className="relative w-16 h-16"
+        >
           {/* Background circle */}
-          <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm border border-pink-200"></div>
-
-          {/* Progress circle */}
-          <svg className="absolute top-0 left-0 w-16 h-16 transform -rotate-90">
+          <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
             <circle
-              cx="32"
-              cy="32"
-              r="28"
-              stroke="currentColor"
-              strokeWidth="4"
+              cx="18"
+              cy="18"
+              r="16"
               fill="none"
-              className="text-pink-300"
-              strokeDasharray={`${(readingProgress / 100) * 175.92} 175.92`}
-              strokeLinecap="round"
-              style={{ transition: 'stroke-dasharray 0.3s ease' }}
+              className="stroke-rose-200 dark:stroke-rose-800"
+              strokeWidth="2"
+            />
+            {/* Progress circle */}
+            <circle
+              cx="18"
+              cy="18"
+              r="16"
+              fill="none"
+              className="stroke-rose-500"
+              strokeWidth="2"
+              strokeDasharray={`${readingProgress}, 100`}
+              className="transition-all duration-300 ease-out"
             />
           </svg>
 
           {/* Percentage text */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-xs font-medium text-gray-600">
+            <span className="text-xs font-bold text-rose-600 dark:text-rose-400">
               {Math.round(readingProgress)}%
             </span>
           </div>
-        </div>
 
-        {/* Reading indicator label */}
-        <p className="text-xs text-gray-500 text-center mt-1">
-          Reading Progress
-        </p>
+          {/* Reading indicator label */}
+          <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
+            <span className="text-xs text-muted-foreground">
+              Reading Progress
+            </span>
+          </div>
+        </motion.div>
       </div>
     </div>
   );
