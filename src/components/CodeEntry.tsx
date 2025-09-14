@@ -89,30 +89,31 @@ const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
       {/* Floating background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {floatingElements.map((element) => (
-          <motion.div
-            key={element.id}
-            className="absolute text-2xl select-none"
-            initial={{
-              x: `${element.x}%`,
-              y: `${element.y}%`,
-              opacity: 0.6,
-            }}
-            animate={{
-              x: [`${element.x}%`, `${element.x + 20}%`, `${element.x - 10}%`, `${element.x}%`],
-              y: [`${element.y}%`, `${element.y - 30}%`, `${element.y + 15}%`, `${element.y}%`],
-              rotate: [0, 360],
-              scale: [1, 1.2, 0.8, 1],
-            }}
-            transition={{
-              duration: element.duration,
-              delay: element.delay,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          >
-            {element.emoji}
-          </motion.div>
-        ))}
+  <motion.div
+    key={element.id}
+    className="absolute text-2xl select-none"
+    style={{
+      left: `${element.x}%`,
+      top: `${element.y}%`,
+      opacity: 0.6,
+    }}
+    animate={{
+      translateX: [0, 20, -10, 0],
+      translateY: [0, -30, 15, 0],
+      rotate: [0, 360],
+      scale: [1, 1.2, 0.8, 1],
+    }}
+    transition={{
+      duration: element.duration,
+      delay: element.delay,
+      repeat: Infinity,
+      ease: "easeInOut",
+    }}
+  >
+    {element.emoji}
+  </motion.div>
+))}
+
       </div>
 
       {/* Romantic quotes in background */}
