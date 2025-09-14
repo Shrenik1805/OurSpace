@@ -73,7 +73,7 @@ const CodeEntry: React.FC<CodeEntryProps> = ({ onAuthenticated }) => {
         ))}
 
         {/* Love Messages */}
-        {["love you", "always ♡", "forever", "💖"].map((text, i) => (
+        {["love you", "always ♡", "forever"].map((text, i) => (
           <motion.div
             key={text}
             className="absolute text-lg text-primary/20 font-dancing"
