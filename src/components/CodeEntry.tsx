@@ -93,29 +93,44 @@ const CodeEntry = ({ onAuthenticated }: CodeEntryProps) => {
       {/* Floating background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {floatingElements.map((element) => (
-          <motion.div
-            key={element.id}
-            className="absolute text-2xl select-none"
-            style={{
-              left: `${element.x}%`,
-              top: `${element.y}%`,
-              opacity: 0.6,
-            }}
-            animate={{
-              translateX: [0, 10, 0, -10, 0], // side-to-side bounce
-              translateY: [0, -20, 0, -10, 0], // vertical bounce
-              scale: [1, 1.1, 1, 0.9, 1], // slight scale for bounce effect
-            }}
-            transition={{
-              duration: element.duration,
-              delay: element.delay,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          >
-            {element.emoji}
-          </motion.div>
-        ))}
+  <motion.div
+    key={element.id}
+    className="absolute text-2xl select-none"
+    style={{
+      opacity: 0.6,
+      left: 0,
+      top: 0,
+    }}
+    initial={{
+      x: (element.x / 100) * window.innerWidth,
+      y: (element.y / 100) * window.innerHeight,
+    }}
+    animate={{
+      x: [
+        (element.x / 100) * window.innerWidth,
+        (element.x / 100 + 0.2 + Math.random() * 0.3) * window.innerWidth,
+        (element.x / 100 - 0.2 - Math.random() * 0.3) * window.innerWidth,
+        (element.x / 100) * window.innerWidth,
+      ],
+      y: [
+        (element.y / 100) * window.innerHeight,
+        (element.y / 100 + 0.2 + Math.random() * 0.3) * window.innerHeight,
+        (element.y / 100 - 0.2 - Math.random() * 0.3) * window.innerHeight,
+        (element.y / 100) * window.innerHeight,
+      ],
+      scale: [1, 1.1, 1, 0.9, 1],
+    }}
+    transition={{
+      duration: element.duration,
+      delay: element.delay,
+      repeat: Infinity,
+      ease: "easeInOut",
+    }}
+  >
+    {element.emoji}
+  </motion.div>
+))}
+
       </div>
 
       {/* Main card */}
