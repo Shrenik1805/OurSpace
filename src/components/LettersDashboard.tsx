@@ -210,7 +210,7 @@ const LettersDashboard: React.FC<LettersDashboardProps> = ({ onLogout }) => {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-inter">
             Welcome to our special place. Choose the letter that matches your heart today.
           </p>
-        </div>
+       </motion.div>   
 
         {/* Quick Actions */}
         <motion.div
