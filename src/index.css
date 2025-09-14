@@ -186,6 +186,22 @@ All colors MUST be HSL.
   to { width: 100%; }
 }
 
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: 0 0 20px hsl(340 65% 60% / 0.3);
+    transform: scale(1);
+  }
+  50% { 
+    box-shadow: 0 0 40px hsl(340 65% 60% / 0.6);
+    transform: scale(1.02);
+  }
+}
+
 /* Utility classes */
 .animate-float {
   animation: float 3s ease-in-out infinite;
@@ -208,6 +224,16 @@ All colors MUST be HSL.
   overflow: hidden;
   white-space: nowrap;
   border-right: 2px solid hsl(var(--primary));
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.2), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
 }
 
 /* Smooth scrolling */

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import CodeEntry from "@/components/CodeEntry";
 import LettersDashboard from "@/components/LettersDashboard";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const Index = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -24,7 +25,11 @@ const Index = () => {
   };
 
   if (loading) {
-    return <p className="text-center mt-20">Loading...</p>;
+    return (
+      <div className="min-h-screen love-letters-bg flex items-center justify-center">
+        <LoadingSpinner message="Preparing your letters..." size="lg" />
+      </div>
+    );
   }
 
   if (!isAuthenticated) {

@@ -6,9 +6,8 @@ import HeartLock from "./HeartLock";
 import { letterCategories, Letter } from "@/data/letters";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { BookOpen, Search, Heart, Sparkles, LogOut, Filter } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { BookOpen, Search, Heart, Sparkles, Filter } from "lucide-react";
+import { motion } from "framer-motion";
 import {
   Select,
   SelectContent,
@@ -298,7 +297,8 @@ const LettersDashboard: React.FC<LettersDashboardProps> = ({ onLogout }) => {
                     transition={{ delay: 1 + index * 0.1 }}
                   >
                     <Envelope
-                      category={category}
+                      title={category.title}
+                      tag={category.tag}
                       onClick={() => handleLetterOpen(category.letters[0])}
                     />
                   </motion.div>
@@ -323,7 +323,8 @@ const LettersDashboard: React.FC<LettersDashboardProps> = ({ onLogout }) => {
                 transition={{ delay: 1.1 + index * 0.1 }}
               >
                 <Envelope
-                  category={category}
+                  title={category.title}
+                  tag={category.tag}
                   onClick={() => handleLetterOpen(category.letters[0])}
                 />
 
