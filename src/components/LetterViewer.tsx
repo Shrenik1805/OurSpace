@@ -113,11 +113,12 @@ const LetterViewer = ({ letter, onBack }: LetterViewerProps) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
+          className="fixed top-4 left-4 z-50"
         >
           <Button
             onClick={onBack}
-            variant="ghost"
-            className="mb-6 text-primary hover:text-primary/80 font-dancing"
+            variant="secondary"
+            className="bg-white/90 backdrop-blur-sm shadow-lg hover:bg-white text-primary font-dancing"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Letters

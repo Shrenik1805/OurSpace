@@ -118,15 +118,18 @@ const SharedJournal = ({ onBack }: SharedJournalProps) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 p-4">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-6">
+        <div className="fixed top-4 left-4 z-50">
           <Button
             onClick={onBack}
-            variant="ghost"
-            className="mb-4 text-purple-600 hover:text-purple-700"
+            variant="secondary"
+            className="bg-white/90 backdrop-blur-sm shadow-lg hover:bg-white text-primary font-dancing"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Letters
           </Button>
+        </div>
+        
+        <div className="mb-6 pt-16">
           
           <div className="text-center">
             <div className="flex items-center justify-center mb-2">

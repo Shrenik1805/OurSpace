@@ -6,7 +6,7 @@ import HeartLock from "./HeartLock";
 import { letterCategories, Letter } from "@/data/letters";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { BookOpen, Search, Heart, Sparkles, Filter } from "lucide-react";
+import { BookOpen, Search, Heart, Filter } from "lucide-react";
 import { motion } from "framer-motion";
 import {
   Select,
@@ -153,9 +153,19 @@ const LettersDashboard: React.FC<LettersDashboardProps> = ({ onLogout }) => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <div className="w-8 h-8 bg-gradient-romantic rounded-full flex items-center justify-center animate-sparkle">
-                <Sparkles className="w-4 h-4 text-white" />
-              </div>
+              <motion.div 
+                className="w-8 h-8 bg-gradient-romantic rounded-full flex items-center justify-center"
+                animate={{ 
+                  scale: [1, 1.1, 1]
+                }}
+                transition={{ 
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                <Heart className="w-4 h-4 text-white" fill="currentColor" />
+              </motion.div>
               <h1 className="text-2xl font-dancing gradient-text font-semibold">
                 HelloLove
               </h1>
@@ -254,7 +264,7 @@ const LettersDashboard: React.FC<LettersDashboardProps> = ({ onLogout }) => {
               Hello Love,
             </h2>
             
-            <p className="text-lg text-primary/80 font-dancing leading-relaxed">
+            <p className="text-lg text-accent font-dancing leading-relaxed">
               Welcome to our special place. Choose the letter that matches your heart today.
             </p>
           </motion.div>
