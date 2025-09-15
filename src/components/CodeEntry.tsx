@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +12,8 @@ interface CodeEntryProps {
 // Note: In production, this should be validated server-side
 const SECRET_CODE = import.meta.env.VITE_SECRET_CODE || "HelloTanya2024";
 
+const emojiList = ["💕", "💖", "💗", "💝", "💘", "✨", "🌸", "🦋", "🌙", "💫"];
+
 const CodeEntry: React.FC<CodeEntryProps> = ({ onAuthenticated }) => {
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
@@ -19,19 +21,26 @@ const CodeEntry: React.FC<CodeEntryProps> = ({ onAuthenticated }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [attempts, setAttempts] = useState(0);
 
+  // Create stable random positions for emojis
+  const emojiBackground = useMemo(() => {
+    return [...Array(20)].map((_, i) => ({
+      left: Math.random() * 100 + "vw",
+      top: Math.random() * 100 + "vh",
+      emoji: emojiList[i % emojiList.length],
+      duration: Math.random() * 20 + 15,
+      delay: Math.random() * 20
+    }));
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (attempts >= 3) {
       setError("Too many attempts. Please wait before trying again.");
       return;
     }
-
     setIsLoading(true);
     setError("");
-
-    // Simulate network delay for security
     await new Promise(resolve => setTimeout(resolve, 800));
-
     if (code === SECRET_CODE) {
       localStorage.setItem("loveLettersAuth", "true");
       localStorage.setItem("authTimestamp", Date.now().toString());
@@ -41,7 +50,6 @@ const CodeEntry: React.FC<CodeEntryProps> = ({ onAuthenticated }) => {
       setError(`Incorrect code. Try again, my love 💕 (${3 - attempts - 1} attempts remaining)`);
       setCode("");
     }
-
     setIsLoading(false);
   };
 
@@ -49,30 +57,29 @@ const CodeEntry: React.FC<CodeEntryProps> = ({ onAuthenticated }) => {
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 relative overflow-hidden">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(20)].map((_, i) => (
+        {emojiBackground.map((props, i) => (
           <motion.div
             key={i}
             className="absolute text-2xl opacity-20"
             animate={{
               x: ["-10vw", "110vw"],
-              y: [Math.random() * 100 + "vh", Math.random() * 100 + "vh"],
+              y: [props.top, props.top],
               rotate: [0, 360]
             }}
             transition={{
-              duration: Math.random() * 20 + 15,
+              duration: props.duration,
               repeat: Infinity,
               ease: "linear",
-              delay: Math.random() * 20
+              delay: props.delay
             }}
             style={{
-              left: Math.random() * 100 + "vw",
-              top: Math.random() * 100 + "vh"
+              left: props.left,
+              top: props.top
             }}
           >
-            {["💕", "💖", "💗", "💝", "💘", "✨", "🌸", "🦋", "🌙", "💫"][i % 10]}
+            {props.emoji}
           </motion.div>
         ))}
-
         {/* Love Messages */}
         {["love you", "always ♡", "forever"].map((text, i) => (
           <motion.div
@@ -93,7 +100,6 @@ const CodeEntry: React.FC<CodeEntryProps> = ({ onAuthenticated }) => {
           </motion.div>
         ))}
       </div>
-
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
         <Card className="w-full max-w-md bg-white/80 backdrop-blur-sm shadow-2xl border-rose-200">
           <CardHeader className="text-center space-y-4">
@@ -110,16 +116,13 @@ const CodeEntry: React.FC<CodeEntryProps> = ({ onAuthenticated }) => {
             >
               <Heart className="h-16 w-16 text-rose-500 fill-rose-500 mx-auto" />
             </motion.div>
-
             <CardTitle className="text-3xl font-bold text-rose-800 font-script">
               HelloLove
             </CardTitle>
-
             <CardDescription className="text-rose-600">
               Enter our special code to access your personalized messages
             </CardDescription>
           </CardHeader>
-
           <CardContent className="space-y-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="relative">
@@ -143,13 +146,11 @@ const CodeEntry: React.FC<CodeEntryProps> = ({ onAuthenticated }) => {
                   {showCode ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </Button>
               </div>
-
               {error && (
                 <p className="text-red-500 text-sm text-center font-medium">
                   {error}
                 </p>
               )}
-
               <Button 
                 type="submit" 
                 className="w-full bg-rose-600 hover:bg-rose-700 text-white py-3 text-lg font-semibold"
@@ -158,7 +159,6 @@ const CodeEntry: React.FC<CodeEntryProps> = ({ onAuthenticated }) => {
                 {isLoading ? "Unlocking..." : "Open My Heart"}
               </Button>
             </form>
-
             <p className="text-center text-sm text-rose-600 italic">
               Made with love just for you ✨
             </p>
