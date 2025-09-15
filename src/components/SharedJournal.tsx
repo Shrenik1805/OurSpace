@@ -3,9 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Heart, BookOpen, Send, User } from "lucide-react";
+import { ArrowLeft, Heart, BookOpen, Send, User, Bell, Download, BellOff } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
+import { usePWAInstall } from "@/hooks/usePWAInstall";
 
 interface JournalEntry {
  id: string;
@@ -20,34 +22,52 @@ interface SharedJournalProps {
 }
 
 const SharedJournal = ({ onBack }: SharedJournalProps) => {
- const [entries, setEntries] = useState<JournalEntry[]>([]);
- const [newEntry, setNewEntry] = useState("");
- const [authorName, setAuthorName] = useState("");
- const [loading, setLoading] = useState(true);
- const [submitting, setSubmitting] = useState(false);
+  const [entries, setEntries] = useState<JournalEntry[]>([]);
+  const [newEntry, setNewEntry] = useState("");
+  const [authorName, setAuthorName] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  
+  const { permission, requestPermission, unsubscribe, isSupported, loading: notificationLoading } = usePushNotifications();
+  const { isInstallable, isInstalled, installApp } = usePWAInstall();
 
- useEffect(() => {
- fetchEntries();
- // Set up real-time subscription
- const channel = supabase
- .channel('journal_entries_changes')
- .on(
- 'postgres_changes',
- {
- event: 'INSERT',
- schema: 'public',
- table: 'journal_entries'
- },
- (payload) => {
- setEntries(prev => [payload.new as JournalEntry, ...prev]);
- }
- )
- .subscribe();
+  useEffect(() => {
+    fetchEntries();
+    // Set up real-time subscription
+    const channel = supabase
+      .channel('journal_entries_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'journal_entries'
+        },
+        (payload) => {
+          const newEntry = payload.new as JournalEntry;
+          setEntries(prev => [newEntry, ...prev]);
+          
+          // Trigger push notification if permission is granted and it's not the current user's entry
+          if (permission === 'granted' && 'serviceWorker' in navigator) {
+            navigator.serviceWorker.ready.then(registration => {
+              registration.showNotification(`New entry from ${newEntry.author_name}! 💕`, {
+                body: newEntry.content.substring(0, 100) + (newEntry.content.length > 100 ? '...' : ''),
+                icon: '/favicon.ico',
+                badge: '/favicon.ico',
+                tag: 'journal-entry',
+                data: { url: '/' },
+                requireInteraction: true
+              });
+            });
+          }
+        }
+      )
+      .subscribe();
 
- return () => {
- supabase.removeChannel(channel);
- };
- }, []);
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [permission]);
 
  const fetchEntries = async () => {
  try {
@@ -118,10 +138,46 @@ const SharedJournal = ({ onBack }: SharedJournalProps) => {
  <ArrowLeft className="w-4 h-4 mr-2" />
  Back to Letters
  </Button>
- <div className="flex items-center gap-2">
- <BookOpen className="w-5 h-5 text-pink-500" />
- <span className="text-sm font-medium text-pink-600">Shared Journal</span>
- </div>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <BookOpen className="w-5 h-5 text-pink-500" />
+              <span className="text-sm font-medium text-pink-600">Shared Journal</span>
+            </div>
+            <div className="flex items-center gap-2">
+              {isSupported && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={permission === 'granted' ? unsubscribe : requestPermission}
+                  disabled={notificationLoading}
+                  className="text-pink-600 hover:text-pink-700 hover:bg-pink-50"
+                >
+                  {permission === 'granted' ? (
+                    <>
+                      <BellOff className="w-4 h-4 mr-1" />
+                      <span className="hidden sm:inline">Disable</span>
+                    </>
+                  ) : (
+                    <>
+                      <Bell className="w-4 h-4 mr-1" />
+                      <span className="hidden sm:inline">Notify</span>
+                    </>
+                  )}
+                </Button>
+              )}
+              {isInstallable && !isInstalled && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={installApp}
+                  className="text-pink-600 hover:text-pink-700 hover:bg-pink-50"
+                >
+                  <Download className="w-4 h-4 mr-1" />
+                  <span className="hidden sm:inline">Install</span>
+                </Button>
+              )}
+            </div>
+          </div>
  </div>
  </div>
  </div>
