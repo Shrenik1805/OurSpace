@@ -9,8 +9,20 @@ const Index = () => {
 
   useEffect(() => {
     const authStatus = localStorage.getItem("loveLettersAuth");
-    if (authStatus === "true") {
-      setIsAuthenticated(true);
+    const authTimestamp = localStorage.getItem("authTimestamp");
+
+    if (authStatus === "true" && authTimestamp) {
+      const authTime = parseInt(authTimestamp);
+      const now = Date.now();
+      const twentyFourHours = 24 * 60 * 60 * 1000;
+
+      if (now - authTime > twentyFourHours) {
+        localStorage.removeItem("loveLettersAuth");
+        localStorage.removeItem("authTimestamp");
+        setIsAuthenticated(false);
+      } else {
+        setIsAuthenticated(true);
+      }
     }
     setLoading(false);
   }, []);
@@ -21,15 +33,12 @@ const Index = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("loveLettersAuth");
+    localStorage.removeItem("authTimestamp");
     setIsAuthenticated(false);
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen love-letters-bg flex items-center justify-center">
-        <LoadingSpinner message="Preparing your letters..." size="lg" />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!isAuthenticated) {
