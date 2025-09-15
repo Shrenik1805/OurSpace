@@ -44,28 +44,27 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light" storageKey="hellolove-theme">
-        <QueryClientProvider client={queryClient}>
-          <TooltipProvider>
+        <TooltipProvider>
+          <ErrorBoundary>
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
 
               {/* Background Music - only play when authenticated */}
-              <BackgroundMusic playOnLogin={isAuthenticated} />
+              {isAuthenticated && <BackgroundMusic playOnLogin={true} />}
 
               {/* Toast notifications */}
               <Toaster />
               <Sonner />
             </BrowserRouter>
-          </TooltipProvider>
-        </QueryClientProvider>
+          </ErrorBoundary>
+        </TooltipProvider>
       </ThemeProvider>
-    </ErrorBoundary>
+    </QueryClientProvider>
   );
 };
 
