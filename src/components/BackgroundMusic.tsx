@@ -85,7 +85,7 @@ const BackgroundMusic: React.FC<BackgroundMusicProps> = ({ playOnLogin = false }
         setIsLoading(true);
         await audio.play();
       } catch (error) {
-        console.log("Auto-play blocked by browser - user needs to manually start music");
+        // Auto-play blocked by browser - user needs to manually start music
         setIsLoading(false);
       }
     };
