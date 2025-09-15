@@ -1,173 +1,213 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Volume2, VolumeX, Play, Pause } from "lucide-react";
+import { Volume2, VolumeX, Play, Pause, Music } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface BackgroundMusicProps {
- playOnLogin?: boolean;
+  playOnLogin?: boolean;
 }
 
 const BackgroundMusic: React.FC<BackgroundMusicProps> = ({ playOnLogin = false }) => {
- const audioRef = useRef<HTMLAudioElement>(null);
- const [isMuted, setIsMuted] = useState(false);
- const [isPlaying, setIsPlaying] = useState(false);
- const [isLoading, setIsLoading] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
+  const [audioError, setAudioError] = useState(false);
 
- // Start playing ONLY after user logs in (user-triggered event)
- useEffect(() => {
- const audio = audioRef.current;
- if (!audio || !playOnLogin) return;
+  // Initialize audio element
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
 
- const initializeAudio = async () => {
- setIsLoading(true);
- try {
- audio.volume = 0.15; // Slightly lower volume
- audio.muted = isMuted;
- audio.loop = true; // Ensure music loops
+    const handleLoadStart = () => {
+      setIsLoading(true);
+      setAudioError(false);
+    };
 
- const playPromise = audio.play();
- if (playPromise !== undefined) {
- await playPromise;
- setIsPlaying(true);
- }
- } catch (error) {
- console.log("Auto-play blocked by browser; user can manually start");
- } finally {
- setIsLoading(false);
- }
- };
+    const handleCanPlay = () => {
+      setIsLoading(false);
+      setAudioError(false);
+    };
 
- initializeAudio();
- }, [playOnLogin, isMuted]);
+    const handlePlay = () => {
+      setIsPlaying(true);
+      setIsLoading(false);
+    };
 
- // Handle audio events
- useEffect(() => {
- const audio = audioRef.current;
- if (!audio) return;
+    const handlePause = () => {
+      setIsPlaying(false);
+    };
 
- const handlePlay = () => setIsPlaying(true);
- const handlePause = () => setIsPlaying(false);
- const handleLoadStart = () => setIsLoading(true);
- const handleCanPlay = () => setIsLoading(false);
+    const handleError = (e: Event) => {
+      console.error('Audio error:', e);
+      setIsLoading(false);
+      setAudioError(true);
+      setIsPlaying(false);
+    };
 
- audio.addEventListener('play', handlePlay);
- audio.addEventListener('pause', handlePause);
- audio.addEventListener('loadstart', handleLoadStart);
- audio.addEventListener('canplay', handleCanPlay);
+    const handleLoadedData = () => {
+      setIsLoading(false);
+    };
 
- return () => {
- audio.removeEventListener('play', handlePlay);
- audio.removeEventListener('pause', handlePause);
- audio.removeEventListener('loadstart', handleLoadStart);
- audio.removeEventListener('canplay', handleCanPlay);
- };
- }, []);
+    // Add event listeners
+    audio.addEventListener('loadstart', handleLoadStart);
+    audio.addEventListener('canplay', handleCanPlay);
+    audio.addEventListener('loadeddata', handleLoadedData);
+    audio.addEventListener('play', handlePlay);
+    audio.addEventListener('pause', handlePause);
+    audio.addEventListener('error', handleError);
 
- // Toggle play/pause
- const togglePlayPause = () => {
- const audio = audioRef.current;
- if (!audio) return;
+    // Set initial properties
+    audio.volume = 0.15;
+    audio.loop = true;
+    audio.preload = 'auto';
 
- if (isPlaying) {
- audio.pause();
- } else {
- audio.play().catch(() => {
- console.log("Could not play audio");
- });
- }
- };
+    return () => {
+      audio.removeEventListener('loadstart', handleLoadStart);
+      audio.removeEventListener('canplay', handleCanPlay);
+      audio.removeEventListener('loadeddata', handleLoadedData);
+      audio.removeEventListener('play', handlePlay);
+      audio.removeEventListener('pause', handlePause);
+      audio.removeEventListener('error', handleError);
+    };
+  }, []);
 
- // Toggle mute on/off
- const toggleMute = () => {
- const audio = audioRef.current;
- if (!audio) return;
+  // Handle auto-play after user login (requires user interaction)
+  useEffect(() => {
+    if (!playOnLogin || !hasUserInteracted || audioError) return;
 
- const newMutedState = !isMuted;
- audio.muted = newMutedState;
- setIsMuted(newMutedState);
- };
+    const audio = audioRef.current;
+    if (!audio) return;
 
- return (
- <div className="fixed bottom-4 right-4 z-50 flex gap-2">
- <audio
- ref={audioRef}
- src="/ambient-music.mp3"
- preload="metadata"
- >
- Your browser does not support the audio element.
- </audio>
+    const attemptAutoPlay = async () => {
+      try {
+        setIsLoading(true);
+        await audio.play();
+      } catch (error) {
+        console.log("Auto-play blocked by browser - user needs to manually start music");
+        setIsLoading(false);
+      }
+    };
 
- {/* Play/Pause Button */}
- <Button
- variant="outline"
- size="sm"
- onClick={togglePlayPause}
- disabled={isLoading}
- className="bg-white/90 backdrop-blur-sm hover:bg-white/95 border-pink-200/50 text-pink-600 hover:text-pink-700"
- >
- <AnimatePresence mode="wait">
- {isLoading ? (
- <motion.div
- key="loading"
- initial={{ opacity: 0, rotate: 0 }}
- animate={{ opacity: 1, rotate: 360 }}
- exit={{ opacity: 0 }}
- transition={{ repeat: Infinity, duration: 1 }}
- className="w-4 h-4 border-2 border-pink-300 border-t-pink-600 rounded-full"
- />
- ) : isPlaying ? (
- <motion.div
- key="pause"
- initial={{ opacity: 0, scale: 0.8 }}
- animate={{ opacity: 1, scale: 1 }}
- exit={{ opacity: 0, scale: 0.8 }}
- >
- <Pause className="w-4 h-4" />
- </motion.div>
- ) : (
- <motion.div
- key="play"
- initial={{ opacity: 0, scale: 0.8 }}
- animate={{ opacity: 1, scale: 1 }}
- exit={{ opacity: 0, scale: 0.8 }}
- >
- <Play className="w-4 h-4" />
- </motion.div>
- )}
- </AnimatePresence>
- </Button>
+    // Small delay to ensure audio is ready
+    const timeoutId = setTimeout(attemptAutoPlay, 500);
+    return () => clearTimeout(timeoutId);
+  }, [playOnLogin, hasUserInteracted, audioError]);
 
- {/* Mute/Unmute Button */}
- <Button
- variant="outline"
- size="sm"
- onClick={toggleMute}
- className="bg-white/90 backdrop-blur-sm hover:bg-white/95 border-pink-200/50 text-pink-600 hover:text-pink-700"
- >
- <AnimatePresence mode="wait">
- {isMuted ? (
- <motion.div
- key="muted"
- initial={{ opacity: 0, scale: 0.8 }}
- animate={{ opacity: 1, scale: 1 }}
- exit={{ opacity: 0, scale: 0.8 }}
- >
- <VolumeX className="w-4 h-4" />
- </motion.div>
- ) : (
- <motion.div
- key="unmuted"
- initial={{ opacity: 0, scale: 0.8 }}
- animate={{ opacity: 1, scale: 1 }}
- exit={{ opacity: 0, scale: 0.8 }}
- >
- <Volume2 className="w-4 h-4" />
- </motion.div>
- )}
- </AnimatePresence>
- </Button>
- </div>
- );
+  // Handle user interaction to enable autoplay
+  useEffect(() => {
+    const handleUserInteraction = () => {
+      setHasUserInteracted(true);
+      // Remove listeners after first interaction
+      document.removeEventListener('click', handleUserInteraction);
+      document.removeEventListener('keydown', handleUserInteraction);
+      document.removeEventListener('touchstart', handleUserInteraction);
+    };
+
+    document.addEventListener('click', handleUserInteraction);
+    document.addEventListener('keydown', handleUserInteraction);
+    document.addEventListener('touchstart', handleUserInteraction);
+
+    return () => {
+      document.removeEventListener('click', handleUserInteraction);
+      document.removeEventListener('keydown', handleUserInteraction);
+      document.removeEventListener('touchstart', handleUserInteraction);
+    };
+  }, []);
+
+  // Toggle play/pause
+  const togglePlayPause = async () => {
+    const audio = audioRef.current;
+    if (!audio || audioError) return;
+
+    setHasUserInteracted(true);
+
+    try {
+      if (isPlaying) {
+        await audio.pause();
+      } else {
+        setIsLoading(true);
+        await audio.play();
+      }
+    } catch (error) {
+      console.error("Could not play/pause audio:", error);
+      setIsLoading(false);
+      setAudioError(true);
+    }
+  };
+
+  // Toggle mute on/off
+  const toggleMute = () => {
+    const audio = audioRef.current;
+    if (!audio || audioError) return;
+
+    const newMutedState = !isMuted;
+    audio.muted = newMutedState;
+    setIsMuted(newMutedState);
+  };
+
+  // Don't render if there's an audio error
+  if (audioError) {
+    return null;
+  }
+
+  return (
+    <div className="fixed bottom-4 right-4 z-50">
+      <audio
+        ref={audioRef}
+        src="/ambient-music.mp3"
+        preload="auto"
+        loop
+      >
+        Your browser does not support the audio element.
+      </audio>
+
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="flex items-center gap-2 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg border border-rose-200"
+      >
+        {/* Music Icon */}
+        <div className="flex items-center">
+          {isLoading ? (
+            <Music className="h-4 w-4 text-rose-500 animate-pulse" />
+          ) : (
+            <Music className="h-4 w-4 text-rose-500" />
+          )}
+        </div>
+
+        {/* Play/Pause Button */}
+        <Button
+          onClick={togglePlayPause}
+          size="sm"
+          variant="ghost"
+          className="h-8 w-8 p-0 text-rose-600 hover:text-rose-800 hover:bg-rose-100"
+          disabled={isLoading}
+        >
+          {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+        </Button>
+
+        {/* Mute/Unmute Button */}
+        <Button
+          onClick={toggleMute}
+          size="sm"
+          variant="ghost"
+          className="h-8 w-8 p-0 text-rose-600 hover:text-rose-800 hover:bg-rose-100"
+          disabled={audioError}
+        >
+          {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+        </Button>
+
+        {/* Status indicator */}
+        {!hasUserInteracted && playOnLogin && (
+          <span className="text-xs text-rose-600 ml-2">
+            Click to enable music
+          </span>
+        )}
+      </motion.div>
+    </div>
+  );
 };
 
 export default BackgroundMusic;
