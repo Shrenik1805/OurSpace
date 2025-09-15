@@ -1,81 +1,76 @@
-import { Component, ErrorInfo, ReactNode } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, RefreshCw } from "lucide-react";
+import { AlertTriangle, RefreshCw } from "lucide-react";
 
-interface Props {
-  children: ReactNode;
-}
-
-interface State {
+interface ErrorBoundaryState {
   hasError: boolean;
   error?: Error;
 }
 
-export class ErrorBoundary extends Component<Props, State> {
-  public state: State = {
-    hasError: false
-  };
+interface ErrorBoundaryProps {
+  children: React.ReactNode;
+}
 
-  public static getDerivedStateFromError(error: Error): State {
+export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };
   }
 
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('HelloLove Error Boundary caught an error:', error, errorInfo);
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('Error caught by boundary:', error, errorInfo);
   }
 
-  private handleReload = () => {
-    window.location.reload();
-  };
-
-  private handleReset = () => {
+  handleReset = () => {
     this.setState({ hasError: false, error: undefined });
   };
 
-  public render() {
+  render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen love-letters-bg flex items-center justify-center p-4">
-          <Card className="letter-paper max-w-md w-full">
+        <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 flex items-center justify-center p-4">
+          <Card className="max-w-lg w-full bg-white/80 backdrop-blur-sm shadow-xl border-rose-200">
             <CardHeader className="text-center">
-              <Heart className="w-12 h-12 text-primary mx-auto mb-4" />
-              <CardTitle className="text-2xl font-playfair text-primary">
+              <div className="flex justify-center mb-4">
+                <AlertTriangle className="h-12 w-12 text-rose-500" />
+              </div>
+              <CardTitle className="text-2xl text-rose-800">
                 Oops! Something went wrong
               </CardTitle>
-              <CardDescription className="text-base">
-                Don't worry, our love is still strong! Let's get you back to your letters.
-              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              {this.state.error && (
-                <div className="bg-muted/50 p-3 rounded-md text-sm text-muted-foreground">
-                  <p className="font-medium mb-1">Error Details:</p>
-                  <p className="text-xs font-mono">{this.state.error.message}</p>
-                </div>
+            <CardContent className="text-center space-y-4">
+              <p className="text-gray-600">
+                Don't worry, this happens sometimes. Let's try to get back to our love letters.
+              </p>
+              {process.env.NODE_ENV === 'development' && this.state.error && (
+                <details className="text-left text-sm bg-rose-50 p-3 rounded border text-rose-700">
+                  <summary className="cursor-pointer font-medium">Error Details</summary>
+                  <pre className="mt-2 whitespace-pre-wrap">
+                    {this.state.error.toString()}
+                  </pre>
+                </details>
               )}
-
-              <div className="flex flex-col sm:flex-row gap-2">
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Button 
                   onClick={this.handleReset}
-                  className="flex-1"
-                  variant="outline"
+                  className="bg-rose-600 hover:bg-rose-700 text-white"
                 >
-                  <RefreshCw className="w-4 h-4 mr-2" />
+                  <RefreshCw className="h-4 w-4 mr-2" />
                   Try Again
                 </Button>
                 <Button 
-                  onClick={this.handleReload}
-                  className="flex-1 bg-gradient-romantic hover:opacity-90"
+                  onClick={() => window.location.reload()}
+                  variant="outline"
+                  className="border-rose-300 text-rose-700 hover:bg-rose-50"
                 >
-                  <Heart className="w-4 h-4 mr-2" />
-                  Reload Page
+                  Refresh Page
                 </Button>
               </div>
-
-              <p className="text-center text-sm text-muted-foreground font-dancing">
-                Made with love, even when things break ✨
-              </p>
             </CardContent>
           </Card>
         </div>
