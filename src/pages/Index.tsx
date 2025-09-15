@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import CodeEntry from "@/components/CodeEntry";
 import LettersDashboard from "@/components/LettersDashboard";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import BackgroundMusic from "@/components/BackgroundMusic";
 
 const Index = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -45,7 +46,12 @@ const Index = () => {
     return <CodeEntry onAuthenticated={handleAuthenticated} />;
   }
 
-  return <LettersDashboard onLogout={handleLogout} />;
+  return (
+    <>
+      <LettersDashboard onLogout={handleLogout} />
+      <BackgroundMusic playOnLogin={true} />
+    </>
+  );
 };
 
 export default Index;

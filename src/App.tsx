@@ -7,8 +7,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import BackgroundMusic from "./components/BackgroundMusic";
-import { useEffect, useState } from "react";
+
+
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,28 +20,6 @@ const queryClient = new QueryClient({
 });
 
 const App: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  // Check authentication status
-  useEffect(() => {
-    const authStatus = localStorage.getItem("loveLettersAuth");
-    const authTimestamp = localStorage.getItem("authTimestamp");
-
-    // Check if auth is expired (24 hours)
-    if (authStatus === "true" && authTimestamp) {
-      const authTime = parseInt(authTimestamp);
-      const now = Date.now();
-      const twentyFourHours = 24 * 60 * 60 * 1000;
-
-      if (now - authTime > twentyFourHours) {
-        localStorage.removeItem("loveLettersAuth");
-        localStorage.removeItem("authTimestamp");
-        setIsAuthenticated(false);
-      } else {
-        setIsAuthenticated(true);
-      }
-    }
-  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -54,8 +32,7 @@ const App: React.FC = () => {
                 <Route path="*" element={<NotFound />} />
               </Routes>
 
-              {/* Background Music - only play when authenticated */}
-              {isAuthenticated && <BackgroundMusic playOnLogin={true} />}
+              {/* Background Music moved to Index to match auth state */}
 
               {/* Toast notifications */}
               <Toaster />
