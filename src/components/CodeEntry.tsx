@@ -46,26 +46,27 @@ const CodeEntry: React.FC<CodeEntryProps> = ({ onAuthenticated }) => {
   };
 
   return (
-    <div className="min-h-screen love-letters-bg flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 relative overflow-hidden">
       {/* Animated Background Elements */}
-      <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute text-2xl opacity-10"
-            initial={{ 
-              x: Math.random() * window.innerWidth, 
-              y: Math.random() * window.innerHeight,
-              rotate: Math.random() * 360
+            className="absolute text-2xl opacity-20"
+            animate={{
+              x: ["-10vw", "110vw"],
+              y: [Math.random() * 100 + "vh", Math.random() * 100 + "vh"],
+              rotate: [0, 360]
             }}
-            animate={{ 
-              y: [null, Math.random() * window.innerHeight],
-              rotate: [null, Math.random() * 360]
+            transition={{
+              duration: Math.random() * 20 + 15,
+              repeat: Infinity,
+              ease: "linear",
+              delay: Math.random() * 20
             }}
-            transition={{ 
-              duration: 10 + Math.random() * 10, 
-              repeat: Infinity, 
-              repeatType: "reverse" 
+            style={{
+              left: Math.random() * 100 + "vw",
+              top: Math.random() * 100 + "vh"
             }}
           >
             {["💕", "💖", "💗", "💝", "💘", "✨", "🌸", "🦋", "🌙", "💫"][i % 10]}
@@ -76,20 +77,16 @@ const CodeEntry: React.FC<CodeEntryProps> = ({ onAuthenticated }) => {
         {["love you", "always ♡", "forever"].map((text, i) => (
           <motion.div
             key={text}
-            className="absolute text-lg text-primary/20 font-dancing"
-            initial={{ 
-              x: Math.random() * window.innerWidth * 0.8,
-              y: Math.random() * window.innerHeight * 0.8,
-              rotate: -15 + Math.random() * 30
+            className="absolute text-rose-300 text-lg font-script opacity-30"
+            animate={{
+              x: ["-20vw", "120vw"],
+              y: ["20vh", "80vh"]
             }}
-            animate={{ 
-              rotate: [-15, 15, -15],
-              scale: [1, 1.1, 1]
-            }}
-            transition={{ 
-              duration: 4, 
-              repeat: Infinity, 
-              delay: i * 0.5 
+            transition={{
+              duration: 25,
+              repeat: Infinity,
+              ease: "linear",
+              delay: i * 8
             }}
           >
             {text}
@@ -97,13 +94,8 @@ const CodeEntry: React.FC<CodeEntryProps> = ({ onAuthenticated }) => {
         ))}
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20, scale: 0.95 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
-      >
-        <Card className="letter-paper border-primary/20 backdrop-blur-sm">
+      <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
+        <Card className="w-full max-w-md bg-white/80 backdrop-blur-sm shadow-2xl border-rose-200">
           <CardHeader className="text-center space-y-4">
             <motion.div
               animate={{ 
@@ -111,17 +103,19 @@ const CodeEntry: React.FC<CodeEntryProps> = ({ onAuthenticated }) => {
                 rotate: [0, 5, -5, 0]
               }}
               transition={{ 
-                duration: 2, 
-                repeat: Infinity, 
-                ease: "easeInOut" 
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
               }}
             >
-              <Heart className="w-12 h-12 text-primary mx-auto" fill="currentColor" />
+              <Heart className="h-16 w-16 text-rose-500 fill-rose-500 mx-auto" />
             </motion.div>
-            <CardTitle className="text-3xl font-playfair text-primary">
+
+            <CardTitle className="text-3xl font-bold text-rose-800 font-script">
               HelloLove
             </CardTitle>
-            <CardDescription className="text-base text-muted-foreground font-inter">
+
+            <CardDescription className="text-rose-600">
               Enter our special code to access your personalized messages
             </CardDescription>
           </CardHeader>
@@ -131,7 +125,7 @@ const CodeEntry: React.FC<CodeEntryProps> = ({ onAuthenticated }) => {
               <div className="relative">
                 <Input
                   type={showCode ? "text" : "password"}
-                  placeholder="Enter the magic words..."
+                  placeholder="Enter secret code"
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
                   className="text-center text-lg tracking-wide border-primary/30 focus:border-primary pr-10 font-inter"
@@ -143,58 +137,34 @@ const CodeEntry: React.FC<CodeEntryProps> = ({ onAuthenticated }) => {
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-rose-500 hover:text-rose-700"
                   onClick={() => setShowCode(!showCode)}
-                  tabIndex={-1}
                 >
-                  {showCode ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
+                  {showCode ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </Button>
               </div>
 
               {error && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-center text-sm text-destructive bg-destructive/10 p-3 rounded-md"
-                >
+                <p className="text-red-500 text-sm text-center font-medium">
                   {error}
-                </motion.div>
+                </p>
               )}
 
-              <Button
-                type="submit"
-                className="w-full bg-gradient-romantic hover:opacity-90 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300"
-                disabled={!code.trim() || isLoading || attempts >= 3}
+              <Button 
+                type="submit" 
+                className="w-full bg-rose-600 hover:bg-rose-700 text-white py-3 text-lg font-semibold"
+                disabled={isLoading || !code.trim()}
               >
-                {isLoading ? (
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Unlocking...
-                  </div>
-                ) : (
-                  <>
-                    <Heart className="w-4 h-4 mr-2" />
-                    Enter Our World
-                  </>
-                )}
+                {isLoading ? "Unlocking..." : "Open My Heart"}
               </Button>
             </form>
 
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="text-center text-sm text-muted-foreground font-dancing text-lg"
-            >
+            <p className="text-center text-sm text-rose-600 italic">
               Made with love just for you ✨
-            </motion.p>
+            </p>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
     </div>
   );
 };
