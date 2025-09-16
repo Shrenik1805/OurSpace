@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Heart, BookOpen, Send, User, Bell, Download, BellOff } from "lucide-react";
+import { ArrowLeft, Heart, BookOpen, Send, User, Bell, Download, BellOff, Edit, Trash2, X, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
@@ -27,6 +27,8 @@ const SharedJournal = ({ onBack }: SharedJournalProps) => {
   const [authorName, setAuthorName] = useState("");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editContent, setEditContent] = useState("");
   
   const { permission, requestPermission, unsubscribe, isSupported, loading: notificationLoading } = usePushNotifications();
   const { isInstallable, isInstalled, installApp } = usePWAInstall();
@@ -113,7 +115,61 @@ const SharedJournal = ({ onBack }: SharedJournalProps) => {
  }
  };
 
- const formatDate = (dateString: string) => {
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this journal entry?')) return;
+    
+    try {
+      const { error } = await supabase
+        .from('journal_entries')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setEntries(prev => prev.filter(entry => entry.id !== id));
+      toast.success("Journal entry deleted");
+    } catch (error) {
+      console.error('Error deleting journal entry:', error);
+      toast.error("Could not delete journal entry");
+    }
+  };
+
+  const handleEdit = (entry: JournalEntry) => {
+    setEditingId(entry.id);
+    setEditContent(entry.content);
+  };
+
+  const handleSaveEdit = async (id: string) => {
+    if (!editContent.trim()) return;
+
+    try {
+      const { error } = await supabase
+        .from('journal_entries')
+        .update({ content: editContent.trim() })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setEntries(prev => prev.map(entry => 
+        entry.id === id 
+          ? { ...entry, content: editContent.trim(), updated_at: new Date().toISOString() }
+          : entry
+      ));
+      setEditingId(null);
+      setEditContent("");
+      toast.success("Journal entry updated");
+    } catch (error) {
+      console.error('Error updating journal entry:', error);
+      toast.error("Could not update journal entry");
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setEditContent("");
+  };
+
+  const formatDate = (dateString: string) => {
  return new Date(dateString).toLocaleString('en-US', {
  year: 'numeric',
  month: 'short',
@@ -266,26 +322,75 @@ const SharedJournal = ({ onBack }: SharedJournalProps) => {
  </Card>
  ) : (
  entries.map((entry) => (
- <Card key={entry.id} className="border-pink-200/50 shadow-sm hover:shadow-md transition-shadow">
- <CardHeader className="pb-3">
- <div className="flex items-center justify-between">
- <div className="flex items-center gap-2">
- <User className="w-4 h-4 text-pink-500" />
- <span className="font-medium text-pink-600">
- {entry.author_name}
- </span>
- </div>
- <span className="text-xs text-gray-500">
- {formatDate(entry.created_at)}
- </span>
- </div>
- </CardHeader>
- <CardContent>
- <div className="text-gray-700 whitespace-pre-wrap leading-relaxed">
- {entry.content}
- </div>
- </CardContent>
- </Card>
+            <Card key={entry.id} className="border-pink-200/50 shadow-sm hover:shadow-md transition-shadow">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <User className="w-4 h-4 text-pink-500" />
+                    <span className="font-medium text-pink-600">
+                      {entry.author_name}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-500">
+                      {formatDate(entry.created_at)}
+                    </span>
+                    <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleEdit(entry)}
+                        className="h-8 w-8 p-0 text-gray-400 hover:text-pink-600"
+                      >
+                        <Edit className="w-3 h-3" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDelete(entry.id)}
+                        className="h-8 w-8 p-0 text-gray-400 hover:text-red-600"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {editingId === entry.id ? (
+                  <div className="space-y-3">
+                    <Textarea
+                      value={editContent}
+                      onChange={(e) => setEditContent(e.target.value)}
+                      rows={4}
+                      className="resize-none"
+                    />
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        onClick={() => handleSaveEdit(entry.id)}
+                        className="bg-green-600 hover:bg-green-700"
+                      >
+                        <Check className="w-3 h-3 mr-1" />
+                        Save
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={handleCancelEdit}
+                      >
+                        <X className="w-3 h-3 mr-1" />
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-gray-700 whitespace-pre-wrap leading-relaxed">
+                    {entry.content}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
  ))
  )}
  </div>
