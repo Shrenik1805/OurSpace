@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { User, Session } from "@supabase/supabase-js";
+import { User } from "@supabase/supabase-js";
 import { Eye, EyeOff, Mail, Lock, UserPlus, LogIn } from "lucide-react";
 
 interface AuthPageProps {
@@ -19,13 +19,11 @@ const AuthPage = ({ onAuthenticated }: AuthPageProps) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
+      (_event, session) => {
         if (session?.user) {
           onAuthenticated(session.user);
         }
@@ -34,7 +32,6 @@ const AuthPage = ({ onAuthenticated }: AuthPageProps) => {
 
     // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
       if (session?.user) {
         onAuthenticated(session.user);
       }
