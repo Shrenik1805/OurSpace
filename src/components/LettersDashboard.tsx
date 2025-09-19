@@ -154,7 +154,7 @@ const LettersDashboard: React.FC<LettersDashboardProps> = ({ onLogout }) => {
  HelloLove
  </h1>
  <p className="text-xs text-gray-500">
- "I'm sorry, I'm not there live, But babe I'm just a click away."
+ "Iknow I'm not there, But babe I'm just a click away."
  </p>
  </div>
  </div>
