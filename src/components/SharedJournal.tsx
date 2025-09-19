@@ -35,6 +35,10 @@ const SharedJournal = ({ onBack }: SharedJournalProps) => {
 
   useEffect(() => {
     fetchEntries();
+    
+    // Store current author name to avoid self-notifications
+    const currentAuthor = localStorage.getItem('currentAuthor') || '';
+    
     // Set up real-time subscription
     const channel = supabase
       .channel('journal_entries_changes')
@@ -49,17 +53,33 @@ const SharedJournal = ({ onBack }: SharedJournalProps) => {
           const newEntry = payload.new as JournalEntry;
           setEntries(prev => [newEntry, ...prev]);
           
-          // Trigger push notification if permission is granted and it's not the current user's entry
-          if (permission === 'granted' && 'serviceWorker' in navigator) {
+          // Only show notification if it's not from the current user
+          if (newEntry.author_name !== currentAuthor && permission === 'granted' && 'serviceWorker' in navigator) {
+            // Send message to service worker to show notification
             navigator.serviceWorker.ready.then(registration => {
-              registration.showNotification(`New entry from ${newEntry.author_name}! 💕`, {
-                body: newEntry.content.substring(0, 100) + (newEntry.content.length > 100 ? '...' : ''),
-                icon: '/favicon.ico',
-                badge: '/favicon.ico',
-                tag: 'journal-entry',
-                data: { url: '/' },
-                requireInteraction: true
-              });
+              if (registration.active) {
+                registration.active.postMessage({
+                  type: 'SHOW_NOTIFICATION',
+                  data: {
+                    title: `New entry from ${newEntry.author_name}! 💕`,
+                    body: newEntry.content.substring(0, 100) + (newEntry.content.length > 100 ? '...' : ''),
+                    icon: '/favicon.ico',
+                    badge: '/favicon.ico',
+                    tag: 'journal-entry',
+                    data: { url: '/' },
+                    requireInteraction: true,
+                    actions: [
+                      {
+                        action: 'open',
+                        title: 'Read Entry',
+                        icon: '/favicon.ico'
+                      }
+                    ]
+                  }
+                });
+              }
+            }).catch(error => {
+              console.error('Error sending notification:', error);
             });
           }
         }
@@ -88,32 +108,35 @@ const SharedJournal = ({ onBack }: SharedJournalProps) => {
  }
  };
 
- const handleSubmit = async (e: React.FormEvent) => {
- e.preventDefault();
- if (!newEntry.trim() || !authorName.trim()) return;
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newEntry.trim() || !authorName.trim()) return;
 
- setSubmitting(true);
- try {
- const { error } = await supabase
- .from('journal_entries')
- .insert([
- {
- author_name: authorName.trim(),
- content: newEntry.trim(),
- }
- ]);
+    setSubmitting(true);
+    try {
+      // Store current author for notification filtering
+      localStorage.setItem('currentAuthor', authorName.trim());
+      
+      const { error } = await supabase
+        .from('journal_entries')
+        .insert([
+          {
+            author_name: authorName.trim(),
+            content: newEntry.trim(),
+          }
+        ]);
 
- if (error) throw error;
+      if (error) throw error;
 
- setNewEntry("");
- toast.success("Your journal entry has been shared");
- } catch (error) {
- console.error('Error adding journal entry:', error);
- toast.error("Could not add journal entry");
- } finally {
- setSubmitting(false);
- }
- };
+      setNewEntry("");
+      toast.success("Your journal entry has been shared");
+    } catch (error) {
+      console.error('Error adding journal entry:', error);
+      toast.error("Could not add journal entry");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this journal entry?')) return;

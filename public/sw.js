@@ -39,29 +39,64 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Push notification event listener
+// Handle messages from the main thread
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SHOW_NOTIFICATION') {
+    const { title, body, icon, badge, tag, data, requireInteraction, actions } = event.data.data;
+    
+    event.waitUntil(
+      self.registration.showNotification(title, {
+        body,
+        icon,
+        badge,
+        tag,
+        data,
+        requireInteraction,
+        actions,
+        renotify: true,
+        silent: false,
+        vibrate: [200, 100, 200]
+      })
+    );
+  }
+});
+
+// Push notification event listener (for server-sent notifications)
 self.addEventListener('push', (event) => {
+  let notificationData;
+  
+  try {
+    notificationData = event.data ? event.data.json() : {};
+  } catch (e) {
+    notificationData = {
+      title: 'HelloLove - New Entry! 💕',
+      body: event.data ? event.data.text() : 'New journal entry from your loved one! 💕'
+    };
+  }
+
   const options = {
-    body: event.data ? event.data.text() : 'New journal entry from your loved one! 💕',
+    body: notificationData.body || 'New journal entry from your loved one! 💕',
     icon: '/favicon.ico',
     badge: '/favicon.ico',
     data: {
-      url: '/'
+      url: notificationData.url || '/'
     },
     actions: [
       {
         action: 'open',
-        title: 'Open HelloLove',
+        title: 'Read Entry',
         icon: '/favicon.ico'
       }
     ],
     tag: 'journal-entry',
     renotify: true,
-    requireInteraction: true
+    requireInteraction: true,
+    silent: false,
+    vibrate: [200, 100, 200]
   };
 
   event.waitUntil(
-    self.registration.showNotification('HelloLove - New Entry! 💕', options)
+    self.registration.showNotification(notificationData.title || 'HelloLove - New Entry! 💕', options)
   );
 });
 

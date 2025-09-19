@@ -50,11 +50,26 @@ export const usePushNotifications = () => {
 
   const subscribeToPushNotifications = async () => {
     try {
+      // Register service worker if not already registered
+      if ('serviceWorker' in navigator) {
+        let registration = await navigator.serviceWorker.getRegistration();
+        
+        if (!registration) {
+          registration = await navigator.serviceWorker.register('/sw.js', {
+            scope: '/'
+          });
+          
+          // Wait for the service worker to be ready
+          await navigator.serviceWorker.ready;
+        }
+      }
+      
       const registration = await navigator.serviceWorker.ready;
       
       const existingSubscription = await registration.pushManager.getSubscription();
       if (existingSubscription) {
         setSubscription(existingSubscription);
+        console.log('Using existing push subscription');
         return existingSubscription;
       }
 
@@ -67,6 +82,7 @@ export const usePushNotifications = () => {
       
       // Store subscription in localStorage for the app to use
       localStorage.setItem('pushSubscription', JSON.stringify(subscription));
+      console.log('Created new push subscription');
       
       return subscription;
     } catch (error) {
