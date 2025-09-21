@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 
+// This will be replaced with actual VAPID key from server
 const PUBLIC_VAPID_KEY = 'BH7K_hP-7XoFBCXTCvl8HxTe7jnq3q5J8s1Mf5K_-9ZgV4c_7L-8C9F2L8K5T4E7Q8K-5L7N-3K8T1B4C7L6M8N3P2';
 
 export const usePushNotifications = () => {
@@ -69,6 +70,7 @@ export const usePushNotifications = () => {
       const existingSubscription = await registration.pushManager.getSubscription();
       if (existingSubscription) {
         setSubscription(existingSubscription);
+        await saveSubscriptionToDatabase(existingSubscription);
         console.log('Using existing push subscription');
         return existingSubscription;
       }
@@ -79,6 +81,9 @@ export const usePushNotifications = () => {
       });
 
       setSubscription(subscription);
+      
+      // Save subscription to database
+      await saveSubscriptionToDatabase(subscription);
       
       // Store subscription in localStorage for the app to use
       localStorage.setItem('pushSubscription', JSON.stringify(subscription));
@@ -91,8 +96,47 @@ export const usePushNotifications = () => {
     }
   };
 
+  const saveSubscriptionToDatabase = async (subscription: PushSubscription) => {
+    try {
+      const { supabase } = await import('@/integrations/supabase/client');
+      
+      const subscriptionData = {
+        endpoint: subscription.endpoint,
+        p256dh: subscription.toJSON().keys?.p256dh || '',
+        auth: subscription.toJSON().keys?.auth || '',
+        user_agent: navigator.userAgent
+      };
+
+      const { error } = await supabase
+        .from('push_subscriptions')
+        .upsert(subscriptionData, { 
+          onConflict: 'endpoint',
+          ignoreDuplicates: false 
+        });
+
+      if (error) {
+        console.error('Error saving subscription to database:', error);
+      } else {
+        console.log('Subscription saved to database successfully');
+      }
+    } catch (error) {
+      console.error('Error in saveSubscriptionToDatabase:', error);
+    }
+  };
+
   const unsubscribe = async () => {
     if (subscription) {
+      // Remove from database
+      try {
+        const { supabase } = await import('@/integrations/supabase/client');
+        await supabase
+          .from('push_subscriptions')
+          .delete()
+          .eq('endpoint', subscription.endpoint);
+      } catch (error) {
+        console.error('Error removing subscription from database:', error);
+      }
+      
       await subscription.unsubscribe();
       setSubscription(null);
       localStorage.removeItem('pushSubscription');

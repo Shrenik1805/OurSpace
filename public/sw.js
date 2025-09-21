@@ -63,11 +63,15 @@ self.addEventListener('message', (event) => {
 
 // Push notification event listener (for server-sent notifications)
 self.addEventListener('push', (event) => {
+  console.log('Push notification received:', event);
+  
   let notificationData;
   
   try {
     notificationData = event.data ? event.data.json() : {};
+    console.log('Notification data:', notificationData);
   } catch (e) {
+    console.log('Failed to parse notification data, using default');
     notificationData = {
       title: 'HelloLove - New Entry! 💕',
       body: event.data ? event.data.text() : 'New journal entry from your loved one! 💕'
@@ -76,24 +80,26 @@ self.addEventListener('push', (event) => {
 
   const options = {
     body: notificationData.body || 'New journal entry from your loved one! 💕',
-    icon: '/favicon.ico',
-    badge: '/favicon.ico',
+    icon: notificationData.icon || '/favicon.ico',
+    badge: notificationData.badge || '/favicon.ico',
     data: {
-      url: notificationData.url || '/'
+      url: notificationData.url || notificationData.data?.url || '/'
     },
-    actions: [
+    actions: notificationData.actions || [
       {
         action: 'open',
         title: 'Read Entry',
         icon: '/favicon.ico'
       }
     ],
-    tag: 'journal-entry',
-    renotify: true,
-    requireInteraction: true,
-    silent: false,
-    vibrate: [200, 100, 200]
+    tag: notificationData.tag || 'journal-entry',
+    renotify: notificationData.renotify !== false,
+    requireInteraction: notificationData.requireInteraction !== false,
+    silent: notificationData.silent || false,
+    vibrate: notificationData.vibrate || [200, 100, 200]
   };
+
+  console.log('Showing notification with options:', options);
 
   event.waitUntil(
     self.registration.showNotification(notificationData.title || 'HelloLove - New Entry! 💕', options)
