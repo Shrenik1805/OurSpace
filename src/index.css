@@ -376,6 +376,30 @@ html {
   }
 }
 
+/* High contrast mode */
+.high-contrast {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 0%;
+  --primary: 240 100% 50%;
+  --primary-foreground: 0 0% 100%;
+  --border: 0 0% 20%;
+  --card: 0 0% 98%;
+  --muted: 0 0% 90%;
+}
+
+.high-contrast .love-letters-bg {
+  background: white;
+}
+
+.high-contrast .love-letters-bg::before {
+  display: none;
+}
+
+.high-contrast .letter-paper {
+  background: white;
+  border: 2px solid black;
+}
+
 /* Reduced motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
   * {

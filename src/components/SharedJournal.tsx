@@ -30,6 +30,7 @@ const SharedJournal = ({ onBack }: SharedJournalProps) => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState("");
   
+  
   const { permission, requestPermission, unsubscribe, isSupported, loading: notificationLoading } = usePushNotifications();
   const { isInstallable, isInstalled, installApp } = usePWAInstall();
 

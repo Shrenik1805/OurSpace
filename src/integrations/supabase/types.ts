@@ -77,6 +77,10 @@ export type Database = {
         Args: { p_body: string; p_title: string; p_url?: string }
         Returns: undefined
       }
+      set_session_user: {
+        Args: { user_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

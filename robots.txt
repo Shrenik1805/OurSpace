@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+
+# Sitemap
+Sitemap: https://hellolove.lovable.app/sitemap.xml
+
+# Allow search engines to index the main content
+Allow: /src/assets/
+
+# Block sensitive areas
+Disallow: /debug/
+Disallow: /test/
