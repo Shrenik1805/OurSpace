@@ -71,7 +71,7 @@ self.addEventListener('push', (event) => {
     notificationData = event.data ? event.data.json() : {};
     console.log('Notification data:', notificationData);
   } catch (e) {
-    console.log('Failed to parse notification data, using default');
+    console.error('Failed to parse notification data:', e);
     notificationData = {
       title: 'HelloLove - New Entry! 💕',
       body: event.data ? event.data.text() : 'New journal entry from your loved one! 💕'
@@ -83,7 +83,8 @@ self.addEventListener('push', (event) => {
     icon: notificationData.icon || '/favicon.ico',
     badge: notificationData.badge || '/favicon.ico',
     data: {
-      url: notificationData.url || notificationData.data?.url || '/'
+      url: notificationData.url || notificationData.data?.url || '/',
+      timestamp: Date.now()
     },
     actions: notificationData.actions || [
       {
@@ -96,28 +97,66 @@ self.addEventListener('push', (event) => {
     renotify: notificationData.renotify !== false,
     requireInteraction: notificationData.requireInteraction !== false,
     silent: notificationData.silent || false,
-    vibrate: notificationData.vibrate || [200, 100, 200]
+    vibrate: notificationData.vibrate || [200, 100, 200],
+    timestamp: Date.now()
   };
 
   console.log('Showing notification with options:', options);
 
   event.waitUntil(
-    self.registration.showNotification(notificationData.title || 'HelloLove - New Entry! 💕', options)
+    self.registration.showNotification(
+      notificationData.title || 'HelloLove - New Entry! 💕', 
+      options
+    ).then(() => {
+      console.log('Notification shown successfully');
+    }).catch(error => {
+      console.error('Failed to show notification:', error);
+    })
   );
 });
 
 // Notification click event listener
 self.addEventListener('notificationclick', (event) => {
+  console.log('Notification clicked:', event);
   event.notification.close();
+  
+  const urlToOpen = event.notification.data?.url || '/';
   
   if (event.action === 'open' || !event.action) {
     event.waitUntil(
-      clients.matchAll({ type: 'window' }).then((clientList) => {
-        if (clientList.length > 0) {
-          return clientList[0].focus();
+      clients.matchAll({ 
+        type: 'window',
+        includeUncontrolled: true 
+      }).then((clientList) => {
+        console.log('Found clients:', clientList.length);
+        
+        // Try to focus existing window first
+        for (const client of clientList) {
+          if (client.url === urlToOpen && 'focus' in client) {
+            console.log('Focusing existing window');
+            return client.focus();
+          }
         }
-        return clients.openWindow('/');
+        
+        // If no matching window found, open new one
+        if (clients.openWindow) {
+          console.log('Opening new window:', urlToOpen);
+          return clients.openWindow(urlToOpen);
+        }
+        
+        return null;
+      }).catch(error => {
+        console.error('Error handling notification click:', error);
       })
     );
   }
+});
+
+// Handle errors
+self.addEventListener('error', (event) => {
+  console.error('Service Worker error:', event.error);
+});
+
+self.addEventListener('unhandledrejection', (event) => {
+  console.error('Service Worker unhandled promise rejection:', event.reason);
 });

@@ -31,7 +31,15 @@ const SharedJournal = ({ onBack }: SharedJournalProps) => {
   const [editContent, setEditContent] = useState("");
   
   
-  const { permission, requestPermission, unsubscribe, isSupported, loading: notificationLoading } = usePushNotifications();
+  const { 
+    permission, 
+    requestPermission, 
+    unsubscribe, 
+    isSupported, 
+    loading: notificationLoading,
+    error: notificationError,
+    retry: retryNotifications
+  } = usePushNotifications();
   const { isInstallable, isInstalled, installApp } = usePWAInstall();
 
   useEffect(() => {
@@ -225,25 +233,40 @@ const SharedJournal = ({ onBack }: SharedJournalProps) => {
             </div>
             <div className="flex items-center gap-2">
               {isSupported && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={permission === 'granted' ? unsubscribe : requestPermission}
-                  disabled={notificationLoading}
-                  className="text-pink-600 hover:text-pink-700 hover:bg-pink-50"
-                >
-                  {permission === 'granted' ? (
-                    <>
-                      <BellOff className="w-4 h-4 mr-1" />
-                      <span className="hidden sm:inline">Disable</span>
-                    </>
-                  ) : (
-                    <>
+                <>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={permission === 'granted' ? unsubscribe : requestPermission}
+                    disabled={notificationLoading}
+                    className="text-pink-600 hover:text-pink-700 hover:bg-pink-50"
+                  >
+                    {permission === 'granted' ? (
+                      <>
+                        <BellOff className="w-4 h-4 mr-1" />
+                        <span className="hidden sm:inline">Disable</span>
+                      </>
+                    ) : (
+                      <>
+                        <Bell className="w-4 h-4 mr-1" />
+                        <span className="hidden sm:inline">Notify</span>
+                      </>
+                    )}
+                  </Button>
+                  {notificationError && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={retryNotifications}
+                      disabled={notificationLoading}
+                      className="text-orange-600 hover:text-orange-700 hover:bg-orange-50"
+                      title={`Retry notifications: ${notificationError}`}
+                    >
                       <Bell className="w-4 h-4 mr-1" />
-                      <span className="hidden sm:inline">Notify</span>
-                    </>
+                      <span className="hidden sm:inline">Retry</span>
+                    </Button>
                   )}
-                </Button>
+                </>
               )}
               {isInstallable && !isInstalled && (
                 <Button
