@@ -308,50 +308,183 @@ export const usePushNotifications = () => {
   };
 
   const unsubscribe = async (): Promise<boolean> => {
-    if (!state.subscription) {
-      toast.error('No active subscription to disable');
+    setState(prev => ({ ...prev, loading: true, error: null }));
+
+    let hasErrors = false;
+    const errors: string[] = [];
+
+    try {
+      // Step 1: Get current subscription from service worker (most reliable source)
+      let currentSubscription = state.subscription;
+      
+      try {
+        const registration = await navigator.serviceWorker.ready;
+        const swSubscription = await registration.pushManager.getSubscription();
+        
+        if (swSubscription) {
+          currentSubscription = swSubscription;
+          console.log('Found subscription in service worker:', swSubscription.endpoint);
+        } else if (!currentSubscription) {
+          console.log('No subscription found in service worker or state');
+          // Clean up any stale state
+          setState(prev => ({ ...prev, subscription: null, loading: false }));
+          localStorage.removeItem('pushSubscription');
+          toast.success('Push notifications already disabled');
+          return true;
+        }
+      } catch (swError) {
+        console.error('Error accessing service worker subscription:', swError);
+        errors.push('Failed to access service worker');
+        hasErrors = true;
+      }
+
+      // Step 2: Remove from database (try even if no current subscription)
+      if (currentSubscription?.endpoint || state.subscription?.endpoint) {
+        try {
+          const { supabase } = await import('@/integrations/supabase/client');
+          const endpoint = currentSubscription?.endpoint || state.subscription?.endpoint || '';
+          
+          if (!endpoint) {
+            console.warn('No endpoint found for database cleanup');
+          } else {
+            const { error: dbError } = await supabase
+              .from('push_subscriptions')
+              .delete()
+              .eq('endpoint', endpoint);
+
+            if (dbError) {
+              console.error('Database removal error:', dbError);
+              errors.push('Failed to remove from database');
+              hasErrors = true;
+            } else {
+              console.log('Successfully removed subscription from database');
+            }
+          }
+        } catch (dbException) {
+          console.error('Database operation failed:', dbException);
+          errors.push('Database operation failed');
+          hasErrors = true;
+        }
+      }
+
+      // Step 3: Unsubscribe from push service
+      if (currentSubscription) {
+        try {
+          const unsubscribed = await currentSubscription.unsubscribe();
+          
+          if (!unsubscribed) {
+            console.warn('Push service unsubscribe returned false');
+            errors.push('Push service unsubscribe failed');
+            hasErrors = true;
+          } else {
+            console.log('Successfully unsubscribed from push service');
+          }
+        } catch (unsubError) {
+          console.error('Push service unsubscribe error:', unsubError);
+          errors.push('Failed to unsubscribe from push service');
+          hasErrors = true;
+        }
+      }
+
+      // Step 4: Clean up local state (always do this)
+      try {
+        setState(prev => ({ ...prev, subscription: null }));
+        localStorage.removeItem('pushSubscription');
+        console.log('Cleaned up local state');
+      } catch (localError) {
+        console.error('Local cleanup error:', localError);
+        errors.push('Failed to clean up local state');
+        hasErrors = true;
+      }
+
+      // Step 5: Verify service worker state is clean
+      try {
+        const registration = await navigator.serviceWorker.ready;
+        const remainingSubscription = await registration.pushManager.getSubscription();
+        
+        if (remainingSubscription) {
+          console.warn('Subscription still exists in service worker, attempting force cleanup');
+          try {
+            await remainingSubscription.unsubscribe();
+            console.log('Force cleaned remaining subscription');
+          } catch (forceError) {
+            console.error('Force cleanup failed:', forceError);
+            errors.push('Failed to force clean service worker');
+            hasErrors = true;
+          }
+        }
+      } catch (verifyError) {
+        console.error('Verification step failed:', verifyError);
+        // Don't add to errors since this is verification only
+      }
+
+      // Provide user feedback
+      if (hasErrors) {
+        const errorMsg = `Partially disabled: ${errors.join(', ')}`;
+        console.warn('Unsubscribe completed with errors:', errors);
+        toast.error(errorMsg);
+        setState(prev => ({ 
+          ...prev, 
+          error: `Some cleanup steps failed: ${errors.slice(0, 2).join(', ')}${errors.length > 2 ? '...' : ''}`,
+          loading: false 
+        }));
+        return false;
+      } else {
+        toast.success('Push notifications disabled');
+        setState(prev => ({ ...prev, loading: false }));
+        return true;
+      }
+
+    } catch (unexpectedError) {
+      console.error('Unexpected error during unsubscribe:', unexpectedError);
+      const errorMsg = `Failed to disable notifications: ${unexpectedError instanceof Error ? unexpectedError.message : 'Unknown error'}`;
+      toast.error(errorMsg);
+      setState(prev => ({ 
+        ...prev, 
+        error: errorMsg,
+        loading: false 
+      }));
       return false;
     }
+  };
 
+  const forceReset = useCallback(async () => {
+    console.log('Force resetting notification state...');
     setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
-      const { supabase } = await import('@/integrations/supabase/client');
-      
-      // Remove from database first
-      const { error: dbError } = await supabase
-        .from('push_subscriptions')
-        .delete()
-        .eq('endpoint', state.subscription.endpoint);
-
-      if (dbError) {
-        console.error('Error removing subscription from database:', dbError);
-        // Continue with local cleanup even if database fails
-      }
-
-      // Unsubscribe from push service
-      const unsubscribed = await state.subscription.unsubscribe();
-      
-      if (!unsubscribed) {
-        throw new Error('Failed to unsubscribe from push service');
-      }
-
-      // Clean up local state
-      setState(prev => ({ ...prev, subscription: null }));
+      // Force clean everything
       localStorage.removeItem('pushSubscription');
       
-      toast.success('Push notifications disabled');
-      return true;
+      if ('serviceWorker' in navigator) {
+        const registration = await navigator.serviceWorker.ready;
+        const subscription = await registration.pushManager.getSubscription();
+        
+        if (subscription) {
+          await subscription.unsubscribe();
+          console.log('Force unsubscribed from service worker');
+        }
+      }
+
+      setState({
+        permission: 'Notification' in window ? Notification.permission : 'denied',
+        subscription: null,
+        loading: false,
+        isSupported: checkBrowserSupport(),
+        error: null
+      });
+
+      toast.success('Notification state reset');
     } catch (error) {
-      console.error('Error unsubscribing:', error);
-      const errorMsg = `Failed to disable notifications: ${error instanceof Error ? error.message : 'Unknown error'}`;
-      toast.error(errorMsg);
-      setState(prev => ({ ...prev, error: errorMsg }));
-      return false;
-    } finally {
-      setState(prev => ({ ...prev, loading: false }));
+      console.error('Force reset failed:', error);
+      setState(prev => ({ 
+        ...prev, 
+        loading: false,
+        error: 'Reset failed'
+      }));
+      toast.error('Reset failed');
     }
-  };
+  }, []);
 
   const retry = useCallback(() => {
     if (retryTimeoutRef.current) {
@@ -372,7 +505,8 @@ export const usePushNotifications = () => {
     error: state.error,
     requestPermission,
     unsubscribe,
-    retry
+    retry,
+    forceReset
   };
 };
 

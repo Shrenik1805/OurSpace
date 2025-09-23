@@ -38,7 +38,8 @@ const SharedJournal = ({ onBack }: SharedJournalProps) => {
     isSupported, 
     loading: notificationLoading,
     error: notificationError,
-    retry: retryNotifications
+    retry: retryNotifications,
+    forceReset: resetNotifications
   } = usePushNotifications();
   const { isInstallable, isInstalled, installApp } = usePWAInstall();
 
@@ -254,17 +255,30 @@ const SharedJournal = ({ onBack }: SharedJournalProps) => {
                     )}
                   </Button>
                   {notificationError && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={retryNotifications}
-                      disabled={notificationLoading}
-                      className="text-orange-600 hover:text-orange-700 hover:bg-orange-50"
-                      title={`Retry notifications: ${notificationError}`}
-                    >
-                      <Bell className="w-4 h-4 mr-1" />
-                      <span className="hidden sm:inline">Retry</span>
-                    </Button>
+                    <>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={retryNotifications}
+                        disabled={notificationLoading}
+                        className="text-orange-600 hover:text-orange-700 hover:bg-orange-50"
+                        title={`Retry notifications: ${notificationError}`}
+                      >
+                        <Bell className="w-4 h-4 mr-1" />
+                        <span className="hidden sm:inline">Retry</span>
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={resetNotifications}
+                        disabled={notificationLoading}
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        title="Force reset notification state"
+                      >
+                        <X className="w-4 h-4 mr-1" />
+                        <span className="hidden sm:inline">Reset</span>
+                      </Button>
+                    </>
                   )}
                 </>
               )}
