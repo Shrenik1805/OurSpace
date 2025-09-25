@@ -13,7 +13,6 @@ const BackgroundMusic: React.FC<BackgroundMusicProps> = ({ playOnLogin = false }
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
-  const [audioError, setAudioError] = useState(false);
 
   // Initialize audio element
   useEffect(() => {
@@ -22,12 +21,10 @@ const BackgroundMusic: React.FC<BackgroundMusicProps> = ({ playOnLogin = false }
 
     const handleLoadStart = () => {
       setIsLoading(true);
-      setAudioError(false);
     };
 
     const handleCanPlay = () => {
       setIsLoading(false);
-      setAudioError(false);
     };
 
     const handlePlay = () => {
@@ -42,7 +39,6 @@ const BackgroundMusic: React.FC<BackgroundMusicProps> = ({ playOnLogin = false }
     const handleError = (e: Event) => {
       console.error('Audio error:', e);
       setIsLoading(false);
-      setAudioError(true);
       setIsPlaying(false);
     };
 
@@ -75,7 +71,7 @@ const BackgroundMusic: React.FC<BackgroundMusicProps> = ({ playOnLogin = false }
 
   // Handle auto-play after user login (requires user interaction)
   useEffect(() => {
-    if (!playOnLogin || !hasUserInteracted || audioError) return;
+    if (!playOnLogin || !hasUserInteracted) return;
 
     const audio = audioRef.current;
     if (!audio) return;
@@ -93,7 +89,7 @@ const BackgroundMusic: React.FC<BackgroundMusicProps> = ({ playOnLogin = false }
     // Small delay to ensure audio is ready
     const timeoutId = setTimeout(attemptAutoPlay, 500);
     return () => clearTimeout(timeoutId);
-  }, [playOnLogin, hasUserInteracted, audioError]);
+  }, [playOnLogin, hasUserInteracted]);
 
   // Handle user interaction to enable autoplay
   useEffect(() => {
@@ -119,7 +115,7 @@ const BackgroundMusic: React.FC<BackgroundMusicProps> = ({ playOnLogin = false }
   // Toggle play/pause
   const togglePlayPause = async () => {
     const audio = audioRef.current;
-    if (!audio || audioError) return;
+    if (!audio) return;
 
     setHasUserInteracted(true);
 
@@ -133,24 +129,18 @@ const BackgroundMusic: React.FC<BackgroundMusicProps> = ({ playOnLogin = false }
     } catch (error) {
       console.error("Could not play/pause audio:", error);
       setIsLoading(false);
-      setAudioError(true);
     }
   };
 
   // Toggle mute on/off
   const toggleMute = () => {
     const audio = audioRef.current;
-    if (!audio || audioError) return;
+    if (!audio) return;
 
     const newMutedState = !isMuted;
     audio.muted = newMutedState;
     setIsMuted(newMutedState);
   };
-
-  // Don't render if there's an audio error
-  if (audioError) {
-    return null;
-  }
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
@@ -194,7 +184,6 @@ const BackgroundMusic: React.FC<BackgroundMusicProps> = ({ playOnLogin = false }
           size="sm"
           variant="ghost"
           className="h-8 w-8 p-0 text-rose-600 hover:text-rose-800 hover:bg-rose-100"
-          disabled={audioError}
         >
           {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
         </Button>

@@ -1,12 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import LetterViewer from "./LetterViewer";
-import SharedJournal from "./SharedJournal";
 import Envelope from "./Envelope";
 import HeartLock from "./HeartLock";
 import { letterCategories, Letter } from "@/data/letters";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { BookOpen, Search, Heart, Filter } from "lucide-react";
+import { BookOpen, Search, Heart, Filter, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import {
  Select,
@@ -22,7 +21,6 @@ interface LettersDashboardProps {
 
 const LettersDashboard: React.FC<LettersDashboardProps> = ({ onLogout }) => {
  const [selectedLetter, setSelectedLetter] = useState<Letter | null>(null);
- const [showJournal, setShowJournal] = useState(false);
  const [searchQuery, setSearchQuery] = useState("");
  const [selectedCategory, setSelectedCategory] = useState("all");
  const [favorites, setFavorites] = useState<string[]>([]);
@@ -48,12 +46,12 @@ const LettersDashboard: React.FC<LettersDashboardProps> = ({ onLogout }) => {
 
  // Restore scroll position when returning to dashboard
  useEffect(() => {
- if (!selectedLetter && !showJournal) {
+ if (!selectedLetter) {
  setTimeout(() => {
  window.scrollTo(0, scrollPositionRef.current);
  }, 0);
  }
- }, [selectedLetter, showJournal]);
+ }, [selectedLetter]);
 
  const handleLetterOpen = (letter: Letter) => {
  scrollPositionRef.current = window.scrollY;
@@ -62,13 +60,8 @@ const LettersDashboard: React.FC<LettersDashboardProps> = ({ onLogout }) => {
 
  const handleBackToDashboard = () => {
  setSelectedLetter(null);
- setShowJournal(false);
  };
 
- const handleJournalOpen = () => {
- scrollPositionRef.current = window.scrollY;
- setShowJournal(true);
- };
 
  const toggleFavorite = (letterTitle: string, event: React.MouseEvent) => {
  event.stopPropagation();
@@ -85,6 +78,20 @@ const LettersDashboard: React.FC<LettersDashboardProps> = ({ onLogout }) => {
  onLogout();
  };
 
+ const handleJournalRedirect = () => {
+ // Detect device and redirect to appropriate journal app
+ const userAgent = navigator.userAgent;
+ const isMac = /Mac|MacIntel|MacPPC|Mac68K/.test(userAgent);
+ const isIOS = /iPad|iPhone|iPod/.test(userAgent);
+ 
+ if (isIOS) {
+ // iOS Journal app URL scheme
+ window.open('journal://', '_blank');
+ } else if (isMac) {
+ // macOS Journal app URL scheme
+ window.open('journal://', '_blank');
+ }
+ };
  // Get mood categories for filtering
  const getMoodCategories = () => {
  const moodMap: Record<string, string[]> = {
@@ -133,11 +140,6 @@ const LettersDashboard: React.FC<LettersDashboardProps> = ({ onLogout }) => {
  );
  }
 
- if (showJournal) {
- return (
- <SharedJournal onBack={handleBackToDashboard} />
- );
- }
 
  return (
  <div className="min-h-screen bg-gradient-to-br from-pink-50 via-rose-50 to-purple-50">
@@ -159,7 +161,19 @@ const LettersDashboard: React.FC<LettersDashboardProps> = ({ onLogout }) => {
  </div>
  </div>
  
+ <div className="flex items-center gap-2">
+ <Button
+ variant="ghost"
+ size="sm"
+ onClick={handleJournalRedirect}
+ className="text-pink-600 hover:text-pink-700 hover:bg-pink-50"
+ >
+ <BookOpen className="w-4 h-4 mr-2" />
+ <span className="hidden sm:inline">Shared Journal</span>
+ <ExternalLink className="w-3 h-3 ml-1" />
+ </Button>
  <HeartLock onLogout={handleLogoutClick} />
+ </div>
  </div>
  </div>
  </div>
@@ -207,18 +221,6 @@ const LettersDashboard: React.FC<LettersDashboardProps> = ({ onLogout }) => {
  <p className="text-gray-600 max-w-2xl mx-auto">
  Welcome to our special place. Choose the letter that matches your heart today.
  </p>
- </div>
-
- {/* Quick Actions */}
- <div className="flex justify-center mb-12">
- <Button
- onClick={handleJournalOpen}
- variant="outline"
- className="border-pink-200 text-pink-600 hover:bg-pink-50 hover:border-pink-300"
- >
- <BookOpen className="w-4 h-4 mr-2" />
- Our Shared Journal
- </Button>
  </div>
 
  {/* Favorites Section - Now at the top */}
