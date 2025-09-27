@@ -10,7 +10,7 @@ interface CodeEntryProps {
 }
 
 // Note: In production, this should be validated server-side
-const SECRET_CODE = import.meta.env.VITE_SECRET_CODE || "HelloTanya2024";
+const SECRET_CODE = import.meta.env.VITE_SECRET_CODE || "Mine4ever";
 
 const emojiList = ["💕", "💖", "💗", "💝", "💘", "✨", "🌸", "🦋", "🌙", "💫"];
 
