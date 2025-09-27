@@ -77,21 +77,10 @@ const LettersDashboard: React.FC<LettersDashboardProps> = ({ onLogout }) => {
  localStorage.removeItem("authTimestamp");
  onLogout();
  };
-
- const handleJournalRedirect = () => {
- // Detect device and redirect to appropriate journal app
- const userAgent = navigator.userAgent;
- const isMac = /Mac|MacIntel|MacPPC|Mac68K/.test(userAgent);
- const isIOS = /iPad|iPhone|iPod/.test(userAgent);
  
- if (isIOS) {
- // iOS Journal app URL scheme
- window.open('journal://', '_blank');
- } else if (isMac) {
- // macOS Journal app URL scheme
- window.open('journal://', '_blank');
- }
- };
+const handleJournalRedirect = () => {
+  window.open("https://wafflejournal.app.link/get", "_blank");
+};
  // Get mood categories for filtering
  const getMoodCategories = () => {
  const moodMap: Record<string, string[]> = {
