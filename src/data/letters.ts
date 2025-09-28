@@ -26,16 +26,16 @@ export const letterCategories: Record<string, LetterCategory> = {
 
 I wish you could see yourself the way I see you when you're happy. Your smile doesn't just light up the room - it lights up my entire world.
 
-When you laugh, it's like music that I never want to stop hearing. When your eyes sparkle with joy, I fall in love with you all over again. Your happiness is contagious in the most beautiful way.
+When you laugh, it's like music that I never want to stop hearing. When your eyes sparkle (only for me), I fall in love with you all over again. Your happiness is contagious in the most beautiful way.
 
-I love how you get excited about little things - the way you dance when your favorite song comes on, how you light up talking about things you're passionate about, the way you celebrate small victories.
+I love how you get excited about little things - the way you dance when your favourite song comes on, how you light up talking about things you're passionate about, the way you celebrate small victories.
 
-Never apologize for your joy. Never dim your light for anyone. Your happiness is a gift to this world, and seeing you embrace it is one of my greatest privileges.
+Never apologise for your joy. Never dim your light for anyone. Your happiness is a gift to this world, and seeing you embrace it is one of my greatest privileges.
 
 Keep shining, my love. The world needs your light.
 
 Celebrating you always,
-Your biggest fan ✨`
+Your biggest fan ✨
       }
     ]
   },
@@ -51,7 +51,7 @@ Your biggest fan ✨`
 
 I need you to hear this today: YOU ARE ENOUGH.
 
-Not when you lose weight or gain confidence. Not when you get that promotion or achieve that goal. Not when you fix the things you think are broken about yourself.
+Not when you try to meet my expectations or gain confidence. Not when you are that boss girl or achieve that goal. Not when you fix the things you think are broken about yourself.
 
 Right now. Today. In this moment. Exactly as you are.
 
@@ -64,7 +64,7 @@ I fell in love with you exactly as you are. Your flaws aren't bugs that need fix
 You. Are. Enough.
 
 Loving every part of you,
-Your reminder that you're already whole ❤️`
+Your reminder that you're already whole ❤️
       }
     ]
   },
@@ -80,7 +80,7 @@ Your reminder that you're already whole ❤️`
 
 I know you miss me, and I miss you too. More than words can express. But I want you to know something - even when we're apart, I'm never really gone.
 
-I'm in the morning coffee that reminds you of our lazy Sunday mornings together. I'm in your favorite song that makes you smile. I'm in the sunset that takes your breath away. I'm in every little moment that makes you think of love.
+I'm in the morning pancakes that reminds you of our lazy weekends together. I'm in your favourite song that makes you smile. I'm in the sunset that takes your breath away. I'm in every little moment that makes you think of love.
 
 Close your eyes and feel my arms around you. Remember my voice telling you how much I love you. Remember my laugh when you tell me your silly jokes. Remember how it feels when I hold your hand.
 
@@ -89,7 +89,7 @@ The distance is temporary, but my love for you is eternal. Every second we're ap
 Until then, carry my love with you everywhere you go. You are never alone.
 
 Missing you endlessly,
-Your heart that beats for you 💕`
+Your heart that beats for you 💕
       }
     ]
   },
@@ -105,7 +105,7 @@ Your heart that beats for you 💕`
         date: "September 14, 2025",
         content: `Good morning, my beautiful love,
 
-As you open your eyes to a new day, I want you to know that somewhere, someone is thinking about you with the biggest smile on their face. That someone is me.
+As you open your eyes to a new day, I want you to know that somewhere, someone is thinking about you with the biggest smile on his face. That someone is me.
 
 Today is a blank canvas, and you get to paint it however you want. Whether today brings challenges or celebrations, remember that you have everything you need to handle whatever comes your way.
 
@@ -113,15 +113,15 @@ Here's your daily reminder:
 - You are loved beyond measure
 - You are capable of amazing things
 - You deserve all the good things coming your way
-- Your presence makes the world brighter
+- Your presence makes the world better
 - I'm grateful for you every single day
 
-Take on today with confidence, knowing that you are absolutely incredible just as you are.
+Take on today with confidence, knowing that you are absolutely incredible/badass just as you are.
 
 Have the most wonderful day, my love.
 
 Starting each day loving you,
-Your devoted morning person ☀️`
+Your morning person ☀️
       }
     ]
   },
@@ -134,7 +134,6 @@ Your devoted morning person ☀️`
         preview: "As you close your eyes tonight...",
         date: "September 14, 2025",
         content: `My sweetest dream,
-
 As you prepare for sleep tonight, I want your last thoughts to be filled with love and peace.
 
 Today you did your best, and that's all anyone can ask for. Whatever happened today - the victories and the struggles - you handled it all with grace. Now it's time to rest.
@@ -148,7 +147,7 @@ Close your eyes and dream of all the beautiful things waiting for you. Dream of 
 Sleep well, my love. Tomorrow is another day to love you.
 
 With all my love and gentle kisses,
-Your guardian of sweet dreams 🌙✨`
+sweet dreams 🌙✨`
       }
     ]
   },
@@ -173,7 +172,7 @@ If today has been hard, remember that tomorrow is a fresh start. If today has be
 Either way, I love you.
 
 Just because,
-Your person who thinks about you constantly 💭❤️`
+I’m your person 💭❤️
       }
     ]
   },
@@ -193,18 +192,18 @@ Happy, happy birthday to the most incredible person in the world! Today is all a
 
 I'm so grateful that you were born. I'm grateful for every year that led you to become the amazing person you are today. I'm grateful that our paths crossed and that I get to love you.
 
-You make this world brighter just by being in it. You bring joy, kindness, laughter, and love wherever you go. You make everyone around you better, including me.
+You make this world a place to be cherished just by being in it. You bring joy, kindness, laughter, and love wherever you go. You make everyone around you better, including me.
 
-I hope your birthday is filled with everything that makes you happy - good food, your favorite people, surprises that make you smile, and moments that remind you how loved you are.
+I hope your birthday is filled with everything that makes you happy - good food, your favourite people, surprises that make you smile, and moments that remind you how loved you are.
 
 You deserve to be celebrated not just today, but every single day. You deserve all the love, all the joy, all the beautiful things life has to offer.
 
 I can't wait to celebrate many more birthdays with you, to watch you grow and evolve and become even more amazing (if that's even possible).
 
-Have the most wonderful day, birthday girl/boy!
+Have the most wonderful day, birthday girl!
 
 Celebrating you always,
-Your birthday party planner 🎂🎉`
+Ps. Don’t forgot lots bday sex 😋🎉
       }
     ]
   },
@@ -217,7 +216,7 @@ Your birthday party planner 🎂🎉`
         preview: "Celebrating another beautiful month together...",
         date: "September 14, 2025",
         content: `My love,
-
+        
 Happy montiversary! Another month of loving you, learning about you, and growing together. Time feels different when you're in love - some days feel like forever, and some months feel like minutes.
 
 This month brought us new memories, new inside jokes, new ways to love each other. I think about all the little moments that made this month special - your sleepy morning voice, the way you laugh at your own jokes, how you always know exactly what to say when I need comfort.
@@ -229,7 +228,7 @@ Here's to all the months behind us that brought us to this moment, and all the m
 I love you more today than I did a month ago, and I'll love you even more a month from now.
 
 Celebrating our love always,
-Your devoted partner 💕`
+Your devoted partner 💕
       }
     ]
   },
@@ -244,7 +243,7 @@ Your devoted partner 💕`
         preview: "Remember, my love, you are stronger than any storm...",
         date: "September 14, 2025",
         content: `My dearest love,
-
+        
 I know right now your mind feels like it's racing, and the world might seem overwhelming. But I want you to take a deep breath with me.
 
 You are not alone in this moment. Even when I'm not physically there, my love surrounds you like a warm embrace. Your anxiety doesn't define you - it's just a temporary visitor, and like all visitors, it will leave.
@@ -254,13 +253,13 @@ Remember all the times you've felt this way before? And look - you made it throu
 Close your eyes, take three deep breaths, and remember:
 - This feeling is temporary
 - You are safe
-- You are loved beyond measure
+- You are loved beyond existence 
 - I believe in you completely
 
 You've got this, beautiful. And I've got you.
 
 All my love and strength,
-Your devoted partner ❤️`
+❤️
       }
     ]
   },
@@ -273,7 +272,7 @@ Your devoted partner ❤️`
         preview: "You don't have to carry it all at once...",
         date: "September 14, 2025",
         content: `My overwhelmed darling,
-
+        
 I know everything feels like too much right now. Your to-do list is endless, deadlines are looming, people are depending on you, and it feels like the world is spinning too fast.
 
 But let's slow down for just a moment. Let's breathe together.
@@ -282,16 +281,16 @@ You don't have to do everything at once. You don't have to be everything to ever
 
 Pick one thing. Just one. Do that one thing. Then pick another. One step at a time, one breath at a time, one moment at a time.
 
-It's okay to ask for help. It's okay to delegate. It's okay to say "I'm overwhelmed and I need support." Strong people ask for help when they need it.
+It's okay to ask for help. It's okay to delegate. It's okay to say "I'm overwhelmed and I need support." Strong people ask for help when they need it. I am always here to help you.
 
 Remember that you've handled stress before and you've come through it. This too shall pass. You are more capable and resilient than you know.
 
-Take a hot shower. Call a friend. Go for a walk. Do something, anything, that brings you even a moment of peace.
+Take a hot shower. Call me. Go for a walk. Do something, anything, that brings you even a moment of peace.
 
 You've got this, and I've got you.
 
 Breathing with you,
-Your calm in every storm 🌊💙`
+Your calm in every storm 🌊 
       }
     ]
   },
@@ -315,12 +314,12 @@ Bad days are part of being human. They don't mean you're doing anything wrong or
 
 Tomorrow is a fresh start. New possibilities, new opportunities, new chances for things to go right. Today's struggles don't determine tomorrow's success.
 
-For now, be extra gentle with yourself. Do something that brings you comfort. Remember that you're loved deeply and that this day doesn't define you.
+For now, be extra gentle with yourself. Do something that brings you comfort. Eat good food. Remember that you're loved deeply and that this day doesn't define you.
 
 You've gotten through 100% of your bad days so far. That's a perfect track record.
 
 Standing by you through it all,
-Your constant support system 🌈💪`
+Your Hulk 💪 
       }
     ]
   },
@@ -336,18 +335,19 @@ Your constant support system 🌈💪`
 
 I know you don't feel your best right now. You're cramping, you're uncomfortable, you feel bloated and emotional and just not like yourself. But I want you to know something - you are still absolutely perfect to me.
 
-Your body is doing something incredible. It's following ancient rhythms, preparing for life, showing its incredible power and resilience. There is nothing disgusting or shameful about this natural process.
+Your body is doing something incredible. It's following ancient rhythms, preparing for life, showing its incredible power and resilience. 
 
 You don't have to hide from me or feel embarrassed. You don't have to pretend you feel fine when you don't. I want to take care of you during this time.
 
-Put on those comfortable clothes. Use the heating pad. Eat whatever sounds good. Cancel plans if you need to. Rest as much as you want.
+Put on those comfortable clothes(I think mine?). Use the heating pad(don’t be lazy). Eat whatever sounds good. Cancel plans if you need to. Rest as much as you want.
 
-You are not "gross" or "moody" or any of those horrible things society tells women they are during their periods. You are human, you are natural, you are beautiful.
+You are not "moody" or any of those horrible things society tells women they are during their periods. You are human, you are natural, you are beautiful.
 
 I love you through every day of your cycle, through every mood, through every cramp and every comfort food craving.
 
 Taking care of you always,
-Your understanding partner 🌸💕`
+Your future hubby 🌸
+
       }
     ]
   }
