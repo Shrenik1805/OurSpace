@@ -35,7 +35,7 @@ Never apologise for your joy. Never dim your light for anyone. Your happiness is
 Keep shining, my love. The world needs your light.
 
 Celebrating you always,
-Your biggest fan ✨
+Your biggest fan ✨`
       }
     ]
   },
@@ -64,7 +64,7 @@ I fell in love with you exactly as you are. Your flaws aren't bugs that need fix
 You. Are. Enough.
 
 Loving every part of you,
-Your reminder that you're already whole ❤️
+Your reminder that you're already whole ❤️`
       }
     ]
   },
@@ -89,7 +89,7 @@ The distance is temporary, but my love for you is eternal. Every second we're ap
 Until then, carry my love with you everywhere you go. You are never alone.
 
 Missing you endlessly,
-Your heart that beats for you 💕
+Your heart that beats for you 💕`
       }
     ]
   },
@@ -121,7 +121,7 @@ Take on today with confidence, knowing that you are absolutely incredible/badass
 Have the most wonderful day, my love.
 
 Starting each day loving you,
-Your morning person ☀️
+Your morning person ☀️`
       }
     ]
   },
@@ -172,7 +172,7 @@ If today has been hard, remember that tomorrow is a fresh start. If today has be
 Either way, I love you.
 
 Just because,
-I’m your person 💭❤️
+I’m your person 💭❤️`
       }
     ]
   },
@@ -203,7 +203,7 @@ I can't wait to celebrate many more birthdays with you, to watch you grow and ev
 Have the most wonderful day, birthday girl!
 
 Celebrating you always,
-Ps. Don’t forgot lots bday sex 😋🎉
+Ps. Don’t forgot lots bday sex 😋🎉`
       }
     ]
   },
@@ -228,7 +228,7 @@ Here's to all the months behind us that brought us to this moment, and all the m
 I love you more today than I did a month ago, and I'll love you even more a month from now.
 
 Celebrating our love always,
-Your devoted partner 💕
+Your devoted partner 💕`
       }
     ]
   },
@@ -259,7 +259,7 @@ Close your eyes, take three deep breaths, and remember:
 You've got this, beautiful. And I've got you.
 
 All my love and strength,
-❤️
+❤️`
       }
     ]
   },
@@ -281,7 +281,7 @@ You don't have to do everything at once. You don't have to be everything to ever
 
 Pick one thing. Just one. Do that one thing. Then pick another. One step at a time, one breath at a time, one moment at a time.
 
-It's okay to ask for help. It's okay to delegate. It's okay to say "I'm overwhelmed and I need support." Strong people ask for help when they need it. I am always here to help you.
+It's okay to ask for help. It's okay to delegate. It's okay to say "I'm overwhelmed and I need support." Strong people ask for help when they need it. I am always here to help you.
 
 Remember that you've handled stress before and you've come through it. This too shall pass. You are more capable and resilient than you know.
 
@@ -290,7 +290,7 @@ Take a hot shower. Call me. Go for a walk. Do something, anything, that brings y
 You've got this, and I've got you.
 
 Breathing with you,
-Your calm in every storm 🌊 
+Your calm in every storm 🌊`
       }
     ]
   },
@@ -319,7 +319,7 @@ For now, be extra gentle with yourself. Do something that brings you comfort. Ea
 You've gotten through 100% of your bad days so far. That's a perfect track record.
 
 Standing by you through it all,
-Your Hulk 💪 
+Your Hulk 💪`
       }
     ]
   },
@@ -339,15 +339,14 @@ Your body is doing something incredible. It's following ancient rhythms, prepari
 
 You don't have to hide from me or feel embarrassed. You don't have to pretend you feel fine when you don't. I want to take care of you during this time.
 
-Put on those comfortable clothes(I think mine?). Use the heating pad(don’t be lazy). Eat whatever sounds good. Cancel plans if you need to. Rest as much as you want.
+Put on those comfortable clothes (I think mine?). Use the heating pad (don’t be lazy). Eat whatever sounds good. Cancel plans if you need to. Rest as much as you want.
 
 You are not "moody" or any of those horrible things society tells women they are during their periods. You are human, you are natural, you are beautiful.
 
 I love you through every day of your cycle, through every mood, through every cramp and every comfort food craving.
 
 Taking care of you always,
-Your future hubby 🌸
-
+Your future hubby 🌸`
       }
     ]
   }
