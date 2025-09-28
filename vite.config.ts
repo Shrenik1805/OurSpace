@@ -30,7 +30,7 @@ export default defineConfig(({ mode }) => ({
         background_color: '#fdf2f8',
         display: 'standalone',
         orientation: 'portrait',
-        start_url: '/',
+        start_url: '/OurSpace/',
         icons: [
           {
             src: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMjAuODQgNC42MWE1LjUgNS41IDAgMCAwLTcuNzggMEwxMiA1LjY3bC0xLjA2LTEuMDZhNS41IDUuNSAwIDAgMC03Ljc4IDcuNzhsMS4wNiAxLjA2TDEyIDIxLjIzbDcuNzgtNy43OCAxLjA2LTEuMDZhNS41IDUuNSAwIDAgMCAwLTcuNzh6IiBmaWxsPSIjZWM0ODk5Ii8+Cjwvc3ZnPgo=',
