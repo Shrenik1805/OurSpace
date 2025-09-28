@@ -9,31 +9,29 @@ import { PerformanceMonitor } from "@/components/PerformanceMonitor";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
-
 const App: React.FC = () => {
-
   return (
-      <ThemeProvider defaultTheme="light" storageKey="hellolove-theme">
-        <AccessibilityProvider>
-          <TooltipProvider>
-            <ErrorBoundary>
-              <PerformanceMonitor />
-              <BrowserRouter>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
+    <ThemeProvider defaultTheme="light" storageKey="hellolove-theme">
+      <AccessibilityProvider>
+        <TooltipProvider>
+          <ErrorBoundary>
+            <PerformanceMonitor />
+            <BrowserRouter basename="/OurSpace">
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
 
-                {/* Background Music moved to Index to match auth state */}
+              {/* Background Music moved to Index to match auth state */}
 
-                {/* Toast notifications */}
-                <Toaster />
-                <Sonner />
-              </BrowserRouter>
-            </ErrorBoundary>
-          </TooltipProvider>
-        </AccessibilityProvider>
-      </ThemeProvider>
+              {/* Toast notifications */}
+              <Toaster />
+              <Sonner />
+            </BrowserRouter>
+          </ErrorBoundary>
+        </TooltipProvider>
+      </AccessibilityProvider>
+    </ThemeProvider>
   );
 };
 
